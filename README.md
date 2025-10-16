@@ -96,7 +96,61 @@ Skills can include additional files in their directory:
 
 ## Available Skills
 
-### fastmod
+### Tier 1: Essential Command-Line Tools
+
+#### jq
+**Purpose:** JSON query language for filtering, transforming, and manipulating JSON data
+**Files:** SKILL.md, quick-reference.md, examples.md
+**Use Cases:**
+- Processing JSON output from APIs, logs, or configuration files
+- Filtering, transforming, or extracting data from complex JSON structures
+- Combining or restructuring JSON data
+- Working with JSON in shell scripts or pipelines
+- Debugging API responses or JSON-based workflows
+
+#### ripgrep (rg)
+**Purpose:** Blazingly fast recursive code search with smart defaults
+**Files:** SKILL.md, quick-reference.md, examples.md
+**Use Cases:**
+- Searching large codebases for patterns across thousands of files
+- Finding code references, function calls, or variable usage
+- Filtering search results by file type, path, or content
+- Debugging or refactoring code that depends on specific patterns
+- Security auditing and vulnerability scanning
+
+#### ast-grep (sg)
+**Purpose:** Semantic code search and transformation using Abstract Syntax Trees
+**Files:** SKILL.md, quick-reference.md, examples.md
+**Use Cases:**
+- Searching for code patterns that text regex can't express precisely
+- Refactoring code based on semantic meaning, not just text
+- Finding code structure patterns (function calls, class definitions)
+- Performing AST-based code transformations with metavariables
+- Analyzing code for architectural patterns or anti-patterns
+
+#### yq
+**Purpose:** YAML, JSON, XML processor with jq-like syntax
+**Files:** SKILL.md, quick-reference.md, examples.md
+**Use Cases:**
+- Processing YAML configuration files (Kubernetes, Docker Compose, CI/CD)
+- Converting between YAML, JSON, XML, CSV formats
+- Querying and transforming structured data files
+- Automating configuration management workflows
+- Validating and formatting YAML/JSON files
+
+#### fzf
+**Purpose:** Interactive command-line fuzzy finder
+**Files:** SKILL.md, quick-reference.md, examples.md
+**Use Cases:**
+- Interactively searching through files, directories, or command history
+- Building interactive selection menus for shell scripts
+- Filtering large lists or command outputs
+- Creating powerful keyboard-driven workflows
+- Integrating fuzzy search into custom tools and aliases
+
+### Code Transformation
+
+#### fastmod
 **Purpose:** Expert guidance for large-scale codebase refactoring using fastmod
 **Files:** SKILL.md, quick-reference.md, examples.md
 **Use Cases:**
