@@ -96,7 +96,15 @@ Skills can include additional files in their directory:
 
 ## Available Skills
 
-*Currently this repository is in initial setup. Skills will be added soon.*
+### fastmod
+**Purpose:** Expert guidance for large-scale codebase refactoring using fastmod
+**Files:** SKILL.md, quick-reference.md, examples.md
+**Use Cases:**
+- Bulk find-and-replace across 20+ files
+- Rename classes, functions, or variables codebase-wide
+- Update import paths, API calls, or framework patterns
+- Regex-based transformations with interactive review
+- Safe multi-file refactoring with human oversight
 
 ## Usage
 
