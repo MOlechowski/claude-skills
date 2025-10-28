@@ -196,7 +196,7 @@ const agent = new ClaudeAgent({
 | **Resources** | Multiple files in directory | Embedded in single file |
 | **Code Execution** | Bundled scripts | Via Bash tool |
 | **Progressive Loading** | Yes (3 levels) | Partial |
-| **Status** | Experimental (as of Claude Code 2.0.20) | Fully supported |
+| **Status** | Production (since October 16, 2025) | Fully supported |
 
 ## Compatibility
 
@@ -206,7 +206,7 @@ const agent = new ClaudeAgent({
 - Claude Agent SDK (programmatic access)
 - Claude Developer Platform (API)
 
-**Current Status:** Skills support is in early stages for Claude Code 2.0.20. This repository prepares for broader skills adoption as the feature matures.
+**Current Status:** Skills are fully supported in Claude Code 1.0+ (production-ready since October 16, 2025). This repository provides curated, reusable skills for common development workflows.
 
 ## Development
 

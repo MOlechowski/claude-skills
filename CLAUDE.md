@@ -166,13 +166,13 @@ Skills work automatically once installed:
 
 ## Current Status
 
-**Claude Code 2.0.20:** Skills support is experimental. The infrastructure exists but skills are not yet widely documented or distributed.
+**Claude Code 1.0+:** Skills are fully supported (production-ready since October 16, 2025). The framework is stable and widely adopted across Claude platforms.
 
-**This repository:** Prepares for broader skills adoption by:
-- Establishing skill patterns and structure
-- Providing installation mechanism
-- Documenting best practices
-- Creating reusable skill templates
+**This repository:** Provides curated, production-ready skills by:
+- Offering proven skill patterns and structure
+- Providing simple installation mechanism
+- Documenting best practices from real-world usage
+- Creating reusable skill templates for common workflows
 
 ## Skills vs Agents Comparison
 
@@ -183,9 +183,9 @@ Skills work automatically once installed:
 | **Resources** | Multiple bundled files | Single markdown |
 | **Code** | Separate script files | Via Bash tool |
 | **Loading** | Progressive (3 levels) | Full load |
-| **Maturity** | Experimental | Stable |
+| **Maturity** | Production | Stable |
 
-Both systems are valuable - use agents for current production needs, skills for future-ready capabilities.
+Both systems are production-ready and valuable for different use cases.
 
 ## Contributing
 

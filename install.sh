@@ -84,5 +84,5 @@ done
 echo ""
 echo "Skills are now available in Claude Code. They will activate automatically based on context."
 echo ""
-echo -e "${YELLOW}Note:${NC} Skills support is experimental in Claude Code 2.0.20."
+echo -e "${GREEN}Note:${NC} Skills are production-ready in Claude Code 1.0+ (since October 16, 2025)."
 echo "Visit https://github.com/anthropics/skills for official examples."
