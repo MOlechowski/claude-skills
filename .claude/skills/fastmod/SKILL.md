@@ -238,6 +238,87 @@ fastmod -m 'class OldName\s*\{' 'class NewName {'
 4. ❌ **Rely on lookahead/lookbehind** (not supported in Rust regex)
 5. ❌ **Forget to escape special characters** in replacement strings
 
+### When `--accept-all` IS Acceptable
+
+Non-interactive mode can be safe for **systematic batch refactoring** when ALL conditions are met:
+
+**Required Safety Conditions:**
+1. ✅ **Clean git state** - All changes committed, can easily rollback
+2. ✅ **Simple, well-defined patterns** - No ambiguous matches
+3. ✅ **Word boundaries** - Use `\b` to prevent partial matches
+4. ✅ **File type filtering** - Use `--extensions` to limit scope
+5. ✅ **Repeatable patterns** - Multiple similar renames (e.g., adding prefix to interfaces)
+6. ✅ **Test suite available** - Can verify changes immediately after
+
+**Example: Safe Batch Interface Renaming**
+
+```bash
+#!/bin/bash
+# Safe --accept-all workflow for adding I prefix to TypeScript interfaces
+
+# Function to rename an interface systematically
+rename_interface() {
+  local OLD=$1
+  local NEW=$2
+
+  echo "Renaming $OLD → $NEW..."
+
+  # 1. Interface declarations - word boundary ensures exact matches
+  fastmod --accept-all --extensions ts "export interface ${OLD}\b" "export interface ${NEW}"
+
+  # 2. Type annotations
+  fastmod --accept-all --extensions ts ": ${OLD}\b" ": ${NEW}"
+
+  # 3. Generics
+  fastmod --accept-all --extensions ts "<${OLD}\b" "<${NEW}"
+  fastmod --accept-all --extensions ts "<${OLD}," "<${NEW},"
+
+  # 4. Arrays
+  fastmod --accept-all --extensions ts "${OLD}\[\]" "${NEW}[]"
+
+  # 5. Promise, Partial wrappers
+  fastmod --accept-all --extensions ts "Promise<${OLD}\b" "Promise<${NEW}"
+  fastmod --accept-all --extensions ts "Partial<${OLD}\b" "Partial<${NEW}"
+}
+
+# BEFORE running: Ensure git is clean
+git status || exit 1
+
+# Run systematic renames
+rename_interface "CommitOptions" "ICommitOptions"
+rename_interface "CommitResult" "ICommitResult"
+rename_interface "AgentQueryOptions" "IAgentQueryOptions"
+
+# AFTER running: Verify with tests
+bun test || { echo "Tests failed! Review changes"; exit 1; }
+
+echo "✓ All renames successful and tests passing"
+```
+
+**Verification Checklist for --accept-all:**
+```bash
+# Before
+- [ ] git status shows clean working tree
+- [ ] Patterns tested on 1-2 files manually
+- [ ] Word boundaries (\b) used for exact matching
+- [ ] File extensions specified
+- [ ] Script captures all usage patterns (declarations, types, generics, etc.)
+
+# After
+- [ ] Run test suite: bun test / npm test / cargo test
+- [ ] Review changes: git diff --stat
+- [ ] Check specific files: git diff src/critical-file.ts
+- [ ] Build succeeds: npm run build / cargo build
+- [ ] Ready to commit or rollback: git restore . if needed
+```
+
+**When to STILL use interactive mode:**
+- First time running a pattern (even if it looks simple)
+- Complex patterns with multiple capture groups
+- Patterns that might have edge cases
+- Refactoring unfamiliar codebase sections
+- When you want to learn what the pattern matches
+
 ## Error Recovery
 
 ### Pattern Matching Too Much
