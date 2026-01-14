@@ -76,19 +76,38 @@ find . -name "*.py" | xargs -P 4 -I {} sh -c 'echo "Processing {}"; grep -c "def
 
 ## Background Agent Pattern
 
+**Actual Task tool syntax:**
 ```
-# Spawn agents (pseudo-code)
-for file in filtered_files:
-    Task(
-        prompt="Analyze {file} for X",
-        run_in_background=True
-    )
+Task(
+  description="Analyze batch 1",
+  prompt="Analyze these files. Write to /tmp/rlm_0.json as JSON",
+  run_in_background=true
+)
+```
 
-# Wait and collect
-results = [agent.output for agent in agents]
+**Workflow:**
+1. Filter: `Grep pattern="X" output_mode="files_with_matches"`
+2. Spawn: 3-5 `Task(..., run_in_background=true)`
+3. Collect: `TaskOutput(task_id=<id>)`
+4. Merge: `jq -s '[.[].findings] | add' /tmp/rlm_*.json`
 
-# Synthesize
-final = reduce(results)
+## Merge & Filter with jq
+
+```bash
+# Merge all agent outputs
+jq -s '[.[].findings] | add' /tmp/rlm_*.json > /tmp/report.json
+
+# Filter by severity
+jq '[.[] | select(.severity == "high")]' /tmp/report.json
+
+# Filter by file
+jq '[.[] | select(.file | contains("auth"))]' /tmp/report.json
+
+# Count by severity
+jq 'group_by(.severity) | map({(.[0].severity): length}) | add' /tmp/report.json
+
+# Top 10 issues
+jq '.[0:10]' /tmp/report.json
 ```
 
 ## Recovery: Iterative Python
