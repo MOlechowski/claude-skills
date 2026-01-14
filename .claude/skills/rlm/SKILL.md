@@ -117,21 +117,68 @@ Best for: State tracking, structured analysis, chunk processing
 
 ## Background Agent Pattern
 
-```python
-# Spawn parallel agents
-agents = []
-for file in files_to_analyze:
-    agent = Task(
-        prompt=f"Analyze {file} for X. Output findings as JSON.",
-        run_in_background=True
-    )
-    agents.append(agent)
+Spawn multiple Task agents in parallel using `run_in_background: true`:
 
-# Collect results
-results = [agent.result for agent in agents]
+**Agent 1:**
+```
+Task(
+  description="Analyze auth files",
+  prompt="Analyze these files for security issues:
+- src/auth/login.py
+- src/auth/session.py
 
-# Reduce
-final_answer = synthesize(results)
+Write findings to /tmp/rlm_0.json as JSON:
+{\"findings\": [{\"file\": \"\", \"line\": 0, \"issue\": \"\"}]}",
+  run_in_background=true
+)
+```
+
+**Agent 2:**
+```
+Task(
+  description="Analyze API files",
+  prompt="Analyze these files for security issues:
+- src/api/users.py
+- src/api/payments.py
+
+Write findings to /tmp/rlm_1.json as JSON:
+{\"findings\": [{\"file\": \"\", \"line\": 0, \"issue\": \"\"}]}",
+  run_in_background=true
+)
+```
+
+**Collect results with TaskOutput:**
+```
+TaskOutput(task_id=<agent1_id>)
+TaskOutput(task_id=<agent2_id>)
+```
+
+**Merge with jq:**
+```bash
+jq -s '[.[].findings] | add' /tmp/rlm_*.json
+```
+
+## Handling Large Outputs
+
+Agent outputs can exceed token limits. Solution: agents write to files.
+
+**In agent prompt:**
+```
+"... Write your findings to /tmp/rlm_agent_0.json as JSON"
+```
+
+**Merge all agent outputs:**
+```bash
+jq -s '[.[].findings] | add' /tmp/rlm_*.json > /tmp/report.json
+```
+
+**Filter if report too large:**
+```bash
+# By severity
+jq '[.[] | select(.severity == "high")]' /tmp/report.json
+
+# By file
+jq '[.[] | select(.file | contains("auth"))]' /tmp/report.json
 ```
 
 ## Recovery Method
