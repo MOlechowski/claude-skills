@@ -1,0 +1,171 @@
+---
+name: rlm
+description: |
+  Recursive Language Model skill for processing massive codebases using parallel background agents.
+
+  Use this skill when:
+  - Analyzing large codebases (100+ files, millions of lines)
+  - Searching patterns across many files without loading all into context
+  - Processing repositories that exceed normal context limits
+  - Running parallel analysis with background agents
+
+  Examples:
+  - "analyze this large codebase"
+  - "scan all files for security issues"
+  - "find all usages of X across the entire repo"
+  - "process this massive repository"
+---
+
+# Recursive Language Model (RLM) Skill
+
+You are an expert at processing massive codebases using the RLM paradigm. This skill enables handling 100+ files and millions of lines of code efficiently.
+
+## Core Philosophy
+
+> **"Context is an external resource, not a local variable."**
+
+Instead of loading files directly into context, treat the filesystem as a queryable database. The Root Node (you) orchestrates sub-agents that analyze code in parallel.
+
+## Four-Stage Pipeline
+
+### 1. Index
+Scan file structure without loading content:
+
+```bash
+# Find all relevant files
+find . -type f -name "*.py" | head -100
+
+# Or use ls for structure overview
+ls -laR src/
+```
+
+### 2. Filter
+Narrow candidates using pattern matching:
+
+```bash
+# Find files containing pattern
+grep -rl "pattern" --include="*.ts" .
+
+# Count matches per file
+grep -rc "TODO" --include="*.py" . | grep -v ":0$"
+```
+
+### 3. Map (Parallel Processing)
+Spawn 3-5 background agents, each processing one file independently:
+
+```bash
+# Launch background agents for each file
+for file in file1.py file2.py file3.py; do
+    # Each agent analyzes one file and outputs findings
+done
+```
+
+Use the Task tool with `run_in_background: true` to parallelize.
+
+### 4. Reduce
+Synthesize findings from all sub-agents:
+- Aggregate results
+- Identify patterns across files
+- Build final answer from parallel outputs
+
+## Two Processing Modes
+
+### Native Mode
+Use standard tools for general traversal:
+
+```bash
+# Index
+find . -type f -name "*.go" | wc -l
+
+# Filter
+grep -rl "func.*Error" --include="*.go" .
+
+# Map with background agents
+# (use Task tool with background agents)
+```
+
+Best for: General codebase analysis, pattern searching
+
+### Strict Mode (Python Engine)
+Use the bundled Python engine for dense data:
+
+```bash
+# Scan and index files
+python3 ~/.claude/skills/rlm/rlm.py scan
+
+# Search with context
+python3 ~/.claude/skills/rlm/rlm.py peek "searchterm"
+
+# Get chunks for processing
+python3 ~/.claude/skills/rlm/rlm.py chunk --pattern "*.py"
+```
+
+Best for: State tracking, structured analysis, chunk processing
+
+## Key Constraints
+
+### Never Do
+- `cat *` or `cat *.py` - loads too much at once
+- Load more than 3-5 files into main context simultaneously
+- Try to process entire codebase in single pass
+
+### Always Do
+- Use `grep`/`ripgrep` to filter before loading
+- Prefer `background_task` for file analysis
+- Use Python scripting for state tracking across many files
+- Process in parallel when possible
+
+## Background Agent Pattern
+
+```python
+# Spawn parallel agents
+agents = []
+for file in files_to_analyze:
+    agent = Task(
+        prompt=f"Analyze {file} for X. Output findings as JSON.",
+        run_in_background=True
+    )
+    agents.append(agent)
+
+# Collect results
+results = [agent.result for agent in agents]
+
+# Reduce
+final_answer = synthesize(results)
+```
+
+## Recovery Method
+
+If background agents fail, fall back to iterative Python:
+
+```python
+import os
+import json
+
+results = []
+for root, dirs, files in os.walk('.'):
+    for f in files:
+        if f.endswith('.py'):
+            path = os.path.join(root, f)
+            with open(path) as file:
+                content = file.read()
+                # Process and collect findings
+                results.append(analyze(content))
+
+print(json.dumps(results))
+```
+
+## Integration Notes
+
+This skill works well with:
+- **grep/ripgrep** for filtering
+- **Task tool** for parallel background agents
+- **Python scripts** for state management
+
+## Quick Reference
+
+See `quick-reference.md` for command patterns and rlm.py usage.
+
+## Credits
+
+Based on the Recursive Language Modeling paradigm. Original skill by [BowTiedSwan](https://github.com/BowTiedSwan/rlm-skill).
