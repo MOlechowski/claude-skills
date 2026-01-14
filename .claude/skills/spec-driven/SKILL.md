@@ -113,18 +113,67 @@ git push origin main  # Spec repos typically allow direct push
 
 ## Parallel Work
 
-Use git-worktree skill for working on multiple tasks simultaneously:
+Combine git-worktree (isolated directories) with parallel-flow (agent orchestration):
 
-- **Max 3 concurrent PRs** to avoid CI overload
-- Each worktree handles one task/PR
-- See: git-worktree skill for setup
+### Setup Worktrees
 
 ```bash
-# Create worktrees for parallel tasks
+# Create worktrees for parallel tasks (max 3)
 git worktree add ../impl-task-1 -b feat/task-1
 git worktree add ../impl-task-2 -b feat/task-2
 git worktree add ../impl-task-3 -b feat/task-3
 ```
+
+### Launch Parallel Agents
+
+Use parallel-flow to launch agents, each working in its own worktree:
+
+```
+Task(
+  description="Implement task 1",
+  prompt="Working directory: ../impl-task-1
+
+  1. Implement [task description]
+  2. Run tests
+  3. Commit changes
+  4. Create PR using: gh pr create --title '...' --body '...'
+
+  Output PR URL to /tmp/parallel_tasks/agent_0.json",
+  subagent_type="general-purpose",
+  run_in_background=true
+)
+
+Task(
+  description="Implement task 2",
+  prompt="Working directory: ../impl-task-2
+  ...same pattern...",
+  subagent_type="general-purpose",
+  run_in_background=true
+)
+```
+
+### Aggregate Results
+
+After agents complete:
+1. Collect PR URLs from output files
+2. Update spec repo with PR links
+3. Clean up worktrees: `git worktree remove ../impl-task-1`
+
+### When to Use Parallel Flow
+
+| Scenario | Use parallel-flow? |
+|----------|-------------------|
+| < 5 specs | No - sequential is fine |
+| > 5 specs with backlogs | Yes - parallel discovery |
+| Independent tasks across specs | Yes - parallel implementation |
+| Tasks with cross-spec dependencies | No - sequential required |
+
+### Rules
+
+- **Max 3 concurrent worktrees/agents** to manage CI load
+- Each agent commits only to its worktree branch
+- Each agent creates its own PR
+- Aggregation updates spec repo with all PR links
 
 ## Handling Blocked Tasks
 
@@ -181,7 +230,8 @@ func TestFeature(t *testing.T) {
 ## Integration with Other Skills
 
 - **gh-pr**: Use for PR lifecycle management and merging
-- **git-worktree**: Use for parallel task implementation
+- **git-worktree**: Use for creating isolated working directories
+- **parallel-flow**: Use for orchestrating concurrent agent execution
 - **self-improvement**: Capture learnings after completing tasks
 
 ## Reflection After Tasks
