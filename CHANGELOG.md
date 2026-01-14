@@ -39,5 +39,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - Custom key bindings and preview windows
     - Git integration (branches, commits, files)
     - Docker/Kubernetes workflows and system administration
+- **parallel skill** - GNU parallel shell tool for executing jobs in parallel
+  - Input sources (arguments, files, stdin, cartesian products)
+  - Replacement strings ({}, {.}, {/}, {//}, {/.}, {#}, {%})
+  - Job control, progress tracking, and job logging
+  - Remote execution via SSH
+  - Error handling with halt conditions and retry logic
+- **parallel-flow skill** - Autonomous parallelization of tasks
+  - Analyzes tasks and identifies parallelizable units
+  - Partitions work across Claude agents or shell commands
+  - Decision matrix for agent vs shell parallelism
+  - Result aggregation and error handling patterns
 
 [Unreleased]: https://github.com/MOlechowski/claude-skills/commits/master
