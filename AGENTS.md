@@ -118,26 +118,29 @@ This repository serves as:
 
 ### Skill Description Best Practices
 
-Include:
-- **Purpose**: What does this skill do?
-- **When to use**: Specific scenarios that trigger it
-- **Examples**: Concrete use cases
-- **Capabilities**: Key features or operations
+**Keep descriptions short** - they appear in skill lists and should fit on one line.
 
-Example:
+Put detailed info in the markdown body:
+
 ```yaml
-description: |
-  This skill provides expertise in React performance optimization.
+---
+name: react-perf
+description: React performance optimization.
+---
 
-  Use this skill when:
-  - Analyzing React component render performance
-  - Implementing memoization strategies
-  - Optimizing bundle sizes
+# React Performance Skill
 
-  Examples:
-  - "My React app is slow, help optimize"
-  - "Implement memoization for this component"
+Use this skill when:
+- Analyzing React component render performance
+- Implementing memoization strategies
+- Optimizing bundle sizes
+
+Examples:
+- "My React app is slow, help optimize"
+- "Implement memoization for this component"
 ```
+
+**Don't** put "Use this skill when" or "Examples" in the frontmatter description.
 
 ## Installation and Usage
 
