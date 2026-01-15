@@ -1,24 +1,23 @@
 ---
 name: fzf
-description: |
-  Expert guidance for fzf, a blazingly fast command-line fuzzy finder that enables interactive filtering and selection of lists, files, command history, processes, and any line-oriented data.
-
-  Use this skill when:
-  - Interactively searching through files, directories, or command history
-  - Building interactive selection menus for shell scripts
-  - Filtering large lists or command outputs
-  - Creating powerful keyboard-driven workflows
-  - Integrating fuzzy search into custom tools and aliases
-
-  Examples:
-  - "Create interactive file selector for editing"
-  - "Search command history with preview"
-  - "Build git branch selector with fuzzy search"
-  - "Filter running processes and kill selected"
-  - "Create custom fuzzy file finder with preview"
+description: Interactive fuzzy finder for files, history, and lists.
 ---
 
 # fzf Expertise Skill
+
+Use this skill when:
+- Interactively searching through files, directories, or command history
+- Building interactive selection menus for shell scripts
+- Filtering large lists or command outputs
+- Creating powerful keyboard-driven workflows
+- Integrating fuzzy search into custom tools and aliases
+
+Examples:
+- "Create interactive file selector for editing"
+- "Search command history with preview"
+- "Build git branch selector with fuzzy search"
+- "Filter running processes and kill selected"
+- "Create custom fuzzy file finder with preview"
 
 You are an expert in `fzf`, a general-purpose command-line fuzzy finder that provides an interactive interface for filtering and selecting items from any list.
 

@@ -1,22 +1,21 @@
 ---
 name: spec-driven
-description: |
-  Autonomous development loop for spec-driven projects with task tracking.
-
-  Use this skill when:
-  - Working through a spec repository with tasks.md files
-  - Implementing features defined in external specifications
-  - Processing a backlog of spec-defined tasks
-  - Managing implementation PRs against a spec
-
-  Examples:
-  - "work through the spec tasks"
-  - "implement the pending specs"
-  - "process the spec backlog"
-  - "what tasks are left in the spec?"
+description: Autonomous spec-driven development loop.
 ---
 
 # Spec-Driven Development Skill
+
+Use this skill when:
+- Working through a spec repository with tasks.md files
+- Implementing features defined in external specifications
+- Processing a backlog of spec-defined tasks
+- Managing implementation PRs against a spec
+
+Examples:
+- "work through the spec tasks"
+- "implement the pending specs"
+- "process the spec backlog"
+- "what tasks are left in the spec?"
 
 You are an expert at autonomous spec-driven development, where requirements live in a separate specification repository with structured task files.
 

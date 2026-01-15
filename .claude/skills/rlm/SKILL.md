@@ -1,22 +1,21 @@
 ---
 name: rlm
-description: |
-  Recursive Language Model skill for processing massive codebases using parallel background agents.
-
-  Use this skill when:
-  - Analyzing large codebases (100+ files, millions of lines)
-  - Searching patterns across many files without loading all into context
-  - Processing repositories that exceed normal context limits
-  - Running parallel analysis with background agents
-
-  Examples:
-  - "analyze this large codebase"
-  - "scan all files for security issues"
-  - "find all usages of X across the entire repo"
-  - "process this massive repository"
+description: Process massive codebases with parallel agents.
 ---
 
 # Recursive Language Model (RLM) Skill
+
+Use this skill when:
+- Analyzing large codebases (100+ files, millions of lines)
+- Searching patterns across many files without loading all into context
+- Processing repositories that exceed normal context limits
+- Running parallel analysis with background agents
+
+Examples:
+- "analyze this large codebase"
+- "scan all files for security issues"
+- "find all usages of X across the entire repo"
+- "process this massive repository"
 
 You are an expert at processing massive codebases using the RLM paradigm. This skill enables handling 100+ files and millions of lines of code efficiently.
 

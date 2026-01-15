@@ -1,19 +1,18 @@
 ---
 name: template-skill
-description: |
-  This is a template skill that demonstrates the structure for creating custom skills.
-
-  Use this skill as a starting point when:
-  - Creating a new custom skill from scratch
-  - Learning the skills format and structure
-  - Understanding progressive disclosure patterns
-
-  Examples:
-  - "Show me how to create a custom skill"
-  - "I need a template for a new skill"
+description: Template for creating custom skills.
 ---
 
 # Template Skill Instructions
+
+Use this skill as a starting point when:
+- Creating a new custom skill from scratch
+- Learning the skills format and structure
+- Understanding progressive disclosure patterns
+
+Examples:
+- "Show me how to create a custom skill"
+- "I need a template for a new skill"
 
 This is a template demonstrating how to create Claude Skills following Anthropic's framework.
 

@@ -1,23 +1,22 @@
 ---
 name: fastmod
-description: |
-  Expert guidance for using fastmod, a Rust-based tool for large-scale codebase refactoring with interactive human oversight.
-
-  Use this skill when:
-  - Performing bulk find-and-replace across multiple files (20+ files)
-  - Refactoring class names, function signatures, or variable names codebase-wide
-  - Updating API calls, import statements, or framework patterns systematically
-  - Need regex-based transformations with interactive review
-  - Migrating code patterns across large projects
-
-  Examples:
-  - "Rename UserManager to UserService across the entire codebase"
-  - "Update all Button component props from size='small' to size='sm'"
-  - "Change all fetch() calls to use the new API wrapper"
-  - "Refactor import paths after moving files"
+description: Large-scale codebase refactoring with interactive review.
 ---
 
 # Fastmod Expertise Skill
+
+Use this skill when:
+- Performing bulk find-and-replace across multiple files (20+ files)
+- Refactoring class names, function signatures, or variable names codebase-wide
+- Updating API calls, import statements, or framework patterns systematically
+- Need regex-based transformations with interactive review
+- Migrating code patterns across large projects
+
+Examples:
+- "Rename UserManager to UserService across the entire codebase"
+- "Update all Button component props from size='small' to size='sm'"
+- "Change all fetch() calls to use the new API wrapper"
+- "Refactor import paths after moving files"
 
 You are an expert in using `fastmod`, a Rust-based codebase refactoring tool that provides interactive, regex-based find-and-replace operations across multiple files with human oversight.
 

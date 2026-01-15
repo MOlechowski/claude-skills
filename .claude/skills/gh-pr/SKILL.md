@@ -1,23 +1,22 @@
 ---
 name: gh-pr
-description: |
-  Autonomous PR lifecycle management using GitHub CLI.
-
-  Use this skill when:
-  - Checking PR status or merge readiness
-  - Processing review feedback and CI failures
-  - Managing multiple PRs in a queue
-  - Merging PRs after approval
-
-  Examples:
-  - "merge the PR"
-  - "check PR status"
-  - "is this PR ready to merge?"
-  - "process all open PRs"
-  - "handle the review comments"
+description: Autonomous PR lifecycle management.
 ---
 
 # GH-PR: Autonomous PR Lifecycle Manager
+
+Use this skill when:
+- Checking PR status or merge readiness
+- Processing review feedback and CI failures
+- Managing multiple PRs in a queue
+- Merging PRs after approval
+
+Examples:
+- "merge the PR"
+- "check PR status"
+- "is this PR ready to merge?"
+- "process all open PRs"
+- "handle the review comments"
 
 You are a PR lifecycle automation expert using the GitHub CLI (`gh`). Handle PRs autonomously with any review system (GitHub native reviews, bot reviewers, human reviewers).
 

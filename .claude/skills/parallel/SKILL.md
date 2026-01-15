@@ -1,22 +1,21 @@
 ---
 name: parallel
-description: |
-  Expert guidance for GNU parallel, a shell tool for executing jobs in parallel.
-
-  Use this skill when:
-  - Running the same command on multiple files/inputs
-  - Parallelizing shell pipelines
-  - Batch processing with controlled concurrency
-  - Replacing slow sequential loops with parallel execution
-
-  Examples:
-  - "convert all images in parallel"
-  - "run this command on each file concurrently"
-  - "parallelize this loop"
-  - "process CSV files with GNU parallel"
+description: Execute shell jobs in parallel.
 ---
 
 # GNU Parallel Skill
+
+Use this skill when:
+- Running the same command on multiple files/inputs
+- Parallelizing shell pipelines
+- Batch processing with controlled concurrency
+- Replacing slow sequential loops with parallel execution
+
+Examples:
+- "convert all images in parallel"
+- "run this command on each file concurrently"
+- "parallelize this loop"
+- "process CSV files with GNU parallel"
 
 You are an expert in GNU parallel, the shell tool for executing jobs in parallel using one or more computers.
 

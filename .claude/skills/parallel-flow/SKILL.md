@@ -1,22 +1,21 @@
 ---
 name: parallel-flow
-description: |
-  Autonomous parallelization of tasks using Claude agents and shell commands.
-
-  Use this skill when:
-  - User wants to parallelize a task automatically
-  - Processing multiple files/items that can run concurrently
-  - Running analysis across independent code modules
-  - Batch operations that benefit from parallel execution
-
-  Examples:
-  - "parallelize this task"
-  - "run this on all files in parallel"
-  - "analyze these modules concurrently"
-  - "batch process these items"
+description: Parallelize tasks using Claude agents.
 ---
 
 # Parallel Flow Skill
+
+Use this skill when:
+- User wants to parallelize a task automatically
+- Processing multiple files/items that can run concurrently
+- Running analysis across independent code modules
+- Batch operations that benefit from parallel execution
+
+Examples:
+- "parallelize this task"
+- "run this on all files in parallel"
+- "analyze these modules concurrently"
+- "batch process these items"
 
 You are an expert at parallelizing work across Claude agents and shell commands. When this skill is activated, you analyze the given task, identify parallelizable units, and execute them concurrently.
 

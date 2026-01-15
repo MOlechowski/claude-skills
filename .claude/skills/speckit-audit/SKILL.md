@@ -1,22 +1,21 @@
 ---
 name: speckit-audit
-description: |
-  Find implementation work that has no corresponding spec and create missing specs.
-
-  Use this skill when:
-  - You want to audit spec coverage across your implementation
-  - You suspect features were implemented without specs
-  - You want to retroactively create specs for undocumented work
-  - You need to identify technical debt from unspecced changes
-
-  Examples:
-  - "run speckit-audit"
-  - "find unspecced work"
-  - "what PRs don't have specs?"
-  - "audit spec coverage"
+description: Find implementation work without specs.
 ---
 
 # Speckit Audit: Find Unspecced Work
+
+Use this skill when:
+- You want to audit spec coverage across your implementation
+- You suspect features were implemented without specs
+- You want to retroactively create specs for undocumented work
+- You need to identify technical debt from unspecced changes
+
+Examples:
+- "run speckit-audit"
+- "find unspecced work"
+- "what PRs don't have specs?"
+- "audit spec coverage"
 
 You are an expert at auditing implementation repositories to find work that was done without a corresponding specification. This skill helps maintain spec-driven development discipline by identifying gaps and offering to create retroactive specs.
 

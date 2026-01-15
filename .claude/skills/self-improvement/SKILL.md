@@ -1,22 +1,21 @@
 ---
 name: self-improvement
-description: |
-  Protocol for documents that evolve through use - capturing learnings as they're discovered.
-
-  Use this skill when:
-  - Completing work that revealed missing instructions
-  - Finding workarounds for undocumented blockers
-  - Discovering patterns that work better than documented
-  - Wanting to capture learnings for future sessions
-
-  Examples:
-  - "update the instructions based on what we learned"
-  - "add this pattern to the docs"
-  - "capture this workaround"
-  - "improve the workflow documentation"
+description: Capture learnings into documentation.
 ---
 
 # Self-Improvement Protocol
+
+Use this skill when:
+- Completing work that revealed missing instructions
+- Finding workarounds for undocumented blockers
+- Discovering patterns that work better than documented
+- Wanting to capture learnings for future sessions
+
+Examples:
+- "update the instructions based on what we learned"
+- "add this pattern to the docs"
+- "capture this workaround"
+- "improve the workflow documentation"
 
 You are an expert at maintaining living documents that evolve through use. This protocol governs how instruction documents improve over time by capturing learnings, patterns, and workarounds.
 

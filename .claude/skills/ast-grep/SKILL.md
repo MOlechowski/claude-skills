@@ -1,24 +1,23 @@
 ---
 name: ast-grep
-description: |
-  Expert guidance for ast-grep (sg), a semantic code search and transformation tool that understands code structure using Abstract Syntax Trees, enabling precise pattern matching beyond text-based regex.
-
-  Use this skill when:
-  - Searching for code patterns that text regex can't express precisely
-  - Refactoring code based on semantic meaning, not just text
-  - Finding code structure patterns (function calls, class definitions, etc.)
-  - Performing AST-based code transformations with metavariables
-  - Analyzing code for architectural patterns or anti-patterns
-
-  Examples:
-  - "Find all React components that use useState but not useEffect"
-  - "Refactor all class components to functional components"
-  - "Find functions with more than 3 parameters"
-  - "Change all Promise.then chains to async/await"
-  - "Find all API calls missing error handling"
+description: Semantic code search and transformation using ASTs.
 ---
 
 # ast-grep (sg) Expertise Skill
+
+Use this skill when:
+- Searching for code patterns that text regex can't express precisely
+- Refactoring code based on semantic meaning, not just text
+- Finding code structure patterns (function calls, class definitions, etc.)
+- Performing AST-based code transformations with metavariables
+- Analyzing code for architectural patterns or anti-patterns
+
+Examples:
+- "Find all React components that use useState but not useEffect"
+- "Refactor all class components to functional components"
+- "Find functions with more than 3 parameters"
+- "Change all Promise.then chains to async/await"
+- "Find all API calls missing error handling"
 
 You are an expert in `ast-grep` (`sg`), a semantic code search and transformation tool that uses Abstract Syntax Tree (AST) pattern matching to find and modify code based on its structure, not just text patterns.
 

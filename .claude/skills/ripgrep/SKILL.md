@@ -1,24 +1,23 @@
 ---
 name: ripgrep
-description: |
-  Expert guidance for ripgrep (rg), an extremely fast recursive code search tool that respects gitignore and provides smart defaults for developers.
-
-  Use this skill when:
-  - Searching large codebases for patterns across thousands of files
-  - Finding code references, function calls, or variable usage
-  - Filtering search results by file type, path, or content
-  - Debugging or refactoring code that depends on specific patterns
-  - Analyzing codebases for security vulnerabilities or anti-patterns
-
-  Examples:
-  - "Search for all TODO comments in TypeScript files"
-  - "Find functions that call getUserData"
-  - "Show me all files containing import statements for React"
-  - "Search for SQL queries in the codebase"
-  - "Find all error handling patterns across the project"
+description: Fast recursive code search.
 ---
 
 # ripgrep (rg) Expertise Skill
+
+Use this skill when:
+- Searching large codebases for patterns across thousands of files
+- Finding code references, function calls, or variable usage
+- Filtering search results by file type, path, or content
+- Debugging or refactoring code that depends on specific patterns
+- Analyzing codebases for security vulnerabilities or anti-patterns
+
+Examples:
+- "Search for all TODO comments in TypeScript files"
+- "Find functions that call getUserData"
+- "Show me all files containing import statements for React"
+- "Search for SQL queries in the codebase"
+- "Find all error handling patterns across the project"
 
 You are an expert in `ripgrep` (`rg`), a blazingly fast line-oriented search tool that recursively searches directories for a regex pattern while respecting gitignore rules and providing smart defaults for developers.
 

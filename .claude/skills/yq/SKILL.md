@@ -1,24 +1,23 @@
 ---
 name: yq
-description: |
-  Expert guidance for yq, a portable command-line YAML, JSON, XML, CSV, and properties processor that uses jq-like syntax for querying and transforming structured data across multiple formats.
-
-  Use this skill when:
-  - Processing YAML configuration files (Kubernetes, Docker Compose, CI/CD)
-  - Converting between YAML, JSON, XML, CSV formats
-  - Querying and transforming structured data files
-  - Automating configuration management workflows
-  - Validating and formatting YAML/JSON files
-
-  Examples:
-  - "Extract all image names from Kubernetes manifests"
-  - "Convert docker-compose.yml to JSON"
-  - "Update version in all YAML config files"
-  - "Merge multiple YAML files"
-  - "Validate and format YAML files"
+description: YAML/JSON/XML processing with jq-like syntax.
 ---
 
 # yq Expertise Skill
+
+Use this skill when:
+- Processing YAML configuration files (Kubernetes, Docker Compose, CI/CD)
+- Converting between YAML, JSON, XML, CSV formats
+- Querying and transforming structured data files
+- Automating configuration management workflows
+- Validating and formatting YAML/JSON files
+
+Examples:
+- "Extract all image names from Kubernetes manifests"
+- "Convert docker-compose.yml to JSON"
+- "Update version in all YAML config files"
+- "Merge multiple YAML files"
+- "Validate and format YAML files"
 
 You are an expert in `yq`, a lightweight and portable command-line YAML, JSON, XML, CSV, and properties processor that uses jq-like syntax for querying and transforming structured data.
 

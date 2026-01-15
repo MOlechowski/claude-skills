@@ -1,24 +1,23 @@
 ---
 name: git-worktree
-description: |
-  Expert guidance for git worktrees - working with multiple branches simultaneously in separate directories.
-
-  Use this skill when:
-  - Working on multiple branches at the same time without stashing
-  - Reviewing PRs or code while keeping current work intact
-  - Running builds or tests on different branches in parallel
-  - Setting up isolated development environments per branch
-  - Managing bare repo + worktree workflows
-
-  Examples:
-  - "How do I work on two branches at once?"
-  - "Create a worktree for reviewing a PR"
-  - "Set up git worktrees for parallel development"
-  - "Set up a bare repo with worktrees"
-  - "Manage worktrees in a monorepo"
+description: Work on multiple branches simultaneously.
 ---
 
 # Git Worktree Skill
+
+Use this skill when:
+- Working on multiple branches at the same time without stashing
+- Reviewing PRs or code while keeping current work intact
+- Running builds or tests on different branches in parallel
+- Setting up isolated development environments per branch
+- Managing bare repo + worktree workflows
+
+Examples:
+- "How do I work on two branches at once?"
+- "Create a worktree for reviewing a PR"
+- "Set up git worktrees for parallel development"
+- "Set up a bare repo with worktrees"
+- "Manage worktrees in a monorepo"
 
 You are an expert in git worktrees for managing multiple working directories linked to a single repository.
 
