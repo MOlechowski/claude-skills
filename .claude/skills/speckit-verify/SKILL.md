@@ -19,108 +19,135 @@ Examples:
 
 You are an expert at verifying that specifications accurately reflect implementation. Implementation is the source of truth - when drift is found, the spec is updated.
 
+## Three-Tier Verification
+
+| Tier | Type | Method | Speed |
+|------|------|--------|-------|
+| 1 | Static | grep/ripgrep | Fast |
+| 2 | Pattern | ast-grep/semantic | Medium |
+| 3 | Analysis | LLM agents | Slow |
+
 ## Workflow
 
 ### 1. LOCATE Resources
 
-Find spec and implementation:
-
 ```bash
-# Find spec
 SPEC_DIR="specs/$SPEC_ID"
 ls $SPEC_DIR/spec.md
-
-# Find implementation
 ls submodules/*/.git 2>/dev/null || ls src/
 ```
 
-### 2. PARSE Spec Claims
+### 2. PARSE Spec Claims by Tier
 
-Extract verifiable claims from spec:
+Extract claims and categorize:
 
-**Claim types:**
-| Type | Example in spec | How to verify |
-|------|-----------------|---------------|
-| Config value | "Timeout is 10s" | grep for timeout constant |
-| Default | "Default port is 8080" | find default assignment |
-| Limit | "Max 100 retries" | find limit constant |
-| API signature | "Takes (url, options)" | check function params |
-| State | "States: idle, running, done" | find state enum/type |
-| Env var | "Uses `API_KEY`" | grep for env var usage |
+**Tier 1 claims** (static values):
+- Config values: "Timeout is 10s"
+- Env vars: "Uses `API_KEY`"
+- Constants: "Max 100 retries"
+- Defaults: "Default port is 8080"
+- Error codes: "Returns error code 404"
 
-**Extraction patterns:**
-```bash
-# Find numbers with units in spec
-grep -E "[0-9]+\s*(s|ms|m|h|KB|MB|GB)" spec.md
+**Tier 2 claims** (patterns):
+- Feature presence: "Supports retry with backoff"
+- Test coverage: "Timeout handling tested"
+- Log messages: "Logs 'Connection established'"
+- CLI flags: "Accepts --verbose flag"
+- DB schema: "Table has column `created_at`"
 
-# Find defaults
-grep -i "default" spec.md
+**Tier 3 claims** (behavior):
+- Behavioral: "Retries on network failure"
+- Error handling: "Gracefully handles timeout"
+- Edge cases: "Handles empty input"
+- Security: "Validates user input"
 
-# Find env vars
-grep -E '\$[A-Z_]+|`[A-Z_]+`' spec.md
-```
-
-### 3. ANALYZE Implementation
-
-For each claim, find actual value in code:
+### 3. TIER 1 - Static Checks (grep)
 
 ```bash
-# Find timeout values
-grep -r "timeout" --include="*.go" --include="*.ts" src/
+# Config values
+grep -rn "timeout.*=\|Timeout.*:" src/
 
-# Find defaults
-grep -r "default\|DEFAULT" --include="*.go" src/
+# Env vars
+grep -rn "os.Getenv\|process.env\|os.environ" src/
 
-# Find env vars
-grep -r "os.Getenv\|process.env" src/
+# Constants/limits
+grep -rn "const\|MAX\|LIMIT\|DEFAULT" src/
+
+# Error codes
+grep -rn "error\|Error\|ERROR" src/
 ```
 
-### 4. COMPARE
-
-Build drift report:
-
-| Claim | Spec Value | Impl Value | Status |
-|-------|------------|------------|--------|
+Build results table:
+| Claim | Spec | Impl | Status |
+|-------|------|------|--------|
 | Timeout | 10s | 30s | DRIFT |
 | MaxRetries | 5 | 5 | OK |
-| DefaultPort | 8080 | 9000 | DRIFT |
 
-### 5. PREVIEW Changes
+### 4. TIER 2 - Pattern Checks (ast-grep/semantic)
 
-Show user what will be updated:
-
-```markdown
-## Spec Drift Report
-
-Found 3 drifts in specs/010-feature/spec.md:
-
-| Claim | Spec says | Impl has | Action |
-|-------|-----------|----------|--------|
-| Timeout | 10s | 30s | Update spec |
-| DefaultPort | 8080 | 9000 | Update spec |
-| MaxRetries | 3 | 5 | Update spec |
-
-Proceed with updates? [Y/n]
+**Feature presence:**
+```bash
+# Check if retry logic exists
+sg -p 'retry($$$)' --lang go src/
+sg -p 'backoff($$$)' --lang go src/
 ```
 
-### 6. UPDATE Spec
-
-Apply corrections and add changelog:
-
-```markdown
-## Changelog
-
-### Spec Verification (YYYY-MM-DD)
-
-Synced spec to implementation:
-
-| Claim | Old | New | Source |
-|-------|-----|-----|--------|
-| Timeout | 10s | 30s | src/config.go:42 |
-| DefaultPort | 8080 | 9000 | src/server.go:15 |
+**Test coverage:**
+```bash
+# Map spec items to test files
+ls *_test.go | xargs grep -l "Timeout"
+ls *_test.go | xargs grep -l "Retry"
 ```
 
-## Output Format
+**Log messages:**
+```bash
+# Compare spec logs vs impl
+grep -r "log\.\|logger\." src/ | grep -i "connection"
+```
+
+**CLI flags:**
+```bash
+# Find flag definitions
+grep -rn "flag\.\|--\|addFlag" src/
+```
+
+Build results:
+| Feature | Spec'd | Impl'd | Tested | Status |
+|---------|--------|--------|--------|--------|
+| Retry | Yes | Yes | Yes | OK |
+| Rate limit | Yes | No | No | MISSING |
+
+### 5. TIER 3 - Analysis Checks (LLM agents)
+
+Spawn analysis agents for behavioral verification:
+
+**Agent per check:**
+```
+Task(
+  description="Verify retry behavior",
+  prompt="Read src/client.go. Does the code retry on network failure as spec says?
+
+  Spec claim: 'Retries up to 3 times on network failure'
+
+  Answer: VERIFIED / NOT_VERIFIED / PARTIAL
+  Evidence: [cite specific code]",
+  run_in_background=true
+)
+```
+
+**Checks to run:**
+- Behavioral correctness
+- Error handling completeness
+- Edge case coverage
+- Security validation
+
+**Collect results:**
+```bash
+# Merge agent outputs
+jq -s '.' /tmp/verify_*.json
+```
+
+### 6. REPORT - Aggregate Findings
 
 ```
 ============================================
@@ -130,65 +157,93 @@ SPECKIT-VERIFY COMPLETE
 Spec: specs/010-feature/spec.md
 Impl: src/
 
-Claims checked: 15
-  OK:     12
-  Drift:   3
+Tier 1 (Static):     12/12 OK
+Tier 2 (Pattern):     8/10 OK, 2 issues
+Tier 3 (Analysis):    5/6 OK, 1 issue
 
-Updates applied:
-  - Timeout: 10s → 30s (src/config.go:42)
-  - DefaultPort: 8080 → 9000 (src/server.go:15)
-  - MaxRetries: 3 → 5 (src/retry.go:8)
+Issues found:
+  [T1] Timeout: 10s → 30s (DRIFT)
+  [T2] Feature "rate limiting" → MISSING
+  [T2] Test coverage "retry" → UNTESTED
+  [T3] Edge case "empty input" → NOT HANDLED
+```
 
-Changelog entry added.
-============================================
+### 7. PREVIEW Changes
+
+```markdown
+## Spec Updates Required
+
+### Drift corrections (Tier 1)
+| Claim | Old | New | Source |
+|-------|-----|-----|--------|
+| Timeout | 10s | 30s | src/config.go:42 |
+
+### Missing features (Tier 2)
+- Rate limiting: Not implemented (spec overpromises)
+  Action: Remove from spec OR flag as TODO
+
+### Behavioral gaps (Tier 3)
+- Empty input handling: Code throws, spec says graceful
+  Action: Update spec to match actual behavior
+
+Proceed with updates? [Y/n]
+```
+
+### 8. UPDATE Spec
+
+Apply corrections and add changelog:
+
+```markdown
+## Changelog
+
+### Spec Verification (YYYY-MM-DD)
+
+3-tier verification against implementation:
+
+| Tier | Issue | Resolution |
+|------|-------|------------|
+| T1 | Timeout drift | Updated 10s → 30s |
+| T2 | Rate limiting missing | Removed from spec |
+| T3 | Empty input behavior | Updated error handling section |
 ```
 
 ## Rules
 
-1. **Implementation is truth** - Always update spec to match impl, never reverse
-2. **Cite sources** - Reference file:line for each correction
-3. **Preview first** - Show drift before updating
-4. **Preserve intent** - Update values, don't rewrite prose
-5. **Add changelog** - Document all changes with date
+1. **Implementation is truth** - Update spec to match impl
+2. **Tier order** - Run T1 → T2 → T3 (fast to slow)
+3. **Cite sources** - Reference file:line for each finding
+4. **Preview first** - Show all tiers before updating
+5. **Categorize issues** - DRIFT vs MISSING vs NOT_HANDLED
 
-## Drift Detection Patterns
+## Quick Reference
 
-### Config Values
+### Tier 1 patterns
 ```bash
-# Timeouts
-grep -rn "timeout.*=\|Timeout.*:" src/
+# Numbers with units
+grep -E "[0-9]+\s*(s|ms|m|h|KB|MB)" spec.md
 
-# Limits
-grep -rn "max\|limit\|MAX\|LIMIT" src/
-
-# Defaults
-grep -rn "default\|Default\|DEFAULT" src/
+# Environment variables
+grep -E '\$[A-Z_]+|`[A-Z_]+`' spec.md
 ```
 
-### API Signatures
+### Tier 2 patterns
 ```bash
-# Function definitions
-grep -rn "^func \|function \|def " src/
+# Feature keywords
+grep -i "support\|implement\|provide" spec.md
 
-# Exported types
-grep -rn "^type \|^interface \|^class " src/
+# Test mapping
+grep -l "TestTimeout\|test_timeout" *_test.*
 ```
 
-### Environment Variables
-```bash
-# Go
-grep -rn "os.Getenv" src/
-
-# Node
-grep -rn "process.env" src/
-
-# Python
-grep -rn "os.environ" src/
+### Tier 3 prompts
+```
+"Does [file] handle [edge case] as spec claims?"
+"Is [security requirement] enforced in [file]?"
+"Does [function] behave as spec describes?"
 ```
 
 ## Integration
 
-Works with other speckit skills:
-- **speckit-audit**: Find unspecced work → speckit-verify syncs it
-- **speckit-retro**: Captures learnings → speckit-verify syncs values
-- **speckit-flow**: Implements spec → speckit-verify validates after
+- **speckit-audit**: Find unspecced work → verify syncs it
+- **speckit-retro**: Captures learnings → verify validates
+- **speckit-flow**: Implements spec → verify checks after
