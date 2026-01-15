@@ -28,19 +28,31 @@ After implementation, bugs are fixed, edge cases are discovered, and assumptions
 
 ### 1. LOCATE Resources
 
-Find the spec and implementation repository:
+Find the spec directory, all markdown files, and implementation repository:
 
 ```bash
-# Check current directory for spec.md
-ls specs/*/spec.md 2>/dev/null || ls spec.md 2>/dev/null
+# Find spec directory
+SPEC_DIR="specs/$SPEC_ID"
+ls $SPEC_DIR/spec.md 2>/dev/null || ls spec.md 2>/dev/null
+
+# Discover ALL markdown files in spec directory
+ls $SPEC_DIR/*.md
 
 # Auto-detect implementation repo in submodules
 ls submodules/*/go.mod 2>/dev/null || ls submodules/*/.git 2>/dev/null
+
+# List all specs for cross-spec analysis
+ls specs/*/spec.md
 ```
 
 **Required inputs:**
 - Spec directory (current dir or specified)
 - Implementation repo path (auto-detect from `submodules/` or specified)
+
+**Discovered files:**
+- Primary: `spec.md` (main specification)
+- Supporting: `quick-reference.md`, `decision-tree.md`, etc.
+- Related specs: Other `specs/*/spec.md` for cross-spec propagation
 
 If not found, ask the user to specify paths.
 
@@ -86,18 +98,27 @@ Use semantic analysis to identify learnings in commit messages and PR discussion
 - Test additions without new discoveries
 - Documentation updates
 
-### 4. CATEGORIZE by Spec Section
+### 4. CATEGORIZE by File and Section
 
-Map each learning to the appropriate spec section:
+Map each learning to the appropriate file and section:
 
-| Learning Type | Target Section | Format |
-|---------------|----------------|--------|
-| Edge case discovered | Edge Cases | Q&A format |
-| Timing/timeout issue | Testability Requirements, Assumptions | Table row or bullet |
-| Race condition | State Machine, Edge Cases | Failure mode row |
-| Environment requirement | Testability Requirements | Env var table row |
-| API behavior | Assumptions | Bullet point |
-| Cleanup/lifecycle | State Machine | Failure mode + recovery |
+| Learning Type | Target File | Target Section | Format |
+|---------------|-------------|----------------|--------|
+| Edge case discovered | spec.md | Edge Cases | Q&A format |
+| Timing/timeout issue | spec.md | Testability Requirements | Table row |
+| Race condition | spec.md | State Machine | Failure mode row |
+| Environment requirement | spec.md | Testability Requirements | Env var table row |
+| API behavior | spec.md | Assumptions | Bullet point |
+| Cleanup/lifecycle | spec.md | State Machine | Failure mode + recovery |
+| Command pattern | quick-reference.md | Commands | Code block |
+| Decision rationale | decision-tree.md | Decisions | Decision entry |
+| Troubleshooting tip | quick-reference.md | Troubleshooting | Bullet point |
+
+**File selection rules:**
+- Core behavior/contract → `spec.md`
+- Quick lookup/cheatsheet → `quick-reference.md`
+- Why decisions were made → `decision-tree.md`
+- How to debug/fix → `quick-reference.md`
 
 ### 5. GENERATE Updates
 
@@ -129,31 +150,36 @@ For each learning, generate the spec update:
 
 ### 6. PREVIEW Changes
 
-Before editing, show the user what will be changed:
+Before editing, show the user what will be changed, grouped by file:
 
 ```markdown
-## Proposed Spec Updates
+## Proposed Updates
 
-### Edge Cases (3 additions)
+### spec.md (4 changes)
+
+**Edge Cases (+2)**
 1. + What happens when container stops before cleanup? ...
 2. + What happens when rate limit is exceeded during burst? ...
-3. + What happens when GitHub API returns 502? ...
 
-### State Machine (1 addition)
+**State Machine (+1)**
 | Transition | Can Fail? | Recovery |
 |------------|-----------|----------|
 | + token_refresh | Yes | Retry with backoff (PR #415) |
 
-### Assumptions (2 updates)
+**Assumptions (+1)**
 - + TokenRequestTimeout needs 30s, not 10s (commit c2f62d2)
-- + Podman tests cannot run in parallel (PR #417)
+
+### quick-reference.md (1 change)
+
+**Troubleshooting (+1)**
+- + If token refresh fails, check network timeout settings (PR #415)
 
 Proceed with updates? [Y/n]
 ```
 
-### 7. UPDATE Spec
+### 7. UPDATE Files
 
-Apply the changes to spec.md and add changelog entry:
+Apply changes to all affected files and add changelog entry to `spec.md`:
 
 ```markdown
 ## Changelog
@@ -162,12 +188,51 @@ Apply the changes to spec.md and add changelog entry:
 
 Analysis of implementation commits and PRs revealed:
 
-| Source | Learning | Section Updated |
-|--------|----------|-----------------|
-| PR #42 | Podman tests race when parallel | Edge Cases |
-| commit abc123 | Token timeout needs 30s | Assumptions |
-| PR #415 | Container cleanup can fail | State Machine |
+| Source | Learning | File | Section |
+|--------|----------|------|---------|
+| PR #42 | Podman tests race when parallel | spec.md | Edge Cases |
+| commit abc123 | Token timeout needs 30s | spec.md | Assumptions |
+| PR #415 | Token refresh troubleshooting | quick-reference.md | Troubleshooting |
 ```
+
+### 8. CROSS-SPEC Propagation
+
+After updating the primary spec, check if learnings apply to other specs:
+
+**Signals for cross-spec relevance:**
+- Shared infrastructure (e.g., "GitHub API rate limit" affects all specs using GH API)
+- Common patterns (e.g., "timeout handling" applies to all async operations)
+- Platform constraints (e.g., "Podman limitation" affects all container specs)
+
+**Process:**
+```bash
+# List all specs
+ls specs/*/spec.md
+
+# For each learning, grep for shared components in other specs
+grep -l "GitHub API" specs/*/spec.md
+grep -l "container" specs/*/spec.md
+```
+
+**Cross-spec preview (separate confirmation):**
+```markdown
+## Cross-Spec Propagation
+
+The following learnings may apply to other specs:
+
+### Learning: "GitHub API needs 30s timeout"
+Applies to:
+- specs/005-runner-base/spec.md (uses GitHub API)
+- specs/015-webhook-handler/spec.md (uses GitHub API)
+
+Propagate to these specs? [Y/n]
+```
+
+**Rules for cross-spec updates:**
+1. Always show as separate preview from primary updates
+2. Require explicit user confirmation
+3. Add cross-reference in changelog: "Propagated from spec 010"
+4. Only propagate to specs that share the affected component
 
 ## Output Format
 
@@ -178,7 +243,7 @@ After completion, report:
 SPECKIT-RETRO COMPLETE
 ============================================
 
-Spec: specs/010-ephemeral-pool/spec.md
+Spec: specs/010-ephemeral-pool/
 Impl: submodules/gh-runner
 
 Analyzed:
@@ -186,12 +251,20 @@ Analyzed:
   - 8 merged PRs
 
 Learnings found: 6
-  - Edge Cases: 3 additions
-  - State Machine: 1 addition
-  - Assumptions: 2 updates
-  - Testability: 0 additions
 
-Changelog entry added.
+Primary spec updates:
+  spec.md:
+    - Edge Cases: +3
+    - State Machine: +1
+    - Assumptions: +1
+  quick-reference.md:
+    - Troubleshooting: +1
+
+Cross-spec propagation:
+  specs/005-runner-base/spec.md:
+    - Assumptions: +1 (shared: GH API timeout)
+
+Changelog entries added.
 ============================================
 ```
 

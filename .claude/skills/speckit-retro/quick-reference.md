@@ -132,3 +132,64 @@ Is it about environment/config?
 Is it correcting an original assumption?
   → Assumptions section
 ```
+
+## File Selection Guide
+
+```
+Which file should receive the learning?
+
+Is it core behavior or contract?
+  → spec.md
+
+Is it a quick command or snippet?
+  → quick-reference.md
+
+Is it explaining WHY a decision was made?
+  → decision-tree.md
+
+Is it how to debug or troubleshoot?
+  → quick-reference.md
+```
+
+| Learning Type | Target File | Target Section |
+|---------------|-------------|----------------|
+| Edge case | spec.md | Edge Cases |
+| Timing issue | spec.md | Testability Requirements |
+| Race condition | spec.md | State Machine |
+| Command pattern | quick-reference.md | Commands |
+| Troubleshooting | quick-reference.md | Troubleshooting |
+| Decision rationale | decision-tree.md | Decisions |
+
+## Cross-Spec Propagation Signals
+
+When a learning might apply to multiple specs:
+
+```
+Shared infrastructure signals:
+  "GitHub API"     → All specs using GH API
+  "rate limit"     → All specs making external calls
+  "authentication" → All specs using auth tokens
+
+Platform constraint signals:
+  "Podman"         → All container specs
+  "Docker"         → All container specs
+  "systemd"        → All service specs
+
+Common pattern signals:
+  "timeout"        → All async operation specs
+  "retry"          → All network operation specs
+  "cleanup"        → All resource lifecycle specs
+```
+
+### Cross-Spec Commands
+
+```bash
+# Find specs sharing a component
+grep -l "GitHub API" specs/*/spec.md
+
+# Find all container-related specs
+grep -l "container\|podman\|docker" specs/*/spec.md
+
+# Find specs with similar patterns
+grep -l "timeout" specs/*/spec.md
+```
