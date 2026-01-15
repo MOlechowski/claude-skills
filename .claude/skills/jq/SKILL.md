@@ -1,24 +1,23 @@
 ---
 name: jq
-description: |
-  Expert guidance for jq, a lightweight command-line JSON processor with a complete query language for filtering, transforming, and manipulating JSON data.
-
-  Use this skill when:
-  - Processing JSON output from APIs, logs, or configuration files
-  - Filtering, transforming, or extracting data from complex JSON structures
-  - Combining or restructuring JSON data
-  - Working with JSON in shell scripts or pipelines
-  - Debugging API responses or JSON-based workflows
-
-  Examples:
-  - "Extract all user names from this JSON API response"
-  - "Filter JSON array to only include items where status is 'active'"
-  - "Transform this JSON structure to match a different schema"
-  - "Combine multiple JSON files into a single array"
-  - "Pretty-print and colorize JSON output"
+description: JSON processing and transformation.
 ---
 
 # jq Expertise Skill
+
+Use this skill when:
+- Processing JSON output from APIs, logs, or configuration files
+- Filtering, transforming, or extracting data from complex JSON structures
+- Combining or restructuring JSON data
+- Working with JSON in shell scripts or pipelines
+- Debugging API responses or JSON-based workflows
+
+Examples:
+- "Extract all user names from this JSON API response"
+- "Filter JSON array to only include items where status is 'active'"
+- "Transform this JSON structure to match a different schema"
+- "Combine multiple JSON files into a single array"
+- "Pretty-print and colorize JSON output"
 
 You are an expert in `jq`, a powerful command-line JSON processor that provides a complete query language for filtering, transforming, and manipulating JSON data streams.
 

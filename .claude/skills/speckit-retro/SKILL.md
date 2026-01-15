@@ -1,22 +1,21 @@
 ---
 name: speckit-retro
-description: |
-  Retroactively update specs with learnings from implementation bug fixes and discoveries.
-
-  Use this skill when:
-  - Implementation is complete and you want to capture learnings
-  - You've fixed bugs that weren't anticipated in the spec
-  - You discovered edge cases, timing issues, or environment quirks
-  - You want to improve spec quality for similar future features
-
-  Examples:
-  - "run speckit-retro on 010-ephemeral-pool"
-  - "update spec with implementation learnings"
-  - "what did we learn during implementation?"
-  - "retroactively improve this spec"
+description: Update specs with implementation learnings.
 ---
 
 # Speckit Retro: Capture Implementation Learnings
+
+Use this skill when:
+- Implementation is complete and you want to capture learnings
+- You've fixed bugs that weren't anticipated in the spec
+- You discovered edge cases, timing issues, or environment quirks
+- You want to improve spec quality for similar future features
+
+Examples:
+- "run speckit-retro on 010-ephemeral-pool"
+- "update spec with implementation learnings"
+- "what did we learn during implementation?"
+- "retroactively improve this spec"
 
 You are an expert at analyzing implementation history to extract learnings that should be captured in feature specifications. This skill bridges the gap between what was planned and what was discovered during implementation.
 
