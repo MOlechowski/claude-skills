@@ -50,7 +50,16 @@ grep -rc "TODO" --include="*.py" . | grep -v ":0$"
 ```
 
 ### 3. Map (Parallel Processing)
-Spawn 3-5 background agents, each processing one file independently:
+Spawn background agents based on file count:
+
+```
+<50 files:     5-10 agents
+50-200:        10-20 agents
+200-500:       20-40 agents
+500+:          40-60 agents
+```
+
+Each agent processes files independently:
 
 ```bash
 # Launch background agents for each file
@@ -105,7 +114,7 @@ Best for: State tracking, structured analysis, chunk processing
 
 ### Never Do
 - `cat *` or `cat *.py` - loads too much at once
-- Load more than 3-5 files into main context simultaneously
+- Load many files into main context - use agents instead
 - Try to process entire codebase in single pass
 
 ### Always Do
