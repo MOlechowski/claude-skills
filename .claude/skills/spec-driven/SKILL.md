@@ -111,6 +111,65 @@ git commit -m "mark: complete authentication task [PR #42]"
 git push origin main  # Spec repos typically allow direct push
 ```
 
+## Multi-Spec Implementation (REQUIRED: Use Worktrees)
+
+**When implementing multiple specs in one session, ALWAYS use git worktrees.** This prevents:
+- Branch conflicts when switching between specs
+- Lost work from uncommitted changes
+- Context confusion between specs
+
+### Setup Worktrees Upfront
+
+Before starting any implementation, create worktrees for ALL specs:
+
+```bash
+# From implementation repo root
+cd $IMPL_REPO
+
+# Create worktree for each spec (use spec branch name)
+git worktree add ../impl-014-feature -b 014-feature-name main
+git worktree add ../impl-015-feature -b 015-feature-name main
+
+# Verify
+git worktree list
+```
+
+### Implement in Separate Directories
+
+Work in each worktree directory independently:
+
+```bash
+# Spec 014
+cd ../impl-014-feature
+# ... implement, test, commit ...
+git push -u origin 014-feature-name
+gh pr create --title "feat: spec 014 - feature name"
+
+# Spec 015 (no git checkout needed!)
+cd ../impl-015-feature
+# ... implement, test, commit ...
+git push -u origin 015-feature-name
+gh pr create --title "feat: spec 015 - feature name"
+```
+
+### Cleanup After PRs Merged
+
+```bash
+cd $IMPL_REPO
+git worktree remove ../impl-014-feature
+git worktree remove ../impl-015-feature
+git branch -d 014-feature-name 015-feature-name
+```
+
+### Why Worktrees for Multi-Spec?
+
+| Without Worktrees | With Worktrees |
+|-------------------|----------------|
+| `git checkout` loses uncommitted work | Each spec has isolated directory |
+| Easy to commit to wrong branch | Each worktree = one branch only |
+| Must remember current branch | Directory name = spec context |
+| Sequential only | Can work on specs in parallel |
+
 ## Parallel Work
 
 Combine git-worktree (isolated directories) with parallel-flow (agent orchestration):

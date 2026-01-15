@@ -68,12 +68,27 @@ spec-repo/
 gh pr list --state open --json number,title,reviewDecision
 ```
 
-### 2. Create Feature Branch
+### 2. Multi-Spec Setup (REQUIRED for 2+ specs)
+```bash
+# Create worktrees BEFORE starting implementation
+git worktree add ../impl-014-feature -b 014-feature-name main
+git worktree add ../impl-015-feature -b 015-feature-name main
+
+# Work in each directory (no git checkout needed)
+cd ../impl-014-feature && # implement spec 014
+cd ../impl-015-feature && # implement spec 015
+
+# Cleanup after PRs merged
+git worktree remove ../impl-014-feature
+git worktree remove ../impl-015-feature
+```
+
+### 3. Single Spec (branch workflow)
 ```bash
 git checkout -b feat/spec-001-task-name main
 ```
 
-### 3. After Implementation
+### 4. After Implementation
 ```bash
 git add -A
 git commit -m "feat: implement task from spec-001"
