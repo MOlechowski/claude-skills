@@ -56,8 +56,15 @@ type(scope): description
 - No period at end
 - No em dashes
 - Under 50 chars for subject
-- Natural tone, not robotic
 - Match repo language and conventions
+
+## Writing Style
+
+- Short sentences
+- Active voice
+- No filler words (just, really, very, basically)
+- Natural tone, not robotic
+- Lead with action or outcome
 
 ## Body
 
