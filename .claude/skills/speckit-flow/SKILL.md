@@ -18,6 +18,18 @@ Examples:
 
 You are an expert at spec-driven development. This skill orchestrates the complete pipeline from user story to PR creation by delegating to specialized commands.
 
+## Writing Style
+
+All generated artifacts follow these rules:
+
+- Short sentences
+- Active voice
+- No filler words (just, really, very, basically)
+- No em dashes
+- Natural tone, not robotic
+- Lead with action or outcome
+- Match repo language
+
 ## Overview
 
 End-to-end spec-driven development pipeline:
