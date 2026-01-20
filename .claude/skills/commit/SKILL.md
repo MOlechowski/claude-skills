@@ -31,9 +31,19 @@ type(scope): description
 
 1. Run `git diff --staged` to see changes
 2. Run `git log --oneline -10` to check repo style
-3. Pick commit type from changes
-4. Infer scope from affected files
-5. Write short description
+3. Detect language from recent commits
+4. Detect footer patterns (Change-Id, tickets)
+5. Pick commit type from changes
+6. Infer scope from affected files
+7. Write short description
+
+## Language Detection
+
+Check recent commits for language:
+- Polish: Dodanie, Naprawa, Poprawa, Zmiana, Usunięcie
+- English: Add, Fix, Update, Remove, Change
+
+Match the dominant language in last 10 commits.
 
 ## Types
 
@@ -60,16 +70,30 @@ type(scope): description
 
 ## Writing Style
 
-- Short sentences
-- Active voice
-- No filler words (just, really, very, basically)
-- Natural tone, not robotic
-- Lead with action or outcome
+Be laconic:
+- Shortest possible subject
+- No filler words
+- No em dashes (use commas or separate sentences)
+- No verbose explanations
+- If subject is clear, skip body
+
+Examples:
+- Bad: "Add Error convenience extensions for NetworkError"
+- Good: "Add Error NetworkError extensions"
+
+- Bad body: "Add helpers to extract httpStatusCode, transportError"
+- Good body: "Extract httpStatusCode from Error"
 
 ## Body
 
-- Simple changes: subject only, no body
-- Complex changes: add body to explain why
+When to add:
+- Simple (1-2 files, clear intent): subject only
+- Complex (3+ files, non-obvious): add body
+
+Body style:
+- Explain why, not what
+- One line per logical change
+- No bullet points unless 3+ items
 
 ## Breaking Changes
 
@@ -87,6 +111,15 @@ feat: update auth flow
 
 BREAKING CHANGE: token format changed
 ```
+
+## Footers
+
+Detect from repo history:
+- Change-Id (Gerrit): preserve if present
+- Ticket IDs (JIRA): include if pattern found
+- Signed-off-by: include if repo uses it
+
+Do not add footers the repo doesn't use.
 
 ## Safety
 
