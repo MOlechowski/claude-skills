@@ -64,36 +64,65 @@ Match the dominant language in last 10 commits.
 
 - Imperative mood: "add" not "added"
 - No period at end
-- No em dashes
+- No em dashes (—) in prose
 - Under 50 chars for subject
 - Match repo language and conventions
+
+Em dash (—) vs hyphen (-):
+- Bad: "add auth — with token support"
+- Good: "add auth with token support"
 
 ## Writing Style
 
 Be laconic:
 - Shortest possible subject
 - No filler words
-- No em dashes (use commas or separate sentences)
+- No bullet points in body
 - No verbose explanations
-- If subject is clear, skip body
+- Skip body unless essential
 
-Examples:
+**Body is noise unless it adds value.**
+
+Subject examples:
 - Bad: "Add Error convenience extensions for NetworkError"
 - Good: "Add Error NetworkError extensions"
 
-- Bad body: "Add helpers to extract httpStatusCode, transportError"
-- Good body: "Extract httpStatusCode from Error"
+Body examples:
+
+Bad (bullets):
+```
+feat(ios): Add mTLS support
+
+- Add certificate fields
+- Extract PEM data
+```
+
+Good (subject only):
+```
+feat(ios): Add mTLS certificate injection
+```
+
+Good (prose body when needed):
+```
+refactor(auth): Extract token service
+
+Separate token logic for unit testing.
+```
 
 ## Body
 
-When to add:
-- Simple (1-2 files, clear intent): subject only
-- Complex (3+ files, non-obvious): add body
+**Prefer no body.** A good subject makes body unnecessary.
 
-Body style:
+Decision tree:
+1. Is subject self-explanatory? → Skip body
+2. Multiple unrelated changes? → Split into separate commits
+3. Need to explain "why"? → Add prose body (1-2 sentences)
+
+If body is needed:
+- Prose only, no bullet points
 - Explain why, not what
-- One line per logical change
-- No bullet points unless 3+ items
+- One sentence per logical change
+- Keep it short
 
 ## Breaking Changes
 
