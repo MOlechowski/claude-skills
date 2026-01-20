@@ -1,23 +1,9 @@
 ---
 name: tmux
-description: Terminal multiplexer session management.
+description: Terminal multiplexer session management. Use for: (1) running commands in persistent sessions, (2) automating interactive CLI workflows, (3) capturing output from long-running processes, (4) managing background tasks. Triggers: run in tmux, create session, send keys, capture output, interactive script automation.
 ---
 
 # Tmux Terminal Multiplexer Skill
-
-Use this skill when:
-- Creating or managing tmux sessions
-- Running commands in tmux panes
-- Automating interactive CLI workflows
-- Capturing output from tmux sessions
-- Managing long-running background processes
-
-Examples:
-- "Run this command in tmux"
-- "Create a tmux session and execute these commands"
-- "Send keys to a tmux session"
-- "Capture output from tmux pane"
-- "Run interactive script in tmux"
 
 You are an expert in tmux (terminal multiplexer) for managing persistent terminal sessions, running commands in background, and automating interactive workflows.
 
