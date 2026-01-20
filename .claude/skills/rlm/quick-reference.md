@@ -1,24 +1,58 @@
 # RLM Quick Reference
 
-## Python Engine Commands
+## Two Operation Modes
 
-```bash
-# Scan and index all files in current directory
-python3 ~/.claude/skills/rlm/rlm.py scan
+| Mode | When | Agents | Subagent Type |
+|------|------|--------|---------------|
+| **Investigation** | Answer questions about code | 3-5 | Explore |
+| **Bulk Processing** | Analyze all files systematically | 5-10 | general-purpose |
 
-# Search for term with surrounding context (200 chars)
-python3 ~/.claude/skills/rlm/rlm.py peek "search_term"
+## Mode 1: Investigation Pattern
 
-# Get file chunks for processing
-python3 ~/.claude/skills/rlm/rlm.py chunk
-
-# Get chunks matching pattern
-python3 ~/.claude/skills/rlm/rlm.py chunk --pattern "*.py"
+```
+Task(
+  description="Explore error handling patterns",
+  prompt="Search the codebase for...",
+  subagent_type="Explore",
+  run_in_background=true
+)
 ```
 
-## Native Mode Commands
+**Agent strategy (broad + narrow):**
+| Agent | Focus |
+|-------|-------|
+| 1 | Broad pattern search |
+| 2 | Architecture/structure |
+| 3 | Targeted file analysis |
+| 4 | (optional) Related code paths |
+| 5 | (optional) Test coverage |
 
-### Index (Scan Structure)
+## Mode 2: Bulk Processing Pattern
+
+```
+Task(
+  description="Analyze auth module",
+  prompt="Analyze src/auth/. Write to /tmp/rlm_auth.json",
+  subagent_type="general-purpose",
+  run_in_background=true
+)
+```
+
+**Scaling:**
+- Max 10 concurrent agents
+- 10-20 files per agent
+- Group by: directory, file type, or domain
+
+## Four-Stage Pipeline
+
+| Stage | Purpose | Tools |
+|-------|---------|-------|
+| Index | Scan structure | `find`, `ls`, `tree` |
+| Filter | Narrow candidates | `rg`, `grep`, `rlm.py peek` |
+| Map | Parallel process | Background agents |
+| Reduce | Synthesize | `jq` merge |
+
+## Index Commands
 
 ```bash
 # Count files by type
@@ -27,136 +61,95 @@ find . -type f -name "*.py" | wc -l
 # List file structure
 find . -type f \( -name "*.ts" -o -name "*.tsx" \) | head -50
 
-# Tree view (if available)
+# Tree view
 tree -I 'node_modules|.git' --dirsfirst
 ```
 
-### Filter (Narrow Candidates)
+## Filter Commands
 
 ```bash
-# Files containing pattern
-grep -rl "pattern" --include="*.go" .
+# Files containing pattern (ripgrep)
+rg -l "pattern" --type py
 
 # Files with match count
-grep -rc "TODO" --include="*.py" . | grep -v ":0$" | sort -t: -k2 -rn
+rg -c "TODO" --type py | grep -v ":0$" | sort -t: -k2 -rn
 
-# Ripgrep (faster)
-rg -l "pattern" --type py
-rg -c "pattern" --type ts | sort -t: -k2 -rn
+# grep alternative
+grep -rl "pattern" --include="*.go" .
 ```
 
-### Map (Parallel Processing)
+## Agent Output Pattern
 
-```bash
-# Process files in parallel (bash)
-find . -name "*.py" | xargs -P 4 -I {} sh -c 'echo "Processing {}"; grep -c "def " {}'
-
-# With Task tool (in Claude)
-# Use run_in_background: true for each file
-```
-
-## Four-Stage Pipeline Summary
-
-| Stage | Purpose | Tools |
-|-------|---------|-------|
-| Index | Scan structure | `find`, `ls`, `tree` |
-| Filter | Narrow candidates | `grep`, `rg`, `rlm.py peek` |
-| Map | Parallel process | Background agents, `xargs -P` |
-| Reduce | Synthesize | Aggregate results |
-
-## Constraints Checklist
-
-| Do | Don't |
-|----|-------|
-| Filter before loading | `cat *` or `cat *.py` |
-| Load 3-5 files max at once | Load entire directories |
-| Use background agents | Sequential file-by-file in main context |
-| Use grep/rg to search | Read files to search |
-| Python for state tracking | Manual state in context |
-
-## Background Agent Pattern
-
-**Actual Task tool syntax:**
 ```
 Task(
   description="Analyze batch 1",
-  prompt="Analyze these files. Write to /tmp/rlm_0.json as JSON",
+  prompt="Analyze these files:
+- file1.py
+- file2.py
+
+Write findings to /tmp/rlm_0.json as JSON:
+{\"category\": \"...\", \"findings\": [...]}",
+  subagent_type="general-purpose",
   run_in_background=true
 )
 ```
 
-**Workflow:**
-1. Filter: `Grep pattern="X" output_mode="files_with_matches"`
-2. Spawn: 3-5 `Task(..., run_in_background=true)`
-3. Collect: `TaskOutput(task_id=<id>)`
-4. Merge: `jq -s '[.[].findings] | add' /tmp/rlm_*.json`
-
-## Merge & Filter with jq
+## Collect & Merge Results
 
 ```bash
 # Merge all agent outputs
-jq -s '[.[].findings] | add' /tmp/rlm_*.json > /tmp/report.json
+jq -s '.' /tmp/rlm_*.json > /tmp/report.json
+
+# Aggregate findings
+jq -s '[.[].findings] | add' /tmp/rlm_*.json
 
 # Filter by severity
-jq '[.[] | select(.severity == "high")]' /tmp/report.json
+jq '[.[].findings[] | select(.severity == "high")]' /tmp/report.json
 
 # Filter by file
-jq '[.[] | select(.file | contains("auth"))]' /tmp/report.json
-
-# Count by severity
-jq 'group_by(.severity) | map({(.[0].severity): length}) | add' /tmp/report.json
-
-# Top 10 issues
-jq '.[0:10]' /tmp/report.json
+jq '[.[].findings[] | select(.file | contains("auth"))]' /tmp/report.json
 ```
 
-## Recovery: Iterative Python
+## Python Engine (Optional)
 
-When background agents fail:
+```bash
+# Scan and index
+python3 ~/.claude/skills/rlm/rlm.py scan
 
-```python
-import os, json
+# Search with context
+python3 ~/.claude/skills/rlm/rlm.py peek "search_term"
 
-results = []
-for root, _, files in os.walk('.'):
-    for f in files:
-        if f.endswith('.py'):
-            path = os.path.join(root, f)
-            # Process each file
-            results.append(process(path))
-
-print(json.dumps(results))
+# Get chunks
+python3 ~/.claude/skills/rlm/rlm.py chunk --pattern "*.py"
 ```
 
-## rlm.py API
+## Constraints
 
-```python
-from rlm import RLMContext
-
-ctx = RLMContext(".")
-
-# Load files into index
-ctx.load_context("**/*.py")
-
-# Search with context window
-matches = ctx.peek("search_term", context_window=200)
-
-# Get chunks for batch processing
-chunks = ctx.get_chunks(file_pattern="*.py")
-```
+| Do | Don't |
+|----|-------|
+| Use Explore agents for questions | `cat *` or `cat *.py` |
+| Use general-purpose for bulk | Spawn > 10 concurrent agents |
+| Filter before spawning agents | Load many files into main context |
+| Write agent outputs to /tmp/ | Sequential processing in main context |
+| Use descriptive agent names | Generic descriptions |
 
 ## Quick Decision Tree
 
 ```
-Large codebase analysis?
+What's your task?
     │
-    ├─► Yes → Use RLM pipeline
-    │         │
-    │         ├─► Many files to search → grep/rg first
-    │         │
-    │         ├─► Need state tracking → Use rlm.py
-    │         │
-    │         └─► Parallel analysis → Background agents
+    ├─► Question about code
+    │   └─► Investigation mode (3-5 Explore agents)
+    │       - Broad search agent
+    │       - Structure/architecture agent
+    │       - Targeted analysis agent
     │
-    └─► No → Standard file reading
+    ├─► Analyze all files
+    │   └─► Bulk mode (5-10 general-purpose agents)
+    │       - Group by directory or file type
+    │       - Max 10-20 files per agent
+    │       - Write outputs to /tmp/rlm_*.json
+    │
+    └─► Simple file read
+        └─► Standard tools (no RLM needed)
 ```

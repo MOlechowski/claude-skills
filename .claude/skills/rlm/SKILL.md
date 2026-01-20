@@ -6,24 +6,99 @@ description: Process massive codebases with parallel agents.
 # Recursive Language Model (RLM) Skill
 
 Use this skill when:
+- Investigating code behavior or patterns across a codebase
 - Analyzing large codebases (100+ files, millions of lines)
 - Searching patterns across many files without loading all into context
 - Processing repositories that exceed normal context limits
-- Running parallel analysis with background agents
 
 Examples:
+- "how are errors handled in this codebase?"
 - "analyze this large codebase"
 - "scan all files for security issues"
 - "find all usages of X across the entire repo"
-- "process this massive repository"
 
-You are an expert at processing massive codebases using the RLM paradigm. This skill enables handling 100+ files and millions of lines of code efficiently.
+You are an expert at processing codebases using the RLM paradigm. This skill enables efficient analysis through parallel agents.
 
 ## Core Philosophy
 
 > **"Context is an external resource, not a local variable."**
 
-Instead of loading files directly into context, treat the filesystem as a queryable database. The Root Node (you) orchestrates sub-agents that analyze code in parallel.
+Instead of loading files directly into context, treat the filesystem as a queryable database. Orchestrate sub-agents that analyze code in parallel.
+
+## Two Operation Modes
+
+### Mode 1: Investigation (3-5 Explore Agents)
+
+Use when answering questions about a codebase. Deploy agents with **different perspectives**:
+
+```
+Task(
+  description="Explore error handling patterns",
+  prompt="Search the codebase for error handling patterns...",
+  subagent_type="Explore",
+  run_in_background=true
+)
+
+Task(
+  description="Find application structure",
+  prompt="Map the architecture and key components...",
+  subagent_type="Explore",
+  run_in_background=true
+)
+
+Task(
+  description="Examine specific file",
+  prompt="Deep dive into src/api/handler.go...",
+  subagent_type="Explore",
+  run_in_background=true
+)
+```
+
+**Agent Strategy - Broad + Narrow:**
+| Agent | Focus | Purpose |
+|-------|-------|---------|
+| 1 | Broad pattern search | Find all instances |
+| 2 | Architecture/structure | Understand context |
+| 3 | Targeted file analysis | Deep dive specific code |
+| 4 | (optional) Related code paths | Trace dependencies |
+| 5 | (optional) Test coverage | Verify behavior |
+
+**Real-world example:**
+```
+├─ Explore error handling patterns · 27 tool uses · 43.8k tokens
+├─ Find integration app structure · 36 tool uses · 45.8k tokens
+└─ Examine modified HTTPHeaderFormatter · 12 tool uses · 15.2k tokens
+```
+
+### Mode 2: Bulk Processing (5-10 Agents)
+
+Use for systematic analysis of all files. Split by **file groups or categories**:
+
+```
+Scaling guidelines:
+- Max 10 concurrent agents (resource limits)
+- 10-20 files per agent (context efficiency)
+- Group by: directory, file type, or domain
+```
+
+**Example - Security Audit:**
+```
+Task(
+  description="Analyze auth module",
+  prompt="Analyze src/auth/ for security issues.
+  Write findings to /tmp/rlm_auth.json",
+  subagent_type="general-purpose",
+  run_in_background=true
+)
+
+Task(
+  description="Analyze API endpoints",
+  prompt="Analyze src/api/ for security issues.
+  Write findings to /tmp/rlm_api.json",
+  subagent_type="general-purpose",
+  run_in_background=true
+)
+```
 
 ## Four-Stage Pipeline
 
@@ -31,11 +106,11 @@ Instead of loading files directly into context, treat the filesystem as a querya
 Scan file structure without loading content:
 
 ```bash
-# Find all relevant files
-find . -type f -name "*.py" | head -100
+# Count files by type
+find . -type f -name "*.py" | wc -l
 
-# Or use ls for structure overview
-ls -laR src/
+# Structure overview
+ls -laR src/ | head -50
 ```
 
 ### 2. Filter
@@ -43,59 +118,85 @@ Narrow candidates using pattern matching:
 
 ```bash
 # Find files containing pattern
-grep -rl "pattern" --include="*.ts" .
+rg -l "error" --type py
 
 # Count matches per file
-grep -rc "TODO" --include="*.py" . | grep -v ":0$"
+rg -c "TODO" --type py | grep -v ":0$"
 ```
 
 ### 3. Map (Parallel Processing)
-Spawn background agents based on file count:
 
-```
-<50 files:     5-10 agents
-50-200:        10-20 agents
-200-500:       20-40 agents
-500+:          40-60 agents
-```
+**Choose mode based on task:**
 
-Each agent processes files independently:
-
-```bash
-# Launch background agents for each file
-for file in file1.py file2.py file3.py; do
-    # Each agent analyzes one file and outputs findings
-done
-```
-
-Use the Task tool with `run_in_background: true` to parallelize.
+| Task Type | Mode | Agents | Subagent Type |
+|-----------|------|--------|---------------|
+| Answer a question | Investigation | 3-5 | Explore |
+| Analyze all files | Bulk | 5-10 | general-purpose |
+| Find specific pattern | Investigation | 2-3 | Explore |
+| Security audit | Bulk | 5-10 | general-purpose |
 
 ### 4. Reduce
 Synthesize findings from all sub-agents:
-- Aggregate results
-- Identify patterns across files
-- Build final answer from parallel outputs
-
-## Two Processing Modes
-
-### Native Mode
-Use standard tools for general traversal:
 
 ```bash
-# Index
-find . -type f -name "*.go" | wc -l
+# Merge JSON outputs
+jq -s '.' /tmp/rlm_*.json
 
-# Filter
-grep -rl "func.*Error" --include="*.go" .
-
-# Map with background agents
-# (use Task tool with background agents)
+# Aggregate findings
+jq -s '[.[].findings] | add' /tmp/rlm_*.json
 ```
 
-Best for: General codebase analysis, pattern searching
+## Agent Output Pattern
 
-### Strict Mode (Python Engine)
-Use the bundled Python engine for dense data:
+Agents write to files to avoid context overflow:
+
+```
+Task(
+  description="Analyze auth files",
+  prompt="Analyze these files for security issues:
+- src/auth/login.py
+- src/auth/session.py
+
+Write findings to /tmp/rlm_auth.json as JSON:
+{\"category\": \"auth\", \"findings\": [{\"file\": \"\", \"line\": 0, \"issue\": \"\"}]}",
+  subagent_type="general-purpose",
+  run_in_background=true
+)
+```
+
+**Collect results:**
+```
+TaskOutput(task_id=<agent_id>, block=true, timeout=60000)
+```
+
+**Merge and filter:**
+```bash
+# Merge all
+jq -s '.' /tmp/rlm_*.json > /tmp/report.json
+
+# Filter by severity
+jq '[.[].findings[] | select(.severity == "high")]' /tmp/report.json
+
+# Filter by file
+jq '[.[].findings[] | select(.file | contains("auth"))]' /tmp/report.json
+```
+
+## Key Constraints
+
+### Never Do
+- `cat *` or `cat *.py` - loads too much at once
+- Load many files into main context - use agents instead
+- Spawn more than 10 concurrent agents
+
+### Always Do
+- Use `rg`/`grep` to filter before spawning agents
+- Use Explore agents for investigation tasks
+- Write agent outputs to /tmp/ files
+- Use descriptive agent names (shown in UI)
+
+## Python Engine (Optional)
+
+For structured analysis, use the bundled Python engine:
 
 ```bash
 # Scan and index files
@@ -108,94 +209,12 @@ python3 ~/.claude/skills/rlm/rlm.py peek "searchterm"
 python3 ~/.claude/skills/rlm/rlm.py chunk --pattern "*.py"
 ```
 
-Best for: State tracking, structured analysis, chunk processing
-
-## Key Constraints
-
-### Never Do
-- `cat *` or `cat *.py` - loads too much at once
-- Load many files into main context - use agents instead
-- Try to process entire codebase in single pass
-
-### Always Do
-- Use `grep`/`ripgrep` to filter before loading
-- Prefer `background_task` for file analysis
-- Use Python scripting for state tracking across many files
-- Process in parallel when possible
-
-## Background Agent Pattern
-
-Spawn multiple Task agents in parallel using `run_in_background: true`:
-
-**Agent 1:**
-```
-Task(
-  description="Analyze auth files",
-  prompt="Analyze these files for security issues:
-- src/auth/login.py
-- src/auth/session.py
-
-Write findings to /tmp/rlm_0.json as JSON:
-{\"findings\": [{\"file\": \"\", \"line\": 0, \"issue\": \"\"}]}",
-  run_in_background=true
-)
-```
-
-**Agent 2:**
-```
-Task(
-  description="Analyze API files",
-  prompt="Analyze these files for security issues:
-- src/api/users.py
-- src/api/payments.py
-
-Write findings to /tmp/rlm_1.json as JSON:
-{\"findings\": [{\"file\": \"\", \"line\": 0, \"issue\": \"\"}]}",
-  run_in_background=true
-)
-```
-
-**Collect results with TaskOutput:**
-```
-TaskOutput(task_id=<agent1_id>)
-TaskOutput(task_id=<agent2_id>)
-```
-
-**Merge with jq:**
-```bash
-jq -s '[.[].findings] | add' /tmp/rlm_*.json
-```
-
-## Handling Large Outputs
-
-Agent outputs can exceed token limits. Solution: agents write to files.
-
-**In agent prompt:**
-```
-"... Write your findings to /tmp/rlm_agent_0.json as JSON"
-```
-
-**Merge all agent outputs:**
-```bash
-jq -s '[.[].findings] | add' /tmp/rlm_*.json > /tmp/report.json
-```
-
-**Filter if report too large:**
-```bash
-# By severity
-jq '[.[] | select(.severity == "high")]' /tmp/report.json
-
-# By file
-jq '[.[] | select(.file | contains("auth"))]' /tmp/report.json
-```
-
 ## Recovery Method
 
-If background agents fail, fall back to iterative Python:
+If background agents fail, fall back to iterative processing:
 
 ```python
-import os
-import json
+import os, json
 
 results = []
 for root, dirs, files in os.walk('.'):
@@ -204,17 +223,17 @@ for root, dirs, files in os.walk('.'):
             path = os.path.join(root, f)
             with open(path) as file:
                 content = file.read()
-                # Process and collect findings
                 results.append(analyze(content))
 
 print(json.dumps(results))
 ```
 
-## Integration Notes
+## Integration
 
-This skill works well with:
-- **grep/ripgrep** for filtering
-- **Task tool** for parallel background agents
+Works well with:
+- **Explore agents** for codebase investigation
+- **rg/grep** for filtering before agent spawn
+- **jq** for merging and filtering results
 - **Python scripts** for state management
 
 ## Quick Reference
