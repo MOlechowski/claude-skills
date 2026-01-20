@@ -33,25 +33,36 @@ Apply this matrix for every PR action:
 | Review State | CI Status | Action |
 |--------------|-----------|--------|
 | Any | FAILING | Fix lint/test errors, push |
-| CHANGES_REQUESTED | PASSING | Address comments, push, request re-review |
-| COMMENTED | PASSING | Safe to merge (minor suggestions only) |
-| APPROVED | CLEAN | `gh pr merge --squash --delete-branch` |
-| PENDING | - | Wait for review |
+| CHANGES_REQUESTED | PASSING | Address comments, push, re-review |
+| COMMENTED | PASSING | Merge (minor suggestions) |
+| APPROVED | CLEAN | Merge |
+| empty | CLEAN | Merge (no review required) |
+| PENDING | BLOCKED | Wait for review |
+
+## Autonomy
+
+When invoked without specific PR number:
+1. List all open PRs in single call
+2. Apply decision matrix to each
+3. Act immediately on mergeable PRs
+4. Report results after actions
+
+Do not ask "Merge?" - merge if conditions met.
 
 ## Workflow Steps
 
 ### 1. Status Check
 
+Single call for all open PRs:
+
 ```bash
-# Get PR state (works from PR branch)
-gh pr view --json number,title,state,reviewDecision,mergeStateStatus,mergeable,statusCheckRollup
+gh pr list --state open --json number,title,headRefName,reviewDecision,mergeStateStatus,mergeable,isDraft
+```
 
-# Get specific PR
+For specific PR:
+
+```bash
 gh pr view $PR --json number,title,reviewDecision,mergeStateStatus,mergeable
-
-# Quick status
-gh pr view $PR --json reviewDecision,mergeStateStatus,mergeable \
-  --jq '{review: .reviewDecision, merge: .mergeStateStatus, mergeable: .mergeable}'
 ```
 
 ### 2. Check Reviews
@@ -193,23 +204,20 @@ If merge blocked by protection rules:
 
 ## Output Format
 
-Always report PR status in this format:
+Action mode (merging):
 
 ```
-PR #123: feat/new-feature
-  CI: passing | Review: APPROVED | Merge: CLEAN
-  Action: Merging...
-  Result: Merged successfully
+Merging #18, #20...
+#18: merged
+#20: merged
 ```
 
-For queue operations:
+Status mode (check only):
 
 ```
-PR Queue Status:
-  #123: MERGED
-  #124: WAITING (CI running)
-  #125: BLOCKED (unresolved comments)
-  #126: SKIPPED (draft)
+#18: CLEAN, mergeable
+#20: BLOCKED (conflicts)
+#21: WAITING (CI running)
 ```
 
 ## Safety Rules
