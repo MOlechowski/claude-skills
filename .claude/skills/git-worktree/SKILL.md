@@ -1,35 +1,13 @@
 ---
 name: git-worktree
-description: Work on multiple branches simultaneously.
+description: Work on multiple branches simultaneously. Use when: working on multiple branches, reviewing PRs without stashing, parallel builds/tests, bare repo workflows. Triggers: /git-worktree, "work on two branches", "create worktree", "set up bare repo".
 ---
 
-# Git Worktree Skill
+# Git Worktree
 
-Use this skill when:
-- Working on multiple branches at the same time without stashing
-- Reviewing PRs or code while keeping current work intact
-- Running builds or tests on different branches in parallel
-- Setting up isolated development environments per branch
-- Managing bare repo + worktree workflows
+Multiple working directories linked to a single repository. Check out multiple branches simultaneously without stashing.
 
-Examples:
-- "How do I work on two branches at once?"
-- "Create a worktree for reviewing a PR"
-- "Set up git worktrees for parallel development"
-- "Set up a bare repo with worktrees"
-- "Manage worktrees in a monorepo"
-
-You are an expert in git worktrees for managing multiple working directories linked to a single repository.
-
-## What are Git Worktrees?
-
-Git worktrees allow you to check out multiple branches simultaneously in separate directories, all sharing the same `.git` repository. This eliminates the need to stash, commit, or lose work when switching contexts.
-
-**Key Benefits:**
-- Work on multiple features/branches simultaneously
-- Review PRs without disrupting current work
-- Run parallel builds/tests on different branches
-- Keep long-running processes (dev servers) running while working elsewhere
+**Benefits:** Work on multiple features, review PRs without disrupting work, parallel builds/tests, keep dev servers running.
 
 ## Core Concepts
 
@@ -198,134 +176,6 @@ git fetch origin
 # Then update individual worktrees as needed
 cd ../repo/main
 git merge origin/main
-```
-
-## Monorepo Workflows
-
-### Selective Package Worktrees
-
-In monorepos, you might want worktrees focused on specific packages:
-
-```bash
-# Main worktree has full monorepo
-~/monorepo/main/
-
-# Feature worktree - work happens in specific package
-~/monorepo/feature-auth/
-# Focus on: packages/auth/, packages/shared/
-```
-
-### Dependency Management Considerations
-
-**Node.js (npm/yarn/pnpm):**
-
-```bash
-# Option 1: Separate node_modules per worktree
-cd ../project-feature
-npm install  # Creates its own node_modules
-
-# Option 2: Shared node_modules with pnpm (recommended for monorepos)
-# pnpm's content-addressable store shares packages efficiently
-
-# Option 3: Symlink common dependencies (advanced)
-ln -s ../main/node_modules ./node_modules  # Use with caution
-```
-
-**Python:**
-
-```bash
-# Separate virtual environments per worktree (recommended)
-cd ../project-feature
-python -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-```
-
-### CI/CD with Worktrees
-
-Worktrees can speed up CI by enabling parallel branch testing:
-
-```bash
-# CI script example
-git worktree add /tmp/test-branch-a branch-a
-git worktree add /tmp/test-branch-b branch-b
-
-# Run tests in parallel
-(cd /tmp/test-branch-a && npm test) &
-(cd /tmp/test-branch-b && npm test) &
-wait
-
-# Cleanup
-git worktree remove /tmp/test-branch-a
-git worktree remove /tmp/test-branch-b
-```
-
-## IDE Integration
-
-### VS Code
-
-```bash
-# Open worktree in new window
-code ../project-feature
-
-# Or use VS Code workspaces to manage multiple worktrees
-# Create .code-workspace file referencing multiple folders
-```
-
-### JetBrains IDEs
-
-Each worktree can be opened as a separate project. The IDE will recognize it shares the same Git repository.
-
-### Vim/Neovim
-
-Worktrees work seamlessly. Just `cd` to the worktree directory and edit normally.
-
-## Troubleshooting
-
-### "fatal: '<branch>' is already checked out"
-
-A branch can only be checked out in one worktree at a time.
-
-```bash
-# Find where the branch is checked out
-git worktree list
-
-# Solutions:
-# 1. Use a different branch
-git worktree add -b feature-v2 ../new-worktree main
-
-# 2. Remove the other worktree first
-git worktree remove ../other-worktree
-```
-
-### Stale Worktree References
-
-If you manually delete a worktree directory:
-
-```bash
-# Clean up the reference
-git worktree prune
-
-# Verify
-git worktree list
-```
-
-### Worktree on Different Filesystem/Network Drive
-
-```bash
-# Lock to prevent accidental pruning
-git worktree lock --reason "On network drive" /mnt/network/worktree
-
-# Unlock when back on local filesystem
-git worktree unlock /mnt/network/worktree
-```
-
-### Submodules in Worktrees
-
-```bash
-# After creating worktree, initialize submodules
-cd ../project-feature
-git submodule update --init --recursive
 ```
 
 ## Best Practices
