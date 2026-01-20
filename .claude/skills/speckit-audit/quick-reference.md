@@ -76,6 +76,66 @@ done
 gh pr list --state merged --search "Spec 010"
 ```
 
+## Drift Detection
+
+### Discover Spec Files
+
+```bash
+# List all files in a spec directory
+ls specs/$SPEC_ID/*.md
+
+# Common files:
+# - spec.md (core specification)
+# - quick-reference.md (commands, patterns)
+# - plan.md (implementation approach)
+# - tasks.md (task tracking)
+```
+
+### Drift Detection Patterns (Tier 1 + Tier 2)
+
+```bash
+# Tier 1: Config values with units
+grep -E "[0-9]+(s|ms|m|h|KB|MB|GB)" specs/$SPEC_ID/*.md
+
+# Tier 1: Environment variables
+grep -E '\$[A-Z_]+|`[A-Z_]+`' specs/$SPEC_ID/*.md
+
+# Tier 1: Constants and limits
+grep -E "MAX|LIMIT|DEFAULT|TIMEOUT" specs/$SPEC_ID/*.md
+
+# Tier 2: Command patterns
+grep -E '^\s*\$|```bash' specs/$SPEC_ID/quick-reference.md
+
+# Tier 2: Feature keywords
+grep -i "support|implement|provide" specs/$SPEC_ID/spec.md
+```
+
+### Verify Against Implementation
+
+```bash
+cd $IMPL_REPO
+
+# Check config values
+grep -rn "timeout|Timeout" src/
+
+# Check env vars
+grep -rn "os.Getenv|process.env|os.environ" src/
+
+# Check constants
+grep -rn "const|MAX|LIMIT|DEFAULT" src/
+
+# Check feature presence
+grep -rn "$FEATURE_KEYWORD" src/
+```
+
+### Drift Classification
+
+| Status | Meaning | Action |
+|--------|---------|--------|
+| SYNCED | Spec matches impl | None |
+| DRIFTED | Spec differs from impl | Auto-fix |
+| UNKNOWN | Cannot verify | Skip |
+
 ## Coverage Report Template
 
 ```markdown
@@ -89,9 +149,19 @@ gh pr list --state merged --search "Spec 010"
 | Category | Count | Percentage |
 |----------|-------|------------|
 | Specced | {n} | {%} |
+|   - Synced | {n} | |
+|   - Drifted (fixed) | {n} | |
 | Unspecced | {n} | {%} |
 | Uncertain | {n} | {%} |
 | **Total** | {n} | 100% |
+
+### Specs Updated (Drift Fixed)
+
+| Spec | File | Change | Source PR |
+|------|------|--------|-----------|
+| 010-pool | spec.md | Timeout: 10s → 30s | PR #418 |
+| 010-pool | quick-reference.md | Added --force flag | PR #418 |
+| 014-cache | tasks.md | Task 3 marked done | PR #421 |
 
 ### Gaps (Unspecced Work)
 
@@ -102,9 +172,10 @@ gh pr list --state merged --search "Spec 010"
 
 ### Actions
 
+- [x] Drift auto-fixed in {n} specs
 - [ ] Review uncertain matches
 - [ ] Create specs for gaps
-- [ ] Run speckit-retro on existing specs
+- [ ] Run speckit-retro for deeper learnings
 ```
 
 ## Generated Description Template
@@ -151,12 +222,18 @@ Is it a refactor with no behavior change?
 ## Integration Commands
 
 ```bash
-# After audit, update existing specs with learnings
+# Run audit (auto-fixes drift, reports gaps)
+/speckit-audit
+
+# After audit, capture deeper behavioral learnings
 /speckit-retro specs/010-ephemeral-pool
 
 # Create full spec for unspecced work
 /speckit-flow "Feature description extracted from PR"
 
-# Check spec quality
-/speckit.analyze
+# Verify specific spec (full 3-tier check)
+/speckit-verify specs/010-ephemeral-pool
 ```
+
+**Note**: speckit-audit now auto-fixes drift using Tier 1 + Tier 2 checks.
+For deeper Tier 3 behavioral analysis, run `/speckit-verify` or `/speckit-retro`.

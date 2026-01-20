@@ -1,31 +1,34 @@
 ---
 name: speckit-audit
-description: Find implementation work without specs.
+description: Find unspecced work and fix spec drift.
 ---
 
-# Speckit Audit: Find Unspecced Work
+# Speckit Audit: Find Unspecced Work and Fix Drift
 
 Use this skill when:
 - You want to audit spec coverage across your implementation
 - You suspect features were implemented without specs
 - You want to retroactively create specs for undocumented work
 - You need to identify technical debt from unspecced changes
+- You want to detect and fix spec drift automatically
 
 Examples:
 - "run speckit-audit"
 - "find unspecced work"
 - "what PRs don't have specs?"
 - "audit spec coverage"
+- "fix spec drift"
 
-You are an expert at auditing implementation repositories to find work that was done without a corresponding specification. This skill helps maintain spec-driven development discipline by identifying gaps and offering to create retroactive specs.
+You are an expert at auditing implementation repositories to find work that was done without a corresponding specification, and detecting drift between specs and implementation. This skill helps maintain spec-driven development discipline by identifying gaps, fixing drift, and offering to create retroactive specs.
 
 ## Purpose
 
-In spec-driven development, all significant work should have a spec. This skill:
+In spec-driven development, all significant work should have a spec, and specs should stay in sync with implementation. This skill:
 1. Scans implementation repos for PRs and significant commits
 2. Compares against existing specs
 3. Reports gaps (work without specs)
-4. Offers to create specs via `/speckit-flow`
+4. Detects and auto-fixes drift in matched specs
+5. Offers to create specs via `/speckit-flow`
 
 ## Workflow
 
@@ -97,7 +100,64 @@ For each implementation item, check if a spec exists:
 - **Unspecced**: No match found (GAP)
 - **Uncertain**: Weak match, needs review
 
-### 4. REPORT Gaps
+### 4. VERIFY Matched Specs (Drift Detection)
+
+For each "Specced" match, check if the spec is still accurate:
+
+```bash
+# Discover all spec files
+SPEC_DIR="specs/$SPEC_ID"
+ls $SPEC_DIR/*.md
+
+# Common files: spec.md, quick-reference.md, plan.md, tasks.md
+```
+
+**Extract claims from ALL spec files:**
+- `spec.md`: Core requirements, config values, behavior
+- `quick-reference.md`: Commands, flags, patterns
+- `plan.md`: Implementation approach
+- `tasks.md`: Task completion status
+
+**Lightweight drift detection (Tier 1 + Tier 2 only):**
+
+| Tier | Check Type | Method |
+|------|------------|--------|
+| T1 | Config values | `grep -E "[0-9]+(s\|ms\|m\|h)" spec.md` |
+| T1 | Env vars | `grep -E '\$[A-Z_]+' spec.md` |
+| T1 | Constants | `grep -E "MAX\|LIMIT\|DEFAULT" spec.md` |
+| T2 | Features | `grep -i "support\|implement" spec.md` |
+| T2 | Commands | `grep -E '^\s*\$\|```bash' quick-reference.md` |
+
+**Compare spec claims against implementation:**
+
+```bash
+# For each claim, verify in implementation
+cd $IMPL_REPO
+
+# Check config values
+grep -rn "timeout\|Timeout" src/
+
+# Check env vars
+grep -rn "os.Getenv\|process.env" src/
+
+# Check feature presence
+grep -rn "$FEATURE_KEYWORD" src/
+```
+
+**Drift classification:**
+- **SYNCED**: Spec matches implementation
+- **DRIFTED**: Spec differs from implementation (auto-fix)
+- **UNKNOWN**: Cannot verify (skip)
+
+**Track drift per file:**
+
+| Spec | File | Claim | Spec Value | Impl Value | Status |
+|------|------|-------|------------|------------|--------|
+| 010 | spec.md | Timeout | 10s | 30s | DRIFTED |
+| 010 | quick-reference.md | --verbose flag | Yes | Yes | SYNCED |
+| 010 | tasks.md | Task 3 | pending | done | DRIFTED |
+
+### 5. REPORT Gaps + Drift
 
 Present findings to user:
 
@@ -107,8 +167,19 @@ Present findings to user:
 ### Summary
 - Total PRs analyzed: 50
 - Specced: 42 (84%)
+  - Synced: 38
+  - Drifted: 4 (auto-fixed)
 - Unspecced: 6 (12%)
 - Uncertain: 2 (4%)
+
+### Drifted Specs (Auto-Fixed)
+
+| Spec | File | Change | Source PR |
+|------|------|--------|-----------|
+| 010-ephemeral-pool | spec.md | Timeout: 10s → 30s | PR #421 |
+| 010-ephemeral-pool | quick-reference.md | Added --force flag | PR #421 |
+| 014-runner-cache | spec.md | MAX_CACHE_SIZE: 1GB → 5GB | PR #418 |
+| 014-runner-cache | tasks.md | Task 3: pending → done | PR #418 |
 
 ### Unspecced Work (Gaps)
 
@@ -125,15 +196,69 @@ Present findings to user:
 |----|-------|---------------|------------|
 | PR #410 | Migrate E2E tests to self-hosted | 011-ci-migration? | 60% |
 
-### Specced Work (For Reference)
+### Specced Work (Synced)
 
-| PR | Title | Matched Spec |
-|----|-------|--------------|
-| PR #421 | Runner binary cache | 014-runner-binary-cache |
-| PR #422 | Tart Linux VMs | 015-tart-linux-runners |
+| PR | Title | Matched Spec | Status |
+|----|-------|--------------|--------|
+| PR #421 | Runner binary cache | 014-runner-binary-cache | Synced |
+| PR #422 | Tart Linux VMs | 015-tart-linux-runners | Synced |
 ```
 
-### 5. OFFER Spec Creation
+### 6. UPDATE Drifted Specs (Auto-Fix)
+
+For each DRIFTED spec, automatically update all affected files:
+
+```bash
+# Discover all spec files
+SPEC_DIR="specs/$SPEC_ID"
+SPEC_FILES=$(ls $SPEC_DIR/*.md)
+
+# Common files and what to update:
+# - spec.md: Config values, env vars, constants, behavior
+# - quick-reference.md: Commands, flags, patterns
+# - plan.md: Implementation approach changes
+# - tasks.md: Task completion status
+```
+
+**Update each affected file:**
+
+| File | What to Update |
+|------|----------------|
+| `spec.md` | Config values, env vars, constants, behavior descriptions |
+| `quick-reference.md` | Command patterns, flags, troubleshooting tips |
+| `plan.md` | Implementation approach if significantly changed |
+| `tasks.md` | Mark completed tasks, add discovered tasks |
+
+**For each drift fix:**
+
+```markdown
+# In spec.md, update the value:
+- Timeout: 10s → 30s
+
+# In quick-reference.md, update commands:
+- Added: --force flag
+
+# In tasks.md, mark tasks done:
+- [x] Task 3: Implement timeout handling (PR #418)
+```
+
+**Add changelog entry to spec.md:**
+
+```markdown
+## Changelog
+
+### Drift Auto-Fix (YYYY-MM-DD)
+
+Audit detected and fixed drift from implementation:
+
+| File | Change | Source |
+|------|--------|--------|
+| spec.md | Timeout: 10s → 30s | PR #418 |
+| quick-reference.md | Added --force flag | PR #418 |
+| tasks.md | Task 3 marked complete | PR #418 |
+```
+
+### 7. OFFER Spec Creation
 
 For each unspecced item the user wants to spec:
 
@@ -160,7 +285,7 @@ Prevent test failures from unexpected machine states.
 Create full spec with /speckit-flow? [Y/n]
 ```
 
-### 6. INVOKE speckit-flow
+### 8. INVOKE speckit-flow
 
 When user approves, invoke the full spec creation pipeline:
 
@@ -215,10 +340,21 @@ Specs Directory: specs/
 Coverage:
   - PRs analyzed: 50
   - Specced: 42 (84%)
+    - Synced: 38
+    - Drifted: 4 (auto-fixed)
   - Unspecced: 6 (12%)
   - Uncertain: 2 (4%)
 
+Specs Updated (Drift Fixed):
+  010-ephemeral-pool:
+    - spec.md: Timeout 10s → 30s
+    - quick-reference.md: Added --force flag
+  014-runner-cache:
+    - spec.md: MAX_CACHE_SIZE 1GB → 5GB
+    - tasks.md: Task 3 marked complete
+
 Actions Taken:
+  - Drift fixed: 4 (across 2 specs)
   - Specs created: 2 (via /speckit-flow)
   - Skipped (infra): 3
   - Pending review: 1
@@ -236,12 +372,15 @@ New Specs:
 3. **User decides** - Present findings, let user choose what to spec
 4. **Full pipeline** - Use `/speckit-flow` for complete spec packages
 5. **Mark as retroactive** - Note that specs are documenting existing work
+6. **Auto-fix drift** - Update all spec files immediately when drift is detected
+7. **Update all files** - Check and fix drift in spec.md, quick-reference.md, plan.md, tasks.md
 
 ## Integration
 
 This skill integrates with:
 - **speckit-flow**: For creating full spec packages
-- **speckit-retro**: Run after audit to update existing specs with learnings
+- **speckit-verify**: Drift detection logic borrowed from verify (Tier 1 + Tier 2 checks)
+- **speckit-retro**: Run after audit to capture deeper behavioral learnings beyond drift fixes
 
 ## Quick Reference
 
