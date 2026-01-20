@@ -38,6 +38,7 @@
 
 ## Preserve
 
+- YAML frontmatter (---...---)
 - Code blocks (fenced and inline)
 - URLs and file paths
 - Technical terms

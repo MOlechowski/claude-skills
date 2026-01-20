@@ -18,6 +18,7 @@ Rewrite markdown files to be more concise while preserving meaning.
 ## Preserve Exactly
 
 Do not modify:
+- YAML frontmatter (---...---)
 - Fenced code blocks (```...```)
 - Inline code (`...`)
 - URLs and paths
@@ -85,5 +86,21 @@ Simplify:
 - Edit file in-place
 - Report before/after line count
 - List major changes made
+
+For aggregation, output JSON:
+```json
+{"file": "path.md", "before": 100, "after": 85}
+```
+
+## Batch Processing
+
+For multiple files:
+
+1. **Discover**: `glob .claude/skills/**/*.md`
+2. **Partition**: Group ~10 files per agent
+3. **Parallelize**: Use `/parallel-flow` with git-worktree for isolation
+4. **Aggregate**: Collect JSON results, merge branches
+
+For 10+ files, use parallel agents with disjoint file sets to avoid conflicts.
 
 See `references/quick-reference.md` for optimization checklist.
