@@ -162,10 +162,10 @@ Present findings to user:
 
 | Spec | File | Change | Source PR |
 |------|------|--------|-----------|
-| 010-ephemeral-pool | spec.md | Timeout: 10s → 30s | PR #421 |
+| 010-ephemeral-pool | spec.md | Timeout: 10s -> 30s | PR #421 |
 | 010-ephemeral-pool | quick-reference.md | Added --force flag | PR #421 |
-| 014-runner-cache | spec.md | MAX_CACHE_SIZE: 1GB → 5GB | PR #418 |
-| 014-runner-cache | tasks.md | Task 3: pending → done | PR #418 |
+| 014-runner-cache | spec.md | MAX_CACHE_SIZE: 1GB -> 5GB | PR #418 |
+| 014-runner-cache | tasks.md | Task 3: pending -> done | PR #418 |
 
 ### Unspecced Work (Gaps)
 
@@ -219,7 +219,7 @@ SPEC_FILES=$(ls $SPEC_DIR/*.md)
 
 ```markdown
 # In spec.md, update the value:
-- Timeout: 10s → 30s
+- Timeout: 10s -> 30s
 
 # In quick-reference.md, update commands:
 - Added: --force flag
@@ -239,7 +239,7 @@ Audit detected and fixed drift from implementation:
 
 | File | Change | Source |
 |------|--------|--------|
-| spec.md | Timeout: 10s → 30s | PR #418 |
+| spec.md | Timeout: 10s -> 30s | PR #418 |
 | quick-reference.md | Added --force flag | PR #418 |
 | tasks.md | Task 3 marked complete | PR #418 |
 ```
@@ -292,7 +292,7 @@ When user approves, invoke the full spec creation pipeline:
 
 ## Filtering Rules
 
-See `quick-reference.md` for filtering rules and output format templates.
+See `references/quick-reference.md` for filtering rules and output format templates.
 
 ## Rules
 
@@ -313,4 +313,4 @@ This skill integrates with:
 
 ## Quick Reference
 
-See `quick-reference.md` for matching patterns and filtering rules.
+See `references/quick-reference.md` for matching patterns and filtering rules.
