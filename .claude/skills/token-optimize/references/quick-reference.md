@@ -44,3 +44,23 @@
 - Technical terms
 - Heading structure
 - List semantics
+
+## Structure
+
+- [ ] Critical info at start/end of sections
+- [ ] Headings are short and scannable
+- [ ] Tables used for comparisons
+- [ ] No repeated concepts across sections
+
+## Format
+
+- [ ] YAML preferred over JSON
+- [ ] Bullets over prose where possible
+- [ ] Abbreviations defined once, then used
+- [ ] Code comments minimal (why, not what)
+
+## Document Design
+
+- [ ] Summary at top
+- [ ] Details in references/
+- [ ] Sections independently useful

@@ -70,6 +70,58 @@ Simplify:
 - Nested lists → flatter when possible
 - Verbose headings → concise ones
 
+## Structural Optimization
+
+**Key info placement:**
+- Put critical info at start and end (avoid "lost in the middle")
+- Lead sections with the most important point
+- End with actionable takeaways
+
+**Heading compression:**
+- "Installation and Setup Instructions" → "Setup"
+- "How to Configure the System" → "Configuration"
+
+**Table vs prose:**
+- Convert verbose lists to tables when comparing items
+- Tables often 20-30% more compact than equivalent prose
+
+## Semantic Compression
+
+**Deduplication:**
+- Remove concepts repeated across sections
+- Consolidate overlapping explanations
+
+**Reference consolidation:**
+- "As above" or "See X" instead of restating
+- Link to single source of truth
+
+**Abbreviation introduction:**
+- Define once: "Large Language Model (LLM)"
+- Use short form after: "The LLM processes..."
+
+## Format Efficiency
+
+**Format selection:**
+- YAML over JSON (15-20% fewer tokens)
+- Bullets over prose paragraphs
+- Tables over verbose comparisons
+
+**Code comments:**
+- Minimal - code should self-document
+- Only explain "why", not "what"
+
+## Document Structure
+
+**Progressive disclosure:**
+- Core info in main file
+- Details in references/ subdirectory
+- Summary at top, details below
+
+**Semantic sections:**
+- Split by topic, not arbitrary length
+- Each section should be independently useful
+- Enable selective loading for RAG
+
 ## Process
 
 1. Read the file completely
