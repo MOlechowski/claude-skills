@@ -14,9 +14,9 @@ spec-\d{3}            # "spec-010"
 ### Branch Name Patterns
 
 ```
-010-ephemeral-pool     → matches spec 010-ephemeral-pool
-feat/010-feature       → matches spec 010-*
-feature/pool-mgmt      → keyword match to pool-related spec
+010-ephemeral-pool     -> matches spec 010-ephemeral-pool
+feat/010-feature       -> matches spec 010-*
+feature/pool-mgmt      -> keyword match to pool-related spec
 ```
 
 ## Filtering Rules
@@ -156,10 +156,10 @@ Coverage:
 
 Specs Updated (Drift Fixed):
   010-ephemeral-pool:
-    - spec.md: Timeout 10s → 30s
+    - spec.md: Timeout 10s -> 30s
     - quick-reference.md: Added --force flag
   014-runner-cache:
-    - spec.md: MAX_CACHE_SIZE 1GB → 5GB
+    - spec.md: MAX_CACHE_SIZE 1GB -> 5GB
     - tasks.md: Task 3 marked complete
 
 Actions Taken:
@@ -197,7 +197,7 @@ New Specs:
 
 | Spec | File | Change | Source PR |
 |------|------|--------|-----------|
-| 010-pool | spec.md | Timeout: 10s → 30s | PR #418 |
+| 010-pool | spec.md | Timeout: 10s -> 30s | PR #418 |
 | 010-pool | quick-reference.md | Added --force flag | PR #418 |
 | 014-cache | tasks.md | Task 3 marked done | PR #421 |
 
@@ -237,24 +237,24 @@ This is a retroactive specification documenting existing functionality.
 
 ```
 Is this a feat: commit/PR?
-  YES → Flag as potential spec needed
-  NO  ↓
-
+  YES -> Flag as potential spec needed
+  NO  |
+      v
 Is this a large fix: (3+ files)?
-  YES → Flag as potential spec needed
-  NO  ↓
-
+  YES -> Flag as potential spec needed
+  NO  |
+      v
 Does it add new functionality?
-  YES → Flag as potential spec needed
-  NO  ↓
-
+  YES -> Flag as potential spec needed
+  NO  |
+      v
 Is it CI/CD/infra related?
-  YES → Skip (not spec-worthy)
-  NO  ↓
-
+  YES -> Skip (not spec-worthy)
+  NO  |
+      v
 Is it a refactor with no behavior change?
-  YES → Skip (not spec-worthy)
-  NO  → Review manually
+  YES -> Skip (not spec-worthy)
+  NO  -> Review manually
 ```
 
 ## Integration Commands

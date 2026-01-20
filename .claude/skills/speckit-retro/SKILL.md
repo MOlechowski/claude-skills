@@ -102,10 +102,10 @@ Map each learning to the appropriate file and section:
 | Troubleshooting tip | quick-reference.md | Troubleshooting | Bullet point |
 
 **File selection rules:**
-- Core behavior/contract → `spec.md`
-- Quick lookup/cheatsheet → `quick-reference.md`
-- Why decisions were made → `decision-tree.md`
-- How to debug/fix → `quick-reference.md`
+- Core behavior/contract -> `spec.md`
+- Quick lookup/cheatsheet -> `quick-reference.md`
+- Why decisions were made -> `decision-tree.md`
+- How to debug/fix -> `quick-reference.md`
 
 ### 5. GENERATE Updates
 
@@ -266,4 +266,4 @@ Changelog entries added.
 
 ## Quick Reference
 
-See `quick-reference.md` for signal patterns and section formats.
+See `references/quick-reference.md` for signal patterns and section formats.

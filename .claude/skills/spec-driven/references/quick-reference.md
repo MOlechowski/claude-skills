@@ -23,13 +23,13 @@ grep -n "^## P1" -A 100 $SPEC_REPO/specs/*/tasks.md | grep "^\- \[ \]"
 
 ```
 spec-repo/
-├── specs/
-│   ├── 001-feature/
-│   │   ├── README.md      # Specification
-│   │   └── tasks.md       # Tasks with checkboxes
-│   ├── 002-feature/
-│   │   └── ...
-└── README.md
++-- specs/
+|   +-- 001-feature/
+|   |   +-- README.md      # Specification
+|   |   +-- tasks.md       # Tasks with checkboxes
+|   +-- 002-feature/
+|   |   +-- ...
++-- README.md
 ```
 
 ## Task Syntax
@@ -177,7 +177,7 @@ Trigger questions:
 - [ ] Did I discover a better pattern?
 - [ ] Was anything confusing?
 
-If yes → Update docs → Commit: "docs: improve <file> - <description>"
+If yes -> Update docs -> Commit: "docs: improve <file> - <description>"
 ```
 
 See: **self-improvement** skill for full protocol.

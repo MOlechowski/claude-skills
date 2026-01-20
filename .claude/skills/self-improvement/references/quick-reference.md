@@ -126,18 +126,18 @@ New approach: Automated in pre-commit hook"
 
 ```
 Did I learn something useful?
-    │
-    ├─► No → Done
-    │
-    └─► Yes → Is it documented?
-                │
-                ├─► Yes → Is documentation correct?
-                │           │
-                │           ├─► Yes → Done
-                │           │
-                │           └─► No → Update it
-                │
-                └─► No → Add it
+    |
+    +-> No -> Done
+    |
+    +-> Yes -> Is it documented?
+                |
+                +-> Yes -> Is documentation correct?
+                |           |
+                |           +-> Yes -> Done
+                |           |
+                |           +-> No -> Update it
+                |
+                +-> No -> Add it
 ```
 
 ## Files Commonly Updated
