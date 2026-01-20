@@ -5,44 +5,26 @@ description: "YAML/JSON/XML processing with jq-like syntax. Use for: (1) queryin
 
 # yq Expertise Skill
 
-**Note:** This skill covers yq v4+ (mikefarah/yq). There's an older Python-based yq with different syntax.
+**Note:** Covers yq v4+ (mikefarah/yq). Older Python yq has different syntax.
 
 ## Basic Usage
 
 ### Read and Query
 ```bash
-# Print entire file
-yq '.' file.yml
-
-# Get specific field
-yq '.metadata.name' pod.yml
-
-# Get nested field
-yq '.spec.containers[0].image' pod.yml
-
-# Get array length
-yq '.items | length' list.yml
-
-# Check if key exists
-yq 'has("metadata")' file.yml
+yq '.' file.yml                          # Print entire file
+yq '.metadata.name' pod.yml              # Get field
+yq '.spec.containers[0].image' pod.yml   # Get nested field
+yq '.items | length' list.yml            # Array length
+yq 'has("metadata")' file.yml            # Check key exists
 ```
 
 ### Output Formats
 ```bash
-# Default YAML output
-yq '.' file.yml
-
-# JSON output
-yq -o json '.' file.yml
-
-# XML output
-yq -o xml '.' file.yml
-
-# Properties format
-yq -o props '.' file.yml
-
-# Compact (no colors or formatting)
-yq -o json -I=0 '.' file.yml
+yq '.' file.yml             # YAML (default)
+yq -o json '.' file.yml     # JSON
+yq -o xml '.' file.yml      # XML
+yq -o props '.' file.yml    # Properties
+yq -o json -I=0 '.' file.yml  # Compact JSON
 ```
 
 ## Path Expressions
@@ -82,11 +64,8 @@ yq '.. | select(has("name")) | .name' file.yml
 
 ### Optional Paths
 ```bash
-# Won't error if key doesn't exist
-yq '.optional.path // "default"' file.yml
-
-# Alternative operator
-yq '.primary // .fallback // "default"' file.yml
+yq '.optional.path // "default"' file.yml          # Default if missing
+yq '.primary // .fallback // "default"' file.yml   # Alternative chain
 ```
 
 ## Filtering and Selection
@@ -122,26 +101,16 @@ yq '.items | unique' file.yml
 
 ### Update Values
 ```bash
-# Set value
-yq '.metadata.name = "new-name"' file.yml
-
-# Update nested value
-yq '.spec.replicas = 3' file.yml
-
-# Update in-place (modify file)
-yq -i '.version = "2.0"' file.yml
-
-# Update multiple values
-yq '.replicas = 5 | .version = "2.0"' file.yml
+yq '.metadata.name = "new-name"' file.yml          # Set value
+yq '.spec.replicas = 3' file.yml                   # Nested value
+yq -i '.version = "2.0"' file.yml                  # In-place
+yq '.replicas = 5 | .version = "2.0"' file.yml     # Multiple
 ```
 
 ### Conditional Updates
 ```bash
-# Update if condition matches
-yq '(.items[] | select(.name == "target")).value = "new"' file.yml
-
-# Set default if missing
-yq '.timeout //= 30' file.yml
+yq '(.items[] | select(.name == "target")).value = "new"' file.yml  # Conditional
+yq '.timeout //= 30' file.yml                                       # Default if missing
 ```
 
 ### Array Operations
@@ -161,17 +130,10 @@ yq 'del(.items[2])' file.yml
 
 ### Delete Operations
 ```bash
-# Delete key
-yq 'del(.unwanted)' file.yml
-
-# Delete nested key
-yq 'del(.spec.template.metadata.labels.old)' file.yml
-
-# Delete matching items
-yq 'del(.items[] | select(.deprecated == true))' file.yml
-
-# Delete in-place
-yq -i 'del(.temporary)' file.yml
+yq 'del(.unwanted)' file.yml                                      # Delete key
+yq 'del(.spec.template.metadata.labels.old)' file.yml             # Nested
+yq 'del(.items[] | select(.deprecated == true))' file.yml         # Matching
+yq -i 'del(.temporary)' file.yml                                  # In-place
 ```
 
 ## Working with Multiple Files
@@ -333,4 +295,4 @@ yq -i '.deploy = {"stage": "deploy", "script": ["./deploy.sh"]}' .gitlab-ci.yml
 
 ## Additional Resources
 
-For detailed examples and reference, see `references/examples.md` and `references/quick-reference.md`.
+See `references/examples.md` and `references/quick-reference.md`.

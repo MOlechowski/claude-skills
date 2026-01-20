@@ -20,14 +20,14 @@ file=$(find . -type f | fzf)
 vim "$file"
 ```
 
-### Default Key Bindings
+### Default Keybindings
 ```
-Ctrl-J / Down    Move cursor down
-Ctrl-K / Up      Move cursor up
-Enter            Select item and exit
-Ctrl-C / Esc     Exit without selection
-Tab              Mark multiple items
-Shift-Tab        Unmark items
+Ctrl-J / Down    Cursor down
+Ctrl-K / Up      Cursor up
+Enter            Select and exit
+Ctrl-C / Esc     Exit
+Tab              Mark item
+Shift-Tab        Unmark
 Ctrl-A           Select all
 Ctrl-D           Deselect all
 Ctrl-U           Clear query
@@ -38,28 +38,25 @@ Ctrl-U           Clear query
 ### Fuzzy Matching
 ```bash
 # Fuzzy match (default)
-fzf  # Type "abc" matches "a_b_c", "a123b456c", etc.
+fzf  # "abc" matches "a_b_c", "a123b456c"
 
-# Exact match (prefix with ')
-fzf  # Type "'exact" matches "exact" only
+# Exact match (prefix ')
+fzf  # "'exact" matches "exact" only
 
-# Prefix match (suffix with ^)
-fzf  # Type "^start" matches lines starting with "start"
+# Prefix match (suffix ^)
+fzf  # "^start" matches lines starting with "start"
 
-# Suffix match (prefix with $)
-fzf  # Type "end$" matches lines ending with "end"
+# Suffix match (prefix $)
+fzf  # "end$" matches lines ending with "end"
 
-# Negation (prefix with !)
-fzf  # Type "!exclude" matches lines not containing "exclude"
+# Negation (prefix !)
+fzf  # "!exclude" excludes lines containing "exclude"
 ```
 
 ### Combining Patterns
 ```bash
-# AND (space-separated)
-# Type "foo bar" matches lines with both "foo" AND "bar"
-
-# OR (pipe-separated)
-# Type "foo | bar" matches lines with "foo" OR "bar"
+# AND (space-separated): "foo bar" matches lines with both
+# OR (pipe-separated): "foo | bar" matches lines with either
 ```
 
 ## Options and Customization
@@ -102,19 +99,10 @@ fzf --delimiter=: --with-nth=2  # Only search 2nd field
 
 ### Preview Window
 ```bash
-# Show preview
 fzf --preview 'cat {}'
-
-# Preview window size
 fzf --preview 'cat {}' --preview-window=right:50%
-
-# Preview window position
 fzf --preview 'cat {}' --preview-window=up:40%
-
-# Hide preview by default (toggle with Ctrl-/)
-fzf --preview 'cat {}' --preview-window=hidden
-
-# Custom preview with bat
+fzf --preview 'cat {}' --preview-window=hidden  # toggle with Ctrl-/
 fzf --preview 'bat --color=always --style=numbers {}'
 ```
 
@@ -198,10 +186,9 @@ eval "$(history | fzf --tac | sed 's/^[[:space:]]*[0-9]*[[:space:]]*//')"
 ## Shell Integration
 
 ### Bash/Zsh Keybindings
-After running `fzf` installer:
-
+After `fzf` installer:
 ```bash
-# Ctrl-T: Paste selected files/directories
+# Ctrl-T: Paste selected files
 # Ctrl-R: Command history
 # Alt-C: Change directory
 ```
@@ -333,4 +320,4 @@ export FZF_ALT_C_OPTS="--preview 'tree -C {} | head -100'"
 
 ## Additional Resources
 
-For detailed examples and reference, see `examples.md` and `quick-reference.md`.
+See `examples.md` and `quick-reference.md`.

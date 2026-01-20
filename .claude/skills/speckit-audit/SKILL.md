@@ -5,15 +5,15 @@ description: "Find unspecced work and fix spec drift. Use when: (1) auditing spe
 
 # Speckit Audit: Find Unspecced Work and Fix Drift
 
-Audit implementation repos to find work without specs and detect drift between specs and implementation. Identifies gaps, fixes drift, and offers to create retroactive specs.
+Audit implementation repos for work without specs and drift between specs and implementation. Identifies gaps, fixes drift, offers retroactive specs.
 
 ## Purpose
 
-In spec-driven development, all significant work should have a spec, and specs should stay in sync with implementation. This skill:
-1. Scans implementation repos for PRs and significant commits
+In spec-driven development, all significant work needs a spec, and specs must stay in sync with implementation. This skill:
+1. Scans repos for PRs and commits
 2. Compares against existing specs
 3. Reports gaps (work without specs)
-4. Detects and auto-fixes drift in matched specs
+4. Auto-fixes drift in matched specs
 5. Offers to create specs via `/speckit-flow`
 
 ## Workflow
@@ -41,7 +41,7 @@ git log --oneline --no-merges -50
 **Extract from each PR/commit:**
 - Title/description
 - Branch name
-- Files changed (for scope assessment)
+- Files changed (scope assessment)
 - Keywords for matching
 
 ### 2. SCAN Specs Directory
@@ -61,34 +61,29 @@ ls -d specs/*/ 2>/dev/null
 
 **Build spec inventory:**
 
-| Spec | Short Name | Title | Keywords |
-|------|------------|-------|----------|
-| 001 | hybrid-runner | Hybrid Runner | tart, podman, vm, container |
-| 010 | ephemeral-pool | Pool Replenishment | pool, replenish, ephemeral |
+| Spec | Short Name | Keywords |
+|------|------------|----------|
+| 001 | hybrid-runner | tart, podman, vm, container |
+| 010 | ephemeral-pool | pool, replenish, ephemeral |
 
 ### 3. MATCH Implementation to Specs
 
-For each implementation item, check if a spec exists:
+For each implementation item, check if spec exists:
 
-**Matching criteria (in order of strength):**
+**Matching criteria (by strength):**
 
-1. **Explicit reference** - PR/commit mentions spec number
-   - "Spec 010", "(#010)", "010-ephemeral"
-
-2. **Branch name match** - Branch follows spec pattern
-   - `010-ephemeral-pool` matches spec `010-ephemeral-pool`
-
-3. **Keyword overlap** - Significant keyword match with spec
-   - PR about "pool replenishment" matches spec with those keywords
+1. **Explicit reference** - PR/commit mentions spec number ("Spec 010", "(#010)")
+2. **Branch name match** - `010-ephemeral-pool` matches spec `010-*`
+3. **Keyword overlap** - PR about "pool replenishment" matches related spec
 
 **Classification:**
-- **Specced**: Clear match to existing spec
-- **Unspecced**: No match found (GAP)
+- **Specced**: Clear match
+- **Unspecced**: No match (GAP)
 - **Uncertain**: Weak match, needs review
 
 ### 4. VERIFY Matched Specs (Drift Detection)
 
-For each "Specced" match, check if the spec is still accurate:
+For each "Specced" match, check if spec is accurate:
 
 ```bash
 # Discover all spec files
@@ -98,13 +93,13 @@ ls $SPEC_DIR/*.md
 # Common files: spec.md, quick-reference.md, plan.md, tasks.md
 ```
 
-**Extract claims from ALL spec files:**
-- `spec.md`: Core requirements, config values, behavior
+**Extract claims from spec files:**
+- `spec.md`: Core requirements, config, behavior
 - `quick-reference.md`: Commands, flags, patterns
 - `plan.md`: Implementation approach
-- `tasks.md`: Task completion status
+- `tasks.md`: Task status
 
-**Lightweight drift detection (Tier 1 + Tier 2 only):**
+**Drift detection (Tier 1 + Tier 2):**
 
 | Tier | Check Type | Method |
 |------|------------|--------|
@@ -114,28 +109,21 @@ ls $SPEC_DIR/*.md
 | T2 | Features | `grep -i "support\|implement" spec.md` |
 | T2 | Commands | `grep -E '^\s*\$\|```bash' quick-reference.md` |
 
-**Compare spec claims against implementation:**
+**Compare spec vs implementation:**
 
 ```bash
-# For each claim, verify in implementation
 cd $IMPL_REPO
-
-# Check config values
-grep -rn "timeout\|Timeout" src/
-
-# Check env vars
-grep -rn "os.Getenv\|process.env" src/
-
-# Check feature presence
-grep -rn "$FEATURE_KEYWORD" src/
+grep -rn "timeout\|Timeout" src/        # Config values
+grep -rn "os.Getenv\|process.env" src/  # Env vars
+grep -rn "$FEATURE_KEYWORD" src/        # Features
 ```
 
 **Drift classification:**
-- **SYNCED**: Spec matches implementation
-- **DRIFTED**: Spec differs from implementation (auto-fix)
+- **SYNCED**: Spec matches impl
+- **DRIFTED**: Spec differs (auto-fix)
 - **UNKNOWN**: Cannot verify (skip)
 
-**Track drift per file:**
+**Track per file:**
 
 | Spec | File | Claim | Spec Value | Impl Value | Status |
 |------|------|-------|------------|------------|--------|
@@ -192,43 +180,23 @@ Present findings to user:
 
 ### 6. UPDATE Drifted Specs (Auto-Fix)
 
-For each DRIFTED spec, automatically update all affected files:
+For each DRIFTED spec, update affected files:
 
 ```bash
-# Discover all spec files
 SPEC_DIR="specs/$SPEC_ID"
-SPEC_FILES=$(ls $SPEC_DIR/*.md)
-
-# Common files and what to update:
-# - spec.md: Config values, env vars, constants, behavior
-# - quick-reference.md: Commands, flags, patterns
-# - plan.md: Implementation approach changes
-# - tasks.md: Task completion status
+ls $SPEC_DIR/*.md
 ```
 
-**Update each affected file:**
+**Update files:**
 
 | File | What to Update |
 |------|----------------|
-| `spec.md` | Config values, env vars, constants, behavior descriptions |
-| `quick-reference.md` | Command patterns, flags, troubleshooting tips |
-| `plan.md` | Implementation approach if significantly changed |
-| `tasks.md` | Mark completed tasks, add discovered tasks |
+| `spec.md` | Config, env vars, constants, behavior |
+| `quick-reference.md` | Commands, flags, troubleshooting |
+| `plan.md` | Implementation approach |
+| `tasks.md` | Mark completed, add discovered tasks |
 
-**For each drift fix:**
-
-```markdown
-# In spec.md, update the value:
-- Timeout: 10s -> 30s
-
-# In quick-reference.md, update commands:
-- Added: --force flag
-
-# In tasks.md, mark tasks done:
-- [x] Task 3: Implement timeout handling (PR #418)
-```
-
-**Add changelog entry to spec.md:**
+**Add changelog to spec.md:**
 
 ```markdown
 ## Changelog
@@ -246,71 +214,52 @@ Audit detected and fixed drift from implementation:
 
 ### 7. OFFER Spec Creation
 
-For each unspecced item the user wants to spec:
+For each unspecced item user wants to spec:
 
 ```markdown
 ## Create Spec for PR #415?
 
 **PR Title**: fix(e2e): properly check Podman machine state
-**PR Body**:
-> Tests were failing because we didn't properly check if Podman machine
-> was running before starting containers. Added state checks for:
-> not running, starting, already running.
+**PR Body**: Tests were failing because Podman machine state wasn't checked.
+**Files Changed**: 3 files
 
-**Files Changed**: 3 files (e2e tests, podman runtime)
-
-**Generated Feature Description**:
+**Generated Description**:
 ```
 Feature: Podman Machine State Management
-
-The system needs to properly check Podman machine state before starting
-containers. Handle states: not running, starting, already running.
-Prevent test failures from unexpected machine states.
+Check Podman machine state before starting containers.
+Handle: not running, starting, already running.
 ```
 
-Create full spec with /speckit-flow? [Y/n]
+Create spec with /speckit-flow? [Y/n]
 ```
 
 ### 8. INVOKE speckit-flow
 
-When user approves, invoke the full spec creation pipeline:
+When user approves, invoke `/speckit-flow` to create full spec package.
 
-```bash
-# speckit-flow will handle:
-# 1. CREATE: spec.md + plan.md + research.md
-# 2. CLARIFY: resolve ambiguities
-# 3. ANALYZE: validate consistency
-# 4. TASKS: generate tasks.md (mark existing work as done)
-# 5. CHECKLIST: quality checklists
-# 6. PR: create PR for spec artifacts
-```
+**Retroactive spec handling:**
+- Note that spec documents existing functionality
+- Tasks reflect completed work
+- Reference original implementation PRs
 
-**Special handling for retroactive specs:**
-- Note in spec that this is retroactive documentation
-- Tasks should reflect already-completed work
-- Reference the original implementation PRs
+## Filtering
 
-## Filtering Rules
-
-See `references/quick-reference.md` for filtering rules and output format templates.
+See `references/quick-reference.md` for rules and templates.
 
 ## Rules
 
-1. **Be conservative** - Only flag genuinely significant work as needing specs
-2. **Skip infrastructure** - CI/CD, tooling, and infra changes rarely need specs
-3. **User decides** - Present findings, let user choose what to spec
-4. **Full pipeline** - Use `/speckit-flow` for complete spec packages
-5. **Mark as retroactive** - Note that specs are documenting existing work
-6. **Auto-fix drift** - Update all spec files immediately when drift is detected
-7. **Update all files** - Check and fix drift in spec.md, quick-reference.md, plan.md, tasks.md
+1. **Be conservative** - Only flag significant work
+2. **Skip infrastructure** - CI/CD, tooling rarely need specs
+3. **User decides** - Present findings, let user choose
+4. **Full pipeline** - Use `/speckit-flow` for complete packages
+5. **Mark retroactive** - Note specs document existing work
+6. **Auto-fix drift** - Update spec files when drift detected
+7. **Update all files** - Fix drift in spec.md, quick-reference.md, plan.md, tasks.md
 
 ## Integration
 
-This skill integrates with:
-- **speckit-flow**: For creating full spec packages
-- **speckit-verify**: Drift detection logic borrowed from verify (Tier 1 + Tier 2 checks)
-- **speckit-retro**: Run after audit to capture deeper behavioral learnings beyond drift fixes
+- **speckit-flow**: Full spec packages
+- **speckit-verify**: Drift detection (Tier 1 + Tier 2)
+- **speckit-retro**: Deeper behavioral learnings
 
-## Quick Reference
-
-See `references/quick-reference.md` for matching patterns and filtering rules.
+See `references/quick-reference.md` for matching patterns and rules.

@@ -7,15 +7,15 @@ description: "Large-scale codebase refactoring with interactive review. Use for:
 
 ## Core Capabilities
 
-1. **Pattern Matching**: Construct precise Rust regex patterns for codebase transformations
-2. **Safe Refactoring**: Guide users through interactive review of each change
-3. **Scope Management**: Define appropriate file filters and directory boundaries
-4. **Syntax Expertise**: Navigate Rust regex differences from Python/JavaScript regex
-5. **Best Practices**: Ensure safe, effective large-scale refactoring operations
+1. **Pattern Matching**: Construct precise Rust regex patterns for transformations
+2. **Safe Refactoring**: Interactive review of each change
+3. **Scope Management**: Define file filters and directory boundaries
+4. **Syntax Expertise**: Navigate Rust regex differences from Python/JS
+5. **Best Practices**: Safe, effective large-scale refactoring
 
 ## Critical Syntax Differences
 
-**IMPORTANT**: fastmod uses Rust regex, NOT Python/JavaScript regex:
+**IMPORTANT**: fastmod uses Rust regex, NOT Python/JS regex:
 
 ### Capture Groups
 ```bash
@@ -32,18 +32,18 @@ fastmod 'function (\w+)' 'const ${1} ='
 fastmod 'price' 'cost is $$10'  # Use $$
 ```
 
-### Not Supported in Rust Regex
+### Not Supported
 - Lookahead: `(?=pattern)`
 - Lookbehind: `(?<=pattern)`
-- Backreferences: `\1` (use `${1}` instead)
+- Backreferences: `\1` (use `${1}`)
 
 ### Shell Quoting
 ```bash
-# Use single quotes to prevent shell interpretation
+# Single quotes prevent shell interpretation
 fastmod 'pattern' 'replacement'  # Good
 
 # Double quotes require escaping $
-fastmod "pattern" "replacement with \$${1}"  # Careful!
+fastmod "pattern" "replacement with \$${1}"  # Careful
 ```
 
 ## Basic Usage Pattern
@@ -57,35 +57,35 @@ fastmod [OPTIONS] <REGEX_PATTERN> <REPLACEMENT> [PATH]
 ### Scope Control
 ```bash
 -d <DIR>              # Directory to search (default: current)
---extensions <EXT>    # Comma-separated file extensions (e.g., js,jsx,ts,tsx)
---iglob <PATTERN>     # Include files matching glob pattern
---exclude-dir <DIR>   # Exclude directory from search
+--extensions <EXT>    # Comma-separated extensions (e.g., js,jsx,ts,tsx)
+--iglob <PATTERN>     # Include files matching glob
+--exclude-dir <DIR>   # Exclude directory
 ```
 
 ### Pattern Matching
 ```bash
--i                    # Case-insensitive matching
--m, --multiline       # Allow patterns to match across multiple lines
+-i                    # Case-insensitive
+-m, --multiline       # Match across lines
 ```
 
 ### Execution Control
 ```bash
---accept-all          # Non-interactive mode (DANGEROUS - test first!)
---print-changed-files # Show which files were modified
+--accept-all          # Non-interactive (DANGEROUS - test first!)
+--print-changed-files # Show modified files
 ```
 
 ## Interactive Workflow
 
-For each match, fastmod shows a colored diff and prompts:
+For each match, fastmod shows colored diff and prompts:
 
 **Options:**
-- `y` - Accept this change
-- `n` - Reject this change
-- `e` - Open in $EDITOR to manually edit
-- `d` - Accept this and all remaining changes in file
-- `q` - Quit (stop processing all files)
-- `s` - Skip this file entirely
-- `?` - Show help
+- `y` - Accept change
+- `n` - Reject change
+- `e` - Open in $EDITOR
+- `d` - Accept all remaining in file
+- `q` - Quit
+- `s` - Skip file
+- `?` - Help
 
 ## Common Refactoring Patterns
 
@@ -97,7 +97,7 @@ fastmod -d src --extensions ts,tsx 'UserManager' 'UserService'
 
 ### 2. Function Signature Changes
 ```bash
-# Add parameter to function calls
+# Add parameter
 fastmod 'authenticate\((.*?)\)' 'authenticate(${1}, context)'
 
 # Update method calls
@@ -106,31 +106,31 @@ fastmod '\.save\(\)' '.save({ validateBeforeSave: true })'
 
 ### 3. Import Path Updates
 ```bash
-# Update import paths after moving files
+# After moving files
 fastmod "from '\./utils/old'" "from './utils/new'"
 fastmod "from '@/components/old" "from '@/components/new"
 ```
 
 ### 4. Framework Migrations
 ```bash
-# Update React prop names
+# React prop names
 fastmod 'size="small"' 'size="sm"'
 fastmod 'size="medium"' 'size="md"'
 fastmod 'size="large"' 'size="lg"'
 ```
 
-### 5. API Call Updates
+### 5. API Updates
 ```bash
-# Wrap existing API calls
+# Wrap API calls
 fastmod 'fetch\((.*?)\)' 'apiClient.fetch(${1})'
 
-# Update endpoint URLs
+# Update endpoints
 fastmod '/api/v1/' '/api/v2/'
 ```
 
 ### 6. Scoped Refactoring
 ```bash
-# Only affect specific file types
+# Specific file types
 fastmod --iglob '**/*Service.ts' 'OldPattern' 'NewPattern'
 
 # Exclude directories
@@ -139,15 +139,14 @@ fastmod --exclude-dir node_modules --exclude-dir dist 'pattern' 'replacement'
 
 ## Safety Guidelines
 
-### MUST (Critical Safety Rules)
+### MUST
 
-1. **Always test patterns first** on a small subset:
+1. **Test patterns first** on small subset:
    ```bash
-   # Test on single directory first
    fastmod -d src/components/Button 'pattern' 'replacement'
    ```
 
-2. **Ensure clean git state** before starting:
+2. **Ensure clean git state**:
    ```bash
    git status  # Should be clean
    git stash   # If needed
@@ -155,18 +154,18 @@ fastmod --exclude-dir node_modules --exclude-dir dist 'pattern' 'replacement'
 
 3. **Use interactive mode** (default) for new patterns
 
-4. **Review first few matches carefully** before using `d` (accept remaining)
+4. **Review first few matches** before using `d`
 
-5. **Use specific scope** with `--extensions` or `--iglob` to limit impact
+5. **Use specific scope** with `--extensions` or `--iglob`
 
-### SHOULD (Best Practices)
+### SHOULD
 
-1. **Start narrow, expand gradually**:
+1. **Start narrow, expand**:
    ```bash
-   # Start: Single directory
+   # Single directory
    fastmod -d src/utils 'pattern' 'replacement'
 
-   # Then: Expand to src
+   # Expand
    fastmod -d src 'pattern' 'replacement'
    ```
 
@@ -174,135 +173,112 @@ fastmod --exclude-dir node_modules --exclude-dir dist 'pattern' 'replacement'
 
 3. **Exclude build/dependency directories**
 
-4. **Test regex patterns** in a regex tester with Rust regex syntax
+4. **Test regex** with Rust regex syntax
 
-### MUST NOT (Prohibited Actions)
+### MUST NOT
 
-1. Use `--accept-all` without thorough testing
-2. Run fastmod with uncommitted changes
-3. Use overly broad patterns without file filtering
-4. Rely on lookahead/lookbehind (not supported)
+1. Use `--accept-all` without testing
+2. Run with uncommitted changes
+3. Use broad patterns without filtering
+4. Rely on lookahead/lookbehind
 
-### When `--accept-all` IS Acceptable
+### When `--accept-all` IS Safe
 
-Non-interactive mode can be safe when ALL conditions are met:
+All conditions must be met:
 1. Clean git state
 2. Simple, well-defined patterns
 3. Word boundaries (`\b`) used
 4. File type filtering applied
-5. Test suite available to verify
+5. Test suite available
 
 ## Error Recovery
 
 ### Pattern Matching Too Much
-- Press `n` to reject
-- Press `q` to quit
-- Refine pattern to be more specific
-
+- Press `n` to reject, `q` to quit
+- Refine pattern:
 ```bash
 # Too broad
-fastmod 'user' 'customer'  # Matches "username", "userService", etc.
+fastmod 'user' 'customer'  # Matches "username", etc.
 
 # More specific
-fastmod '\buser\b' 'customer'  # Only matches whole word "user"
+fastmod '\buser\b' 'customer'  # Whole word only
 ```
 
-### Partial Refactoring Completed
-- Check `git status` to see which files changed
-- Option 1: `git restore .` to undo all and restart
-- Option 2: Continue with remaining files
+### Partial Refactoring
+- `git status` - see changed files
+- `git restore .` - undo all
+- Or continue with remaining files
 
-### Compilation Errors After Refactoring
+### Compilation Errors
 ```bash
-# Identify failing files
-npm run build
-
-# Review changes in failing files
-git diff path/to/failing/file.ts
-
-# Revert specific file if needed
-git restore path/to/file.ts
+npm run build             # Identify failures
+git diff path/to/file.ts  # Review changes
+git restore path/to/file.ts  # Revert if needed
 ```
 
 ## Advanced Patterns
 
 ### Multi-Step Refactoring
 ```bash
-# Step 1: Update class definitions
+# 1: Class definitions
 fastmod 'class UserManager' 'class UserService'
 
-# Step 2: Update imports
+# 2: Imports
 fastmod 'import.*UserManager' 'import { UserService }'
 
-# Step 3: Update all usages
+# 3: Usages
 fastmod 'UserManager' 'UserService'
 
-# Step 4: Update file names (manual)
+# 4: File names (manual)
 git mv src/UserManager.ts src/UserService.ts
 ```
 
-### Capturing Complex Patterns
+### Complex Patterns
 ```bash
-# Capture and reuse multiple groups
+# Multiple capture groups
 fastmod 'function (\w+)\((.*?)\)' 'const ${1} = (${2}) =>'
 
-# Preserve whitespace patterns
+# Preserve whitespace
 fastmod 'if\s*\((.*?)\)\s*{' 'if (${1}) {'
 ```
 
-## Integration with Development Workflow
+## Workflow Integration
 
-### Pre-Refactoring Checklist
+### Pre-Refactoring
 ```bash
-# 1. Clean git state
-git status
-
-# 2. Create checkpoint branch (optional but recommended)
-git checkout -b refactor/update-user-manager
-
-# 3. Run tests to establish baseline
-npm test
-
-# 4. Prepare fastmod command
+git status                              # Clean state
+git checkout -b refactor/update-name    # Checkpoint branch
+npm test                                # Baseline
 fastmod -d src --extensions ts,tsx 'pattern' 'replacement'
 ```
 
-### Post-Refactoring Validation
+### Post-Refactoring
 ```bash
-# 1. Check what changed
-git status
-git diff
-
-# 2. Verify build
-npm run build
-
-# 3. Run tests
-npm test
-
-# 4. Commit if successful
-git add -A
-git commit -m "refactor: rename UserManager to UserService"
+git status && git diff   # Check changes
+npm run build            # Verify build
+npm test                 # Run tests
+git add -A && git commit -m "refactor: rename UserManager to UserService"
 ```
 
 ## Troubleshooting
 
 ### "No matches found"
-- Verify pattern with a test file first
-- Check file extensions filter
-- Try case-insensitive flag `-i`
+- Verify pattern with test file
+- Check extensions filter
+- Try `-i` for case-insensitive
 
 ### "Pattern is invalid"
-- Test regex in Rust regex tester: https://regex101.com (select Rust flavor)
-- Check for unsupported features (lookahead, lookbehind)
+- Test at https://regex101.com (Rust flavor)
+- Check for unsupported features
 
 ### "Replacement has syntax errors"
-- Use `${1}` not `\1` for capture groups
-- Use `$$` for literal dollar signs
-- Check shell quoting (prefer single quotes)
+- Use `${1}` not `\1`
+- Use `$$` for literal `$`
+- Prefer single quotes
 
-## Additional Resources
+## Resources
 
-For detailed examples and reference, see `examples.md` and `quick-reference.md`.
+See `examples.md` and `quick-reference.md`.
 
-- Fastmod GitHub: https://github.com/facebookincubator/fastmod
-- Rust Regex Syntax: https://docs.rs/regex/latest/regex/#syntax
+- Fastmod: https://github.com/facebookincubator/fastmod
+- Rust Regex: https://docs.rs/regex/latest/regex/#syntax

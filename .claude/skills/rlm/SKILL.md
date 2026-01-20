@@ -9,13 +9,13 @@ description: "Process massive codebases with parallel agents using the RLM parad
 
 > **"Context is an external resource, not a local variable."**
 
-Instead of loading files directly into context, treat the filesystem as a queryable database. Orchestrate sub-agents that analyze code in parallel.
+Treat filesystem as queryable database instead of loading files into context. Orchestrate sub-agents for parallel code analysis.
 
 ## Two Operation Modes
 
 ### Mode 1: Investigation (3-5 Explore Agents)
 
-Use when answering questions about a codebase. Deploy agents with **different perspectives**:
+For answering codebase questions. Deploy agents with **different perspectives**:
 
 ```
 Task(
@@ -51,7 +51,7 @@ Task(
 
 ### Mode 2: Bulk Processing (5-10 Agents)
 
-Use for systematic analysis of all files. Split by **file groups or categories**:
+For systematic analysis of all files. Split by **file groups or categories**:
 
 ```
 Scaling guidelines:
@@ -82,7 +82,7 @@ Task(
 ## Four-Stage Pipeline
 
 ### 1. Index
-Scan file structure without loading content:
+Scan file structure without loading content.
 
 ```bash
 # Count files by type
@@ -93,7 +93,7 @@ ls -laR src/ | head -50
 ```
 
 ### 2. Filter
-Narrow candidates using pattern matching:
+Narrow candidates using pattern matching.
 
 ```bash
 # Find files containing pattern
@@ -127,7 +127,7 @@ jq -s '[.[].findings] | add' /tmp/rlm_*.json
 
 ## Agent Output Pattern
 
-Agents write to files to avoid context overflow:
+Agents write to files to avoid context overflow.
 
 ```
 Task(
@@ -175,7 +175,7 @@ jq '[.[].findings[] | select(.file | contains("auth"))]' /tmp/report.json
 
 ## Python Engine (Optional)
 
-For structured analysis, use the bundled Python engine:
+For structured analysis, use the bundled Python engine.
 
 ```bash
 # Scan and index files
@@ -190,7 +190,7 @@ python3 ~/.claude/skills/rlm/rlm.py chunk --pattern "*.py"
 
 ## Recovery Method
 
-If background agents fail, fall back to iterative processing:
+Fallback if background agents fail:
 
 ```python
 import os, json
@@ -209,16 +209,16 @@ print(json.dumps(results))
 
 ## Integration
 
-Works well with:
+Works with:
 - **Explore agents** for codebase investigation
-- **rg/grep** for filtering before agent spawn
-- **jq** for merging and filtering results
+- **rg/grep** for filtering before spawn
+- **jq** for merging/filtering results
 - **Python scripts** for state management
 
 ## Quick Reference
 
-See `quick-reference.md` for command patterns and rlm.py usage.
+See `quick-reference.md` for command patterns.
 
 ## Credits
 
-Based on the Recursive Language Modeling paradigm. Original skill by [BowTiedSwan](https://github.com/BowTiedSwan/rlm-skill).
+Based on RLM paradigm. Original skill by [BowTiedSwan](https://github.com/BowTiedSwan/rlm-skill).

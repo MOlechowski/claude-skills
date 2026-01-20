@@ -18,6 +18,7 @@ Rewrite markdown files to be more concise while preserving meaning.
 ## Preserve Exactly
 
 Do not modify:
+- YAML frontmatter (---...---)
 - Fenced code blocks (```...```)
 - Inline code (`...`)
 - URLs and paths
@@ -69,6 +70,58 @@ Simplify:
 - Nested lists → flatter when possible
 - Verbose headings → concise ones
 
+## Structural Optimization
+
+**Key info placement:**
+- Put critical info at start and end (avoid "lost in the middle")
+- Lead sections with the most important point
+- End with actionable takeaways
+
+**Heading compression:**
+- "Installation and Setup Instructions" → "Setup"
+- "How to Configure the System" → "Configuration"
+
+**Table vs prose:**
+- Convert verbose lists to tables when comparing items
+- Tables often 20-30% more compact than equivalent prose
+
+## Semantic Compression
+
+**Deduplication:**
+- Remove concepts repeated across sections
+- Consolidate overlapping explanations
+
+**Reference consolidation:**
+- "As above" or "See X" instead of restating
+- Link to single source of truth
+
+**Abbreviation introduction:**
+- Define once: "Large Language Model (LLM)"
+- Use short form after: "The LLM processes..."
+
+## Format Efficiency
+
+**Format selection:**
+- YAML over JSON (15-20% fewer tokens)
+- Bullets over prose paragraphs
+- Tables over verbose comparisons
+
+**Code comments:**
+- Minimal - code should self-document
+- Only explain "why", not "what"
+
+## Document Structure
+
+**Progressive disclosure:**
+- Core info in main file
+- Details in references/ subdirectory
+- Summary at top, details below
+
+**Semantic sections:**
+- Split by topic, not arbitrary length
+- Each section should be independently useful
+- Enable selective loading for RAG
+
 ## Process
 
 1. Read the file completely
@@ -85,5 +138,21 @@ Simplify:
 - Edit file in-place
 - Report before/after line count
 - List major changes made
+
+For aggregation, output JSON:
+```json
+{"file": "path.md", "before": 100, "after": 85}
+```
+
+## Batch Processing
+
+For multiple files:
+
+1. **Discover**: `glob .claude/skills/**/*.md`
+2. **Partition**: Group ~10 files per agent
+3. **Parallelize**: Use `/parallel-flow` with git-worktree for isolation
+4. **Aggregate**: Collect JSON results, merge branches
+
+For 10+ files, use parallel agents with disjoint file sets to avoid conflicts.
 
 See `references/quick-reference.md` for optimization checklist.

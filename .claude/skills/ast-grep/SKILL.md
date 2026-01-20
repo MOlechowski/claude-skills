@@ -7,11 +7,11 @@ description: "Semantic code search and transformation using ASTs. Use for: (1) s
 
 ## Core Capabilities
 
-1. **Semantic Search**: Match code by structure, not just text patterns
-2. **Language Aware**: Understands syntax of multiple programming languages
+1. **Semantic Search**: Match code by structure, not text patterns
+2. **Language Aware**: Understands syntax of multiple languages
 3. **Metavariables**: Capture and reuse code fragments in patterns
-4. **Structural Rewriting**: Transform code while preserving semantics
-5. **Multi-Language**: TypeScript, JavaScript, Python, Rust, Go, and more
+4. **Structural Rewriting**: Transform code preserving semantics
+5. **Multi-Language**: TypeScript, JavaScript, Python, Rust, Go, etc.
 6. **Rule Engine**: Define custom linting and refactoring rules
 
 ## Basic Usage
@@ -68,7 +68,7 @@ sg -p 'function $NAME() { $$$BODY }'
 
 ### Anonymous Wildcards
 ```bash
-# Match any expression (don't capture)
+# Match any expression without capturing
 sg -p 'console.log($_$)'
 
 # Match any condition
@@ -231,36 +231,36 @@ sg -p 'db.query($SQL, $$$PARAMS)' --lang js
 ## Best Practices
 
 ### Pattern Writing
-- Start with simple patterns and add constraints
+- Start simple, add constraints incrementally
 - Use metavariables ($VAR) for captures
-- Use wildcards ($_$) when you don't need to capture
+- Use wildcards ($_$) when capture unnecessary
 - Test patterns on small examples first
 - Use --debug-query to understand AST structure
 
 ### Refactoring
-- Always preview changes before applying
+- Preview changes before applying
 - Use --interactive for large refactorings
 - Test after transformations
-- Commit changes incrementally
+- Commit incrementally
 
 ## Troubleshooting
 
 ### Pattern Not Matching
-- Verify language is correct (--lang)
+- Verify language (--lang)
 - Check AST structure with --debug-query
 - Simplify pattern to isolate issue
-- Ensure whitespace doesn't affect match
+- Ensure whitespace isn't affecting match
 
 ### False Positives
 - Add constraints (inside, has, not)
-- Be more specific in pattern
+- Make pattern more specific
 - Use kind constraints for node types
 
 ## Additional Resources
 
-For detailed examples and advanced patterns, see `examples.md` and `quick-reference.md`.
+See `examples.md` and `quick-reference.md` for detailed examples.
 
 - Official Documentation: https://ast-grep.github.io/
 - Pattern Playground: https://ast-grep.github.io/playground.html
 
-When providing ast-grep guidance, emphasize semantic matching over text patterns, suggest testing patterns in the playground, and recommend starting simple then adding constraints for precision.
+Emphasize semantic matching over text patterns. Test patterns in the playground. Start simple, add constraints for precision.

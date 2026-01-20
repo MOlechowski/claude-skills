@@ -70,15 +70,15 @@ gh pr list --state open --json number,title,reviewDecision
 
 ### 2. Multi-Spec Setup (REQUIRED for 2+ specs)
 ```bash
-# Create worktrees BEFORE starting implementation
+# Create worktrees BEFORE implementation
 git worktree add ../impl-014-feature -b 014-feature-name main
 git worktree add ../impl-015-feature -b 015-feature-name main
 
-# Work in each directory (no git checkout needed)
+# Work in each directory (no checkout needed)
 cd ../impl-014-feature && # implement spec 014
 cd ../impl-015-feature && # implement spec 015
 
-# Cleanup after PRs merged
+# Cleanup after merge
 git worktree remove ../impl-014-feature
 git worktree remove ../impl-015-feature
 ```
@@ -168,16 +168,16 @@ mark: update task status for spec-NNN
 
 ## Post-Task Reflection
 
-After completing tasks, use self-improvement skill:
+After tasks, use self-improvement skill:
 
 ```
 Trigger questions:
-- [ ] Did I figure out something not documented?
-- [ ] Did I find a workaround?
-- [ ] Did I discover a better pattern?
-- [ ] Was anything confusing?
+- [ ] Figured out something undocumented?
+- [ ] Found a workaround?
+- [ ] Discovered a better pattern?
+- [ ] Anything confusing?
 
 If yes -> Update docs -> Commit: "docs: improve <file> - <description>"
 ```
 
-See: **self-improvement** skill for full protocol.
+See: **self-improvement** skill.

@@ -5,11 +5,11 @@ description: "Update specs with implementation learnings. Use when: (1) implemen
 
 # Speckit Retro: Capture Implementation Learnings
 
-Analyze implementation history to extract learnings that should be captured in feature specifications. Bridges the gap between what was planned and what was discovered during implementation.
+Analyze implementation history to extract learnings for feature specifications. Bridges the gap between what was planned and what was discovered.
 
 ## Purpose
 
-After implementation, bugs are fixed, edge cases are discovered, and assumptions are corrected. These learnings should flow back into the spec so future similar features benefit from this knowledge.
+After implementation, bugs get fixed, edge cases are discovered, and assumptions are corrected. These learnings should flow back into specs so future features benefit.
 
 ## Workflow
 
@@ -37,11 +37,11 @@ ls specs/*/spec.md
 - Implementation repo path (auto-detect from `submodules/` or specified)
 
 **Discovered files:**
-- Primary: `spec.md` (main specification)
+- Primary: `spec.md`
 - Supporting: `quick-reference.md`, `decision-tree.md`, etc.
 - Related specs: Other `specs/*/spec.md` for cross-spec propagation
 
-If not found, ask the user to specify paths.
+If not found, ask user for paths.
 
 ### 2. GATHER Implementation History
 
@@ -60,13 +60,13 @@ gh pr view $PR_NUMBER --json body,comments,reviews
 ```
 
 **Filter by feature:**
-- Branch name contains spec number (e.g., `010-ephemeral`)
-- Commit/PR message references spec (e.g., "Spec 010", "(#010)")
+- Branch contains spec number (e.g., `010-ephemeral`)
+- Commit/PR references spec (e.g., "Spec 010", "(#010)")
 - Keywords match spec title
 
 ### 3. ANALYZE for Learnings
 
-Use semantic analysis to identify learnings in commit messages and PR discussions.
+Use semantic analysis to identify learnings in commits and PR discussions.
 
 **Signals indicating a learning:**
 
@@ -81,13 +81,13 @@ Use semantic analysis to identify learnings in commit messages and PR discussion
 
 **NOT learnings:**
 - Routine implementation details
-- Refactoring for code quality
-- Test additions without new discoveries
+- Refactoring
+- Test additions without discoveries
 - Documentation updates
 
 ### 4. CATEGORIZE by File and Section
 
-Map each learning to the appropriate file and section:
+Map each learning to appropriate file and section:
 
 | Learning Type | Target File | Target Section | Format |
 |---------------|-------------|----------------|--------|
@@ -101,15 +101,15 @@ Map each learning to the appropriate file and section:
 | Decision rationale | decision-tree.md | Decisions | Decision entry |
 | Troubleshooting tip | quick-reference.md | Troubleshooting | Bullet point |
 
-**File selection rules:**
+**File selection:**
 - Core behavior/contract -> `spec.md`
 - Quick lookup/cheatsheet -> `quick-reference.md`
-- Why decisions were made -> `decision-tree.md`
-- How to debug/fix -> `quick-reference.md`
+- Decision rationale -> `decision-tree.md`
+- Debug/fix guides -> `quick-reference.md`
 
 ### 5. GENERATE Updates
 
-For each learning, generate the spec update:
+For each learning, generate spec update:
 
 **Edge Cases (Q&A format):**
 ```markdown
@@ -137,7 +137,7 @@ For each learning, generate the spec update:
 
 ### 6. PREVIEW Changes
 
-Before editing, show the user what will be changed, grouped by file:
+Before editing, show user what will change, grouped by file:
 
 ```markdown
 ## Proposed Updates
@@ -166,7 +166,7 @@ Proceed with updates? [Y/n]
 
 ### 7. UPDATE Files
 
-Apply changes to all affected files and add changelog entry to `spec.md`:
+Apply changes to all affected files and add changelog to `spec.md`:
 
 ```markdown
 ## Changelog
@@ -184,12 +184,12 @@ Analysis of implementation commits and PRs revealed:
 
 ### 8. CROSS-SPEC Propagation
 
-After updating the primary spec, check if learnings apply to other specs:
+After updating primary spec, check if learnings apply to other specs:
 
 **Signals for cross-spec relevance:**
-- Shared infrastructure (e.g., "GitHub API rate limit" affects all specs using GH API)
-- Common patterns (e.g., "timeout handling" applies to all async operations)
-- Platform constraints (e.g., "Podman limitation" affects all container specs)
+- Shared infrastructure (e.g., GH API rate limit affects all specs using GH API)
+- Common patterns (e.g., timeout handling applies to async operations)
+- Platform constraints (e.g., Podman limitation affects container specs)
 
 **Process:**
 ```bash
@@ -215,11 +215,11 @@ Applies to:
 Propagate to these specs? [Y/n]
 ```
 
-**Rules for cross-spec updates:**
-1. Always show as separate preview from primary updates
+**Cross-spec update rules:**
+1. Show as separate preview from primary updates
 2. Require explicit user confirmation
 3. Add cross-reference in changelog: "Propagated from spec 010"
-4. Only propagate to specs that share the affected component
+4. Only propagate to specs sharing the affected component
 
 ## Output Format
 
@@ -257,12 +257,12 @@ Changelog entries added.
 
 ## Rules
 
-1. **Semantic analysis** - Don't just grep for `fix:` tags. Read and understand context.
-2. **Prove before adding** - Only add learnings that are verified by the implementation.
-3. **Cite sources** - Always reference the commit or PR where the learning came from.
+1. **Semantic analysis** - Read and understand context, don't just grep for `fix:` tags.
+2. **Prove before adding** - Only add verified learnings.
+3. **Cite sources** - Reference commit or PR for each learning.
 4. **Preview first** - Show proposed changes before editing.
-5. **Preserve existing content** - Add to sections, don't replace unless correcting errors.
-6. **One spec at a time** - Focus on thorough analysis of a single spec.
+5. **Preserve existing content** - Add to sections, don't replace unless correcting.
+6. **One spec at a time** - Focus on thorough analysis of single spec.
 
 ## Quick Reference
 
