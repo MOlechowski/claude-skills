@@ -10,7 +10,7 @@ Full commit-to-PR flow: generate commit message, create feature branch, push, an
 ## Workflow
 
 ```
-1. Check changes → 2. Create branch → 3. Commit → 4. Push → 5. Create PR
+1. Check changes → 2. Create branch → 3. Commit → 4. Push → 5. Create PR → 6. Merge
 ```
 
 ## Steps
@@ -93,6 +93,21 @@ Output PR URL when done:
 PR created: https://github.com/owner/repo/pull/123
 ```
 
+### 8. Merge
+
+After PR creation, automatically chain to gh-pr skill:
+
+```
+Skill(skill="gh-pr", args="PR_NUMBER")
+```
+
+gh-pr handles:
+- CI status checks
+- Review processing
+- Auto-merge when ready
+
+Skip merge only if user explicitly requests "create PR only" or "no merge".
+
 ## Atomic Commits
 
 One commit = one logical change.
@@ -114,3 +129,4 @@ If changes need different types (feat + fix), split into separate commits and PR
 | Commit | `git commit -m "type(scope): msg"` |
 | Push | `git push -u origin branch` |
 | PR | `gh pr create --title "..." --body "..."` |
+| Merge | Chain to `gh-pr` skill (automatic) |
