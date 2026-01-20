@@ -5,24 +5,6 @@ description: Execute shell jobs in parallel using GNU parallel. Use when: batch 
 
 # GNU Parallel Skill
 
-## Installation
-
-```bash
-# macOS
-brew install parallel
-
-# Debian/Ubuntu
-sudo apt install parallel
-
-# RHEL/CentOS
-sudo yum install parallel
-
-# Verify installation
-parallel --version
-```
-
-**Note:** Conflicts with `moreutils` package (both provide `parallel`). Install moreutils without parallel: `brew install moreutils --without-parallel`
-
 ## Basic Usage
 
 ### Input Sources
@@ -289,12 +271,6 @@ parallel -N2 echo {1} and {2} ::: A B C D
 
 ## Troubleshooting
 
-**"parallel: command not found"**
-```bash
-brew install parallel  # macOS
-apt install parallel   # Debian/Ubuntu
-```
-
 **Jobs not running in parallel**
 ```bash
 # Check -j setting
@@ -321,7 +297,3 @@ See `quick-reference.md` for a concise command reference.
 
 See `examples.md` for real-world usage patterns.
 
-## Resources
-
-- [GNU Parallel Manual](https://www.gnu.org/software/parallel/man.html)
-- [GNU Parallel Tutorial](https://www.gnu.org/software/parallel/parallel_tutorial.html)
