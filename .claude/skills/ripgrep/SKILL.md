@@ -5,40 +5,6 @@ description: Fast recursive code search. Use for: (1) searching large codebases 
 
 # ripgrep (rg) Expertise Skill
 
-You are an expert in `ripgrep` (`rg`), a fast line-oriented search tool that recursively searches directories for a regex pattern while respecting gitignore rules and providing smart defaults for developers.
-
-## Core Capabilities
-
-1. **Lightning Fast Search**: Multi-threaded parallel search optimized for large codebases
-2. **Smart Filtering**: Automatic respect for `.gitignore`, `.ignore`, and file type detection
-3. **Context Display**: Show surrounding lines, file names, line numbers, and match highlighting
-4. **Advanced Patterns**: Full regex support with multiple pattern matching
-5. **Binary Safety**: Automatically skip binary files unless explicitly requested
-6. **Replacement**: Preview and execute find-and-replace operations
-
-## ripgrep Overview
-
-**What it does:**
-- Recursively searches directories for regex patterns
-- Respects `.gitignore` and other ignore files by default
-- Automatically skips binary files and hidden files
-- Provides colored output with smart highlighting
-- Supports file type filtering (--type) and glob patterns
-- Multi-threaded for maximum performance
-
-**When to use ripgrep:**
-- Searching large codebases (faster than grep, ag, ack)
-- Finding code patterns across many files
-- Refactoring code by finding all usages
-- Security audits and vulnerability scanning
-- Documentation and comment searches
-
-**Why ripgrep vs alternatives:**
-- **Faster** than grep, ack, ag (silver searcher)
-- **Smarter defaults** (respects gitignore, skips binaries)
-- **Better output** (colors, line numbers, context)
-- **Type filtering** (--type js, --type py)
-
 ## Basic Usage
 
 ### Simple Search
@@ -378,49 +344,6 @@ rg --max-count 100 "pattern"
 rg "\bpattern\b" -tjs -g 'src/**'
 ```
 
-## Best Practices
-
-### DO
-- Use `--type` to narrow searches to relevant files
-- Leverage `.gitignore` (default behavior)
-- Use `--smart-case` for case-insensitive when pattern is lowercase
-- Preview replacements before executing
-- Use `--stats` to understand search scope
-
-### DON'T
-- Search all files when you can specify types
-- Forget to escape regex special characters
-- Use `.*` when you can be more specific
-- Ignore performance with `--no-ignore` unless necessary
-
-## Examples by Use Case
-
-### Security Auditing
-```bash
-# Find hardcoded credentials
-rg -i "password\s*=|api_key\s*=" --type-not test
-
-# Find SQL injection risks
-rg "execute.*\+.*" -tpy -tjs
-
-# Find XSS vulnerabilities
-rg "innerHTML|outerHTML" -tjs -tts
-```
-
-### Performance Analysis
-```bash
-# Find console.log statements
-rg "console\.(log|warn|error)" -tjs -tts
-
-# Find TODO performance items
-rg "TODO.*performance|PERF:" -i
-```
-
 ## Additional Resources
 
 For detailed examples and reference, see `examples.md` and `quick-reference.md`.
-
-- Official Manual: https://github.com/BurntSushi/ripgrep/blob/master/GUIDE.md
-- Performance Guide: https://blog.burntsushi.net/ripgrep/
-
-When providing ripgrep guidance, prioritize performance with smart filtering (--type, -g), respect user's gitignore by default, and suggest preview before destructive operations.

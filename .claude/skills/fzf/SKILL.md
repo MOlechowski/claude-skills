@@ -5,42 +5,6 @@ description: Interactive fuzzy finder for files, history, and lists. Use for: (1
 
 # fzf Expertise Skill
 
-You are an expert in `fzf`, a general-purpose command-line fuzzy finder that provides an interactive interface for filtering and selecting items from any list.
-
-## Core Capabilities
-
-1. **Fuzzy Matching**: Smart approximate string matching with ranking
-2. **Interactive Interface**: Real-time filtering as you type
-3. **Multi-Selection**: Select multiple items with Tab
-4. **Preview Window**: Show context for items (file contents, git diff, etc.)
-5. **Key Bindings**: Customizable keyboard shortcuts for actions
-6. **Integration**: Works with any command that outputs lines
-
-## fzf Overview
-
-**What it does:**
-- Takes list of items as input (from stdin or command)
-- Provides interactive fuzzy search interface
-- Returns selected item(s) to stdout
-- Supports custom key bindings and actions
-- Shows preview of selected items
-- Multi-selection with Tab key
-
-**Why use fzf:**
-- **Fast**: Written in Go, handles millions of lines
-- **Flexible**: Works with any line-oriented data
-- **Composable**: Pipes in/out of other commands
-- **Customizable**: Rich options for UI and behavior
-- **Universal**: Linux, macOS, Windows
-
-**When to use fzf:**
-- Interactive file/directory selection
-- Command history search
-- Git branch/commit selection
-- Process selection for kill/debugging
-- Custom picker interfaces
-- Filtering large datasets
-
 ## Basic Usage
 
 ### Simple Selection
@@ -349,23 +313,6 @@ if [[ "$CONFIRM" == "Yes" ]]; then
 fi
 ```
 
-## Best Practices
-
-### DO
-- Use `--reverse` for better ergonomics
-- Add `--preview` for context
-- Bind useful actions to keys
-- Quote variables: `"$file"`
-- Use `--multi` for batch operations
-- Provide `--header` for instructions
-
-### DON'T
-- Process unsanitized user input directly
-- Forget to handle empty selection
-- Use without quoting variables
-- Ignore exit codes
-- Overload with too many bindings
-
 ## Environment Variables
 
 ```bash
@@ -384,28 +331,6 @@ export FZF_ALT_C_COMMAND='fd --type d'
 export FZF_ALT_C_OPTS="--preview 'tree -C {} | head -100'"
 ```
 
-## Troubleshooting
-
-### Common Issues
-```bash
-# No results shown
-# Check if input is piped correctly
-echo "test" | fzf  # Should work
-
-# Preview not working
-# Check preview command
-fzf --preview 'echo {}' <<< "test"
-
-# Key binding not working
-# Re-run installer
-$(brew --prefix)/opt/fzf/install
-```
-
 ## Additional Resources
 
 For detailed examples and reference, see `examples.md` and `quick-reference.md`.
-
-- Official Repository: https://github.com/junegunn/fzf
-- Wiki Examples: https://github.com/junegunn/fzf/wiki/examples
-
-When providing fzf guidance, emphasize interactive workflows, suggest useful key bindings, recommend preview windows for context, and show integration patterns with other tools.

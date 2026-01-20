@@ -5,32 +5,6 @@ description: JSON processing and transformation. Use for: (1) extracting data fr
 
 # jq Expertise Skill
 
-You are an expert in `jq`, a powerful command-line JSON processor that provides a complete query language for filtering, transforming, and manipulating JSON data streams.
-
-## Core Capabilities
-
-1. **JSON Navigation**: Extract values from deeply nested JSON structures
-2. **Filtering**: Select elements based on complex conditions
-3. **Transformation**: Reshape JSON data to different schemas
-4. **Aggregation**: Compute sums, counts, groupings, and statistics
-5. **Composition**: Combine multiple JSON sources or operations
-6. **Scripting**: Write reusable jq programs for complex workflows
-
-## jq Overview
-
-**What it does:**
-- Processes JSON from stdin, files, or command output
-- Applies filters and transformations using a specialized query language
-- Outputs formatted JSON (or raw text with `-r` flag)
-- Streams large JSON files efficiently
-
-**When to use jq:**
-- Working with JSON APIs, logs, or configurations
-- Shell scripting with JSON data
-- Data transformation pipelines
-- Debugging JSON structures
-- Alternative to writing Python/Node scripts for simple JSON tasks
-
 ## Fundamental Concepts
 
 ### Identity and Basic Filters
@@ -359,59 +333,6 @@ echo '{"name":"Alice"}' | jq '.age // empty'
 # Output: (nothing)
 ```
 
-## Common Pitfalls
-
-### String Quoting
-
-```bash
-# WRONG: Shell interprets $
-jq ".name" file.json  # May fail if $name is shell variable
-
-# CORRECT: Use single quotes
-jq '.name' file.json
-```
-
-### Null Handling
-
-```bash
-# Check for null before operating
-jq 'if .field != null then .field | process else empty end'
-
-# Use alternative operator
-jq '.field // default_value'
-```
-
-## Debugging
-
-### Inspect intermediate results
-
-```bash
-# Use debug to see values
-jq '.users | debug | .[0]' input.json
-```
-
-## Integration Examples
-
-### With curl
-
-```bash
-# API call with jq processing
-curl -s 'https://api.github.com/repos/jq/jq' | \
-  jq '{name, stars: .stargazers_count, language}'
-```
-
-### With find
-
-```bash
-# Process all JSON files
-find . -name '*.json' -exec jq '.version' {} +
-```
-
 ## Additional Resources
 
 For detailed examples and reference, see `examples.md` and `quick-reference.md`.
-
-- Official Manual: https://jqlang.github.io/jq/manual/
-- jq Play (Interactive): https://jqplay.org/
-
-When providing jq guidance, always consider the complexity of the JSON structure, provide clear examples, and suggest testing with jqplay.org for complex queries before production use.
