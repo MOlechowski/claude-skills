@@ -169,4 +169,4 @@ Track changes by category:
 
 ## Quick Reference
 
-See `quick-reference.md` for checklists and templates.
+See `references/quick-reference.md` for checklists and templates.
