@@ -60,6 +60,25 @@ Match the dominant language in last 10 commits.
 | ci | CI config |
 | chore | Maintenance |
 
+## Atomic Commits
+
+One commit = one logical change.
+
+**Trigger rule:** If changes need different types (feat + fix) → Split into separate commits.
+
+Before staging, ask: Can this be described in one subject line without "and"?
+
+Bad:
+```
+feat(ios): Add mTLS support and fix cache tests
+```
+
+Good (split into two):
+```
+feat(ios): Add mTLS certificate injection
+fix(ios): Fix cache tests for lowercase headers
+```
+
 ## Style Rules
 
 - Imperative mood: "add" not "added"
