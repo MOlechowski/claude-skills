@@ -1,10 +1,10 @@
-# fzf Examples - Real-World Usage Patterns
+# fzf Examples
 
 ## Development Workflows
 
 ### File Navigation
 ```bash
-# Interactive file editor with preview
+# File editor with preview
 fe() {
   local file
   file=$(fd --type f --hidden --exclude .git | \
@@ -45,7 +45,7 @@ recent() {
 
 ### Directory Navigation
 ```bash
-# Smart cd with preview
+# cd with preview
 fcd() {
   local dir
   dir=$(fd --type d --hidden --exclude .git | \
@@ -86,7 +86,7 @@ badd() {
 
 ### Branch Management
 ```bash
-# Interactive branch checkout with preview
+# Branch checkout with preview
 fco() {
   local branches branch
   branches=$(git branch -vv) &&
@@ -129,7 +129,7 @@ fcmp() {
 
 ### Commit Operations
 ```bash
-# Interactive commit browser
+# Commit browser
 fshow() {
   git log --graph --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" "$@" | \
     fzf --ansi --no-sort --reverse --tiebreak=index \
@@ -218,7 +218,7 @@ fgd() {
 
 ### Process Management
 ```bash
-# Interactive process killer with details
+# Process killer with details
 fkill() {
   local pid
   pid=$(ps aux | sed 1d | \
@@ -253,7 +253,7 @@ fptree() {
 
 ### Docker Management
 ```bash
-# Interactive container shell
+# Container shell
 fdocker() {
   local container
   container=$(docker ps --format '{{.ID}} - {{.Names}} - {{.Image}}' | \
@@ -350,7 +350,7 @@ fkdel() {
 
 ### Environment Management
 ```bash
-# Environment variable browser
+# Environment variable viewer
 fenv() {
   local var
   var=$(env | sort | \
@@ -412,7 +412,7 @@ fpip() {
 
 ## Custom Tools and Scripts
 
-### Interactive Menu System
+### Menu System
 ```bash
 # Main menu
 main_menu() {
@@ -465,7 +465,7 @@ EOF
 
 ### File Operations
 ```bash
-# Bulk rename with preview
+# Bulk rename
 frename() {
   local files
   files=$(fd --type f | \
@@ -488,7 +488,7 @@ frename() {
   done
 }
 
-# Interactive file mover
+# File mover
 fmv() {
   local files dest
   files=$(fd --type f | \
@@ -525,7 +525,7 @@ fdup() {
 
 ### Search and Replace
 ```bash
-# Interactive search and replace
+# Search and replace
 fsr() {
   local pattern replacement files
   read -p "Search pattern: " pattern

@@ -1,4 +1,4 @@
-# yq Examples - Real-World Usage Patterns
+# yq Examples
 
 ## Kubernetes Management
 
