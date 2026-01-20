@@ -11,15 +11,15 @@ Requirements live in a separate specification repository with structured task fi
 
 ```
 spec-repo/
-├── specs/
-│   ├── 001-feature-name/
-│   │   ├── README.md      # Feature specification
-│   │   └── tasks.md       # Implementation tasks
-│   ├── 002-another-feature/
-│   │   ├── README.md
-│   │   └── tasks.md
-│   └── ...
-└── README.md
++-- specs/
+|   +-- 001-feature-name/
+|   |   +-- README.md      # Feature specification
+|   |   +-- tasks.md       # Implementation tasks
+|   +-- 002-another-feature/
+|   |   +-- README.md
+|   |   +-- tasks.md
+|   +-- ...
++-- README.md
 ```
 
 ### Task File Format (tasks.md)
@@ -316,4 +316,4 @@ See: **self-improvement** skill for full protocol.
 
 ## Quick Reference
 
-See `quick-reference.md` for commands and patterns.
+See `references/quick-reference.md` for commands and patterns.
