@@ -1,4 +1,4 @@
-# ast-grep Examples - Real-World Usage Patterns
+# ast-grep Examples
 
 ## React Refactoring
 
@@ -43,7 +43,7 @@ sg -p 'const [$STATE, $SETTER] = useState($COMPLEX_INIT)' \
 # Find useEffect with empty deps
 sg -p 'useEffect(() => { $$$BODY }, [])' --lang tsx
 
-# Find useEffect without deps (dangerous)
+# Find useEffect without deps (risky)
 sg -p 'useEffect(() => { $$$BODY })' \
    --not-has '}, [$$$DEPS]' \
    --lang tsx
@@ -66,7 +66,7 @@ sg -p 'function $NAME(props) {
   return <div>{$PROP}</div>
 }' --lang tsx
 
-# Find components using many props
+# Find components with many props
 sg -p 'function $NAME({ $$$PROPS })' \
    --lang tsx --json | \
    jq 'select(.metavars.PROPS | length > 5)'
@@ -80,7 +80,7 @@ sg -p 'function $NAME({ $$$PROPS })' \
 sg -p 'function $NAME($PARAM) { $$$BODY }' \
    --lang ts
 
-# Find functions without return type
+# Find functions missing return type
 sg -p 'function $NAME($$$PARAMS) { $$$BODY }' \
    --not-has '):' \
    --lang ts
@@ -111,7 +111,7 @@ sg -p 'type $NAME = {
 
 ### Generic Constraints
 ```bash
-# Find generics without constraints
+# Find unconstrained generics
 sg -p 'function $NAME<$T>($$$PARAMS) { $$$BODY }' \
    --not-has 'extends' \
    --lang ts
@@ -134,7 +134,7 @@ sg -p 'await $PROMISE' \
    --not-inside 'try { $$$BODY } catch ($ERR) { $$$HANDLER }' \
    --lang js
 
-# Find async functions without error handling
+# Find async functions lacking error handling
 sg -p 'async function $NAME() {
   await $PROMISE
   $$$REST
@@ -164,7 +164,7 @@ sg -p '$PROMISE.then($SUCCESS).catch($ERROR)' \
   $ERROR(error);
 }' --lang js
 
-# Find unhandled promise rejections
+# Find unhandled rejections
 sg -p '$PROMISE.then($HANDLER)' \
    --not-has '.catch' \
    --lang js
@@ -210,7 +210,7 @@ if ($VAR > THRESHOLD)' \
 
 ### Long Parameter Lists
 ```bash
-# Find functions with many parameters
+# Find functions with many params
 sg -p 'function $NAME($P1, $P2, $P3, $P4, $P5, $$$MORE)' --lang js
 
 # Suggest object parameter pattern
@@ -244,7 +244,7 @@ sg -p 'query($SQL + $VAR)' --lang js
 # Find template literals in SQL
 sg -p 'query(`$$$SQL ${$VAR} $$$`)' --lang js
 
-# Find execute with string interpolation
+# Find execute with interpolation
 sg -p 'execute(`SELECT * FROM users WHERE id = ${$ID}`)' --lang js
 
 # Suggest parameterized queries
@@ -329,7 +329,7 @@ sg -p 'gql`
   }
 `' --lang js
 
-# Find mutations without error handling
+# Find mutations lacking error handling
 sg -p 'mutation $NAME {
   $$$BODY
 }' --not-has 'catch' --lang js
@@ -346,7 +346,7 @@ sg -p 'for ($I of $ARR1) {
   }
 }' --lang js
 
-# Find array operations in loops
+# Find array ops in loops
 sg -p 'for ($I of $ARR) {
   $ARR2.push($ITEM)
 }' --lang js
@@ -474,7 +474,7 @@ sg -p 'module.exports = $EXPORT' \
 
 ### Deprecated API Migration
 ```bash
-# Find deprecated React lifecycle methods
+# Find deprecated lifecycle methods
 sg -p 'componentWillMount() { $$$BODY }' --lang tsx
 
 # Suggest useEffect

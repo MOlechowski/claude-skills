@@ -5,28 +5,28 @@
 ### Phrases Indicating Learnings
 
 ```
-turns out          -> Something behaved differently than expected
-actually           -> Correction to an assumption
-discovered         -> New finding during implementation
-had to             -> Workaround or requirement discovered
-needed to          -> Missing requirement found
-can't / cannot     -> Limitation discovered
-only works when    -> Environment or config requirement
-takes longer       -> Timing assumption incorrect
-race condition     -> Concurrency issue found
-timeout            -> Timing-related discovery
-cleanup            -> Lifecycle issue found
+turns out          -> Behaved differently than expected
+actually           -> Assumption correction
+discovered         -> New finding
+had to             -> Workaround discovered
+needed to          -> Missing requirement
+can't / cannot     -> Limitation found
+only works when    -> Environment/config requirement
+takes longer       -> Timing assumption wrong
+race condition     -> Concurrency issue
+timeout            -> Timing discovery
+cleanup            -> Lifecycle issue
 ```
 
-### NOT Learnings (Skip These)
+### NOT Learnings (Skip)
 
 ```
-refactor           -> Code quality, not spec issue
+refactor           -> Code quality
 cleanup code       -> Internal improvement
-add tests          -> Unless revealing new edge case
-update docs        -> Unless correcting spec
+add tests          -> Unless reveals edge case
+update docs        -> Unless corrects spec
 rename             -> Internal naming
-style / format     -> Code style changes
+style / format     -> Code style
 ```
 
 ## Section Formats
@@ -61,8 +61,8 @@ style / format     -> Code style changes
 
 | Variable | Purpose | Default |
 |----------|---------|---------|
-| `GH_RUNNER_TOKEN_TIMEOUT` | Token request timeout | `30s` (was 10s) |
-| `GH_RUNNER_SEQUENTIAL_TESTS` | Force sequential test execution | `false` |
+| `GH_RUNNER_TOKEN_TIMEOUT` | Token request timeout | `30s` |
+| `GH_RUNNER_SEQUENTIAL_TESTS` | Force sequential tests | `false` |
 ```
 
 ### Assumptions (Bullets)
@@ -70,13 +70,11 @@ style / format     -> Code style changes
 ```markdown
 ## Assumptions
 
-- **Token Request Timing**: Token requests need 30s timeout, not 10s
-  as originally assumed. Network latency on cold starts can exceed 10s.
-  (commit c2f62d2)
+- **Token Request Timing**: Token requests need 30s timeout, not 10s.
+  Network latency on cold starts can exceed 10s. (commit c2f62d2)
 
-- **Podman Parallelism**: Podman container tests cannot run in parallel
-  due to shared machine state. Must be executed sequentially.
-  (PR #417)
+- **Podman Parallelism**: Podman tests cannot run parallel due to shared
+  machine state. Execute sequentially. (PR #417)
 ```
 
 ### Changelog Entry
@@ -117,38 +115,20 @@ git show --stat abc123
 ## Categorization Decision Tree
 
 ```
-Is it about timing/delays?
-  -> Testability Requirements (env var) + Assumptions
-
-Is it about something failing?
-  -> State Machine (failure modes table)
-
-Is it about unexpected behavior?
-  -> Edge Cases (Q&A format)
-
-Is it about environment/config?
-  -> Testability Requirements (env var table)
-
-Is it correcting an original assumption?
-  -> Assumptions section
+Timing/delays?          -> Testability Requirements + Assumptions
+Something failing?      -> State Machine (failure modes)
+Unexpected behavior?    -> Edge Cases (Q&A)
+Environment/config?     -> Testability Requirements
+Correcting assumption?  -> Assumptions section
 ```
 
 ## File Selection Guide
 
 ```
-Which file should receive the learning?
-
-Is it core behavior or contract?
-  -> spec.md
-
-Is it a quick command or snippet?
-  -> quick-reference.md
-
-Is it explaining WHY a decision was made?
-  -> decision-tree.md
-
-Is it how to debug or troubleshoot?
-  -> quick-reference.md
+Core behavior/contract?    -> spec.md
+Quick command/snippet?     -> quick-reference.md
+WHY decision was made?     -> decision-tree.md
+Debug/troubleshoot?        -> quick-reference.md
 ```
 
 | Learning Type | Target File | Target Section |
@@ -162,23 +142,22 @@ Is it how to debug or troubleshoot?
 
 ## Cross-Spec Propagation Signals
 
-When a learning might apply to multiple specs:
+When learning applies to multiple specs:
 
 ```
-Shared infrastructure signals:
-  "GitHub API"     -> All specs using GH API
-  "rate limit"     -> All specs making external calls
-  "authentication" -> All specs using auth tokens
+Shared infrastructure:
+  "GitHub API"     -> Specs using GH API
+  "rate limit"     -> Specs with external calls
+  "authentication" -> Specs using auth tokens
 
-Platform constraint signals:
-  "Podman"         -> All container specs
-  "Docker"         -> All container specs
-  "systemd"        -> All service specs
+Platform constraints:
+  "Podman/Docker"  -> Container specs
+  "systemd"        -> Service specs
 
-Common pattern signals:
-  "timeout"        -> All async operation specs
-  "retry"          -> All network operation specs
-  "cleanup"        -> All resource lifecycle specs
+Common patterns:
+  "timeout"        -> Async operation specs
+  "retry"          -> Network operation specs
+  "cleanup"        -> Resource lifecycle specs
 ```
 
 ### Cross-Spec Commands

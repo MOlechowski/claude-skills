@@ -83,10 +83,10 @@ parallel 'echo {} > output_{#}.txt' ::: A B C
 ### Custom Delimiters
 
 ```bash
-# Tab-separated columns
+# Tab-separated
 parallel --colsep '\t' echo {1} {2} :::: data.tsv
 
-# CSV processing
+# CSV
 parallel --colsep ',' echo "Name: {1}, Age: {2}" :::: people.csv
 
 # Multiple columns
@@ -98,32 +98,32 @@ parallel --colsep '\t' mv {1} {2} :::: rename_pairs.tsv
 ### Concurrency
 
 ```bash
-# Limit to 4 parallel jobs
+# 4 parallel jobs
 parallel -j4 command ::: items
 
-# One job per CPU core (default)
+# One job per core (default)
 parallel -j100% command ::: items
 
-# Half the cores
+# Half cores
 parallel -j50% command ::: items
 
-# Sequential (for testing)
+# Sequential (testing)
 parallel -j1 command ::: items
 ```
 
-### Progress and Feedback
+### Progress Feedback
 
 ```bash
-# Show progress bar
+# Progress bar
 parallel --progress command ::: items
 
-# Show ETA
+# ETA
 parallel --eta command ::: items
 
-# Verbose output
+# Verbose
 parallel --verbose command ::: items
 
-# Show completed percentage
+# Completion percentage
 parallel --bar command ::: items
 ```
 
@@ -173,17 +173,16 @@ parallel --timeout 60 command ::: items
 ### Output Organization
 
 ```bash
-# Keep output order same as input
+# Preserve input order
 parallel --keep-order command ::: items
 
-# Group output (don't interleave lines)
+# Don't interleave lines
 parallel --group command ::: items
 
 # Tag output with input
 parallel --tag command ::: items
-# Output: item1\tresult1
 
-# Tag with custom string
+# Custom tag
 parallel --tagstring '{/.}:' command ::: *.txt
 ```
 
@@ -256,18 +255,18 @@ parallel -N2 echo {1} and {2} ::: A B C D
 
 ### DO
 
-- Use `--dry-run` to test commands before execution
-- Use `--joblog` for long-running batch jobs
-- Quote complex commands properly
-- Use `--keep-order` when output order matters
+- Use `--dry-run` to test before execution
+- Use `--joblog` for long-running jobs
+- Quote complex commands
+- Use `--keep-order` when order matters
 - Set reasonable `-j` limits for I/O-bound tasks
 
 ### DON'T
 
-- Don't use for tasks with inter-dependencies
-- Don't spawn more jobs than the system can handle
-- Don't forget to handle errors in batch jobs
-- Don't use without `--no-run-if-empty` if input might be empty
+- Use for tasks with inter-dependencies
+- Spawn more jobs than system can handle
+- Forget error handling in batch jobs
+- Omit `--no-run-if-empty` if input might be empty
 
 ## Troubleshooting
 
