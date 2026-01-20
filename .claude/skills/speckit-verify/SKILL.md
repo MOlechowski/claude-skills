@@ -1,23 +1,11 @@
 ---
 name: speckit-verify
-description: Verify implementation matches spec, update spec on drift.
+description: Verify implementation matches spec, update spec on drift. Use when: (1) checking if spec matches implementation, (2) implementation changed and spec needs updating, (3) before release to ensure spec accuracy, (4) auditing spec drift over time. Triggers: "verify spec matches implementation", "check for spec drift", "sync spec to code", "run speckit-verify".
 ---
 
 # Speckit Verify: Sync Spec to Implementation
 
-Use this skill when:
-- You want to check if spec still matches implementation
-- Implementation changed and spec needs updating
-- Before releasing to ensure spec accuracy
-- Auditing spec drift over time
-
-Examples:
-- "verify spec matches implementation"
-- "check for spec drift"
-- "sync spec to current code"
-- "run speckit-verify"
-
-You are an expert at verifying that specifications accurately reflect implementation. Implementation is the source of truth - when drift is found, the spec is updated.
+Verify that specifications accurately reflect implementation. Implementation is the source of truth - when drift is found, the spec is updated.
 
 ## Three-Tier Verification
 

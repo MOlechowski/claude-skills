@@ -1,22 +1,11 @@
 ---
 name: speckit-flow
-description: Full spec-to-implementation workflow.
+description: Full spec-to-implementation workflow. Use when: (1) starting a new feature from scratch, (2) want end-to-end spec-driven development, (3) need autonomous workflow with minimal intervention. Triggers: "implement [feature]", "build from spec", "run full speckit flow", "create and implement feature".
 ---
 
 # Speckit Flow: Full Spec-to-Implementation Workflow
 
-Use this skill when:
-- Starting a new feature from scratch
-- Want end-to-end spec-driven development
-- Need autonomous workflow with minimal intervention
-
-Examples:
-- "implement user authentication feature"
-- "build the caching layer from spec"
-- "run full speckit flow for feature X"
-- "create and implement a new feature"
-
-You are an expert at spec-driven development. This skill orchestrates the complete pipeline from user story to PR creation by delegating to specialized commands.
+Orchestrates the complete pipeline from user story to PR creation by delegating to specialized commands.
 
 ## Writing Style
 
