@@ -1,54 +1,9 @@
 ---
 name: parallel
-description: Execute shell jobs in parallel.
+description: Execute shell jobs in parallel using GNU parallel. Use when: batch processing files, running same command on multiple inputs, CPU-intensive transforms, replacing slow loops. Triggers: "run in parallel", "batch process", "parallelize", "convert all images", "process files concurrently".
 ---
 
 # GNU Parallel Skill
-
-Use this skill when:
-- Running the same command on multiple files/inputs
-- Parallelizing shell pipelines
-- Batch processing with controlled concurrency
-- Replacing slow sequential loops with parallel execution
-
-Examples:
-- "convert all images in parallel"
-- "run this command on each file concurrently"
-- "parallelize this loop"
-- "process CSV files with GNU parallel"
-
-You are an expert in GNU parallel, the shell tool for executing jobs in parallel using one or more computers.
-
-## Core Capabilities
-
-1. Execute commands in parallel across multiple inputs
-2. Control concurrency with job slots
-3. Use replacement strings for flexible command construction
-4. Process input from arguments, files, or stdin
-5. Distribute jobs across remote machines
-6. Track progress and maintain job logs
-
-## Overview
-
-GNU parallel is a shell tool for executing jobs in parallel. It can:
-- Replace `xargs` with parallel execution
-- Replace shell loops with parallel processing
-- Distribute work across multiple machines
-- Handle complex input/output patterns
-
-### When to Use
-
-- Processing multiple files with the same command
-- Batch operations that are I/O or CPU bound
-- Replacing sequential `for` loops
-- Distributing work across cores or machines
-
-### When NOT to Use
-
-- Tasks with dependencies between items
-- Operations requiring strict ordering
-- Single-item operations
-- Tasks where overhead exceeds benefit
 
 ## Installation
 
@@ -104,21 +59,15 @@ parallel --link echo ::: A B C ::: 1 2 3
 
 ### Basic Command Patterns
 
-**Simple substitution**
 ```bash
+# Simple substitution
 parallel gzip ::: *.txt
-# Runs: gzip file1.txt, gzip file2.txt, ...
-```
 
-**With explicit placeholder**
-```bash
+# With explicit placeholder
 parallel echo "Processing {}" ::: *.log
-```
 
-**Command with options**
-```bash
+# Command with options (4 jobs at a time)
 parallel -j4 convert {} {.}.png ::: *.jpg
-# Convert jpg to png, 4 jobs at a time
 ```
 
 ## Replacement Strings
@@ -138,11 +87,11 @@ parallel -j4 convert {} {.}.png ::: *.jpg
 ```bash
 # Convert maintaining directory structure
 parallel convert {} {.}.png ::: images/*.jpg
-# /images/photo.jpg → /images/photo.png
+# /images/photo.jpg -> /images/photo.png
 
 # Output to different directory
 parallel convert {} output/{/.}.png ::: images/*.jpg
-# /images/photo.jpg → output/photo.png
+# /images/photo.jpg -> output/photo.png
 
 # Use job number for unique output
 parallel 'echo {} > output_{#}.txt' ::: A B C
@@ -209,12 +158,6 @@ parallel --resume --joblog jobs.log command ::: items
 parallel --resume-failed --joblog jobs.log command ::: items
 ```
 
-**Job log format:**
-```
-Seq  Host  Starttime       JobRuntime  Send  Receive  Exitval  Signal  Command
-1    :     1642000000.000  1.234       0     100      0        0       command item1
-```
-
 ## Error Handling
 
 ### Halt Conditions
@@ -233,24 +176,14 @@ parallel --halt never command ::: items
 parallel --halt now,success=1 grep pattern ::: files
 ```
 
-### Retry Logic
+### Retry and Timeout
 
 ```bash
 # Retry failed jobs 3 times
 parallel --retries 3 command ::: items
 
-# Retry with delay
-parallel --retries 3 --delay 5 command ::: items
-```
-
-### Timeout
-
-```bash
 # Kill jobs taking more than 60 seconds
 parallel --timeout 60 command ::: items
-
-# Timeout with signal
-parallel --timeout 60 --termseq INT,1000,TERM,2000,KILL command ::: items
 ```
 
 ## Output Control
@@ -277,7 +210,6 @@ parallel --tagstring '{/.}:' command ::: *.txt
 ```bash
 # Results to individual files
 parallel --results output_dir command ::: items
-# Creates: output_dir/1/item1/stdout, output_dir/1/item1/stderr
 
 # Simple output files
 parallel 'command {} > {/.}.out' ::: *.txt
@@ -285,68 +217,21 @@ parallel 'command {} > {/.}.out' ::: *.txt
 
 ## Remote Execution
 
-### SSH Distribution
-
 ```bash
 # Run on remote hosts
 parallel --sshlogin host1,host2 command ::: items
-
-# With login details
-parallel --sshlogin user@host1,user@host2 command ::: items
 
 # From hosts file
 parallel --sshloginfile hosts.txt command ::: items
 
 # Include local machine
 parallel --sshlogin :,host1,host2 command ::: items
-```
 
-### File Transfer
-
-```bash
 # Transfer input files to remote
 parallel --transferfile {} --sshlogin host command {} ::: files
 
 # Return output files
 parallel --return {}.out --sshlogin host 'command {} > {}.out' ::: files
-
-# Cleanup remote files after
-parallel --cleanup --transferfile {} --return {}.out --sshlogin host command ::: files
-```
-
-## Integration with Other Tools
-
-### With find
-
-```bash
-# Process found files
-find . -name "*.log" | parallel gzip
-
-# Using find's -exec replacement
-find . -name "*.jpg" -print0 | parallel -0 convert {} {.}.png
-```
-
-### With xargs Comparison
-
-```bash
-# xargs (sequential by default)
-cat files.txt | xargs -I{} command {}
-
-# xargs parallel
-cat files.txt | xargs -P4 -I{} command {}
-
-# GNU parallel (parallel by default, more features)
-cat files.txt | parallel command {}
-```
-
-### Piping and Chaining
-
-```bash
-# Pipe output to another parallel
-parallel command1 ::: items | parallel command2
-
-# Process and aggregate
-parallel grep pattern ::: *.log | sort | uniq -c
 ```
 
 ## Advanced Patterns
@@ -359,16 +244,6 @@ for item in *; do
     sem -j4 command "$item"
 done
 sem --wait
-```
-
-### Conditional Execution
-
-```bash
-# Only run if file exists
-parallel '[ -f {} ] && command {}' ::: items
-
-# Skip empty inputs
-parallel --no-run-if-empty command ::: possibly_empty_list
 ```
 
 ### Complex Commands
@@ -412,17 +287,7 @@ parallel -N2 echo {1} and {2} ::: A B C D
 - Don't forget to handle errors in batch jobs
 - Don't use without `--no-run-if-empty` if input might be empty
 
-### Tips
-
-1. **Test first:** `parallel --dry-run command ::: items`
-2. **Debug:** `parallel --verbose command ::: items`
-3. **Resume interrupted jobs:** Use `--joblog` and `--resume`
-4. **Memory-bound tasks:** Limit with `-j` based on memory, not cores
-5. **Citation:** First run shows citation notice; use `parallel --citation` to silence
-
 ## Troubleshooting
-
-### Common Issues
 
 **"parallel: command not found"**
 ```bash
@@ -460,4 +325,3 @@ See `examples.md` for real-world usage patterns.
 
 - [GNU Parallel Manual](https://www.gnu.org/software/parallel/man.html)
 - [GNU Parallel Tutorial](https://www.gnu.org/software/parallel/parallel_tutorial.html)
-- [Ole Tange's Book](https://doi.org/10.5281/zenodo.1146014)
