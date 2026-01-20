@@ -3,7 +3,7 @@
 ## Workflow
 
 ```
-Input → Analyze → Partition → Execute → Aggregate → Output
+Input -> Analyze -> Partition -> Execute -> Aggregate -> Output
 ```
 
 ## Decision Matrix
