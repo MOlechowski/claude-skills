@@ -296,4 +296,3 @@ See `quick-reference.md` for a concise command reference.
 ## Examples
 
 See `examples.md` for real-world usage patterns.
-
