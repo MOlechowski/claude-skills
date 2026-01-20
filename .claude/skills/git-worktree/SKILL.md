@@ -7,7 +7,7 @@ description: "Work on multiple branches simultaneously. Use when: working on mul
 
 Multiple working directories linked to a single repository. Check out multiple branches simultaneously without stashing.
 
-**Benefits:** Work on multiple features, review PRs without disrupting work, parallel builds/tests, keep dev servers running.
+**Benefits:** Multiple features, PR reviews without disruption, parallel builds/tests, persistent dev servers.
 
 ## Core Concepts
 
@@ -103,8 +103,8 @@ git worktree unlock ../project-feature
 └── myproject-pr-42/     # PR review
 ```
 
-**Pros:** Simple, each worktree is independent
-**Cons:** Can clutter project directory
+**Pros:** Simple, independent worktrees
+**Cons:** Clutters project directory
 
 ### Strategy 2: Subdirectory Organization
 
@@ -117,7 +117,7 @@ git worktree unlock ../project-feature
     └── pr-42/          # PR review
 ```
 
-**Pros:** Clean organization, all related dirs together
+**Pros:** Clean organization, related dirs together
 **Cons:** Deeper paths
 
 ### Strategy 3: Bare Repository (Recommended for Power Users)
@@ -131,12 +131,12 @@ git worktree unlock ../project-feature
     └── feature-x/      # feature branch worktree
 ```
 
-**Pros:** No "special" main worktree, clean separation, easier to reason about
-**Cons:** Slightly more complex initial setup
+**Pros:** No "special" main worktree, clean separation
+**Cons:** More complex initial setup
 
 ## Bare Repository Setup (Advanced)
 
-The bare repo approach treats all worktrees equally - there's no "main" directory that's different from others.
+Bare repo treats all worktrees equally - no "main" directory is special.
 
 ### Initial Setup
 
@@ -180,9 +180,7 @@ git merge origin/main
 
 ## Best Practices
 
-1. **Naming Convention**: Use descriptive names that indicate purpose
-   - `project-feature-auth` not `project-1`
-   - `project-pr-123-review` for PR reviews
+1. **Naming Convention**: Descriptive names indicating purpose (`project-feature-auth` not `project-1`)
 
 2. **Clean Up**: Remove worktrees when done
    ```bash
@@ -194,19 +192,19 @@ git merge origin/main
    git worktree lock --reason "Active development" ../project-feature
    ```
 
-4. **Use Bare Repos for Teams**: When multiple people work with worktrees, bare repos avoid "main worktree" confusion
+4. **Use Bare Repos for Teams**: Avoids "main worktree" confusion
 
-5. **Separate Dependencies**: Each worktree should have its own `node_modules`, `.venv`, etc. to avoid conflicts
+5. **Separate Dependencies**: Each worktree needs own `node_modules`, `.venv`, etc.
 
-6. **Regular Pruning**: Clean up stale references periodically
+6. **Regular Pruning**: Clean stale references periodically
    ```bash
    git worktree prune
    ```
 
 ## Quick Reference
 
-For a concise command reference, see `quick-reference.md` in this skill directory.
+See `quick-reference.md` for command reference.
 
 ## Workflow Examples
 
-For detailed real-world workflow examples, see `examples.md` in this skill directory.
+See `examples.md` for real-world workflow examples.

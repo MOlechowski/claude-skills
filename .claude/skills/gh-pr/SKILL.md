@@ -5,7 +5,7 @@ description: "Autonomous PR lifecycle management. Use when: checking PR status, 
 
 # GH-PR
 
-Handle PRs autonomously using GitHub CLI (`gh`). Works with GitHub native reviews, bot reviewers, and human reviewers.
+Autonomous PR management via GitHub CLI (`gh`). Works with GitHub native reviews, bot reviewers, and human reviewers.
 
 ## Core Workflow
 
@@ -15,7 +15,7 @@ Status Check -> Fix Issues -> Request Review -> Merge
 
 ## Decision Matrix
 
-Apply this matrix for every PR action:
+Apply for every PR action:
 
 | Review State | CI Status | Action |
 |--------------|-----------|--------|
@@ -28,13 +28,13 @@ Apply this matrix for every PR action:
 
 ## Autonomy
 
-When invoked without specific PR number:
+Without specific PR number:
 1. List all open PRs in single call
 2. Apply decision matrix to each
-3. Act immediately on mergeable PRs
+3. Act on mergeable PRs immediately
 4. Report results after actions
 
-Do not ask "Merge?" - merge if conditions met.
+Never ask "Merge?" - merge if conditions met.
 
 ## Workflow Steps
 
@@ -179,15 +179,15 @@ fi
 
 If `mergeable: CONFLICTING`:
 1. Report conflict to user
-2. Do NOT attempt auto-resolve
+2. Do NOT auto-resolve
 3. Suggest: `git fetch origin && git rebase origin/main`
 
 ### Branch Protection
 
-If merge blocked by protection rules:
+If merge blocked by protection:
 1. Check required reviewers
 2. Report missing approvals
-3. Do NOT bypass protections
+3. Do NOT bypass
 
 ## Output Format
 
@@ -211,10 +211,10 @@ Status mode (check only):
 
 1. **Never force push** to shared branches
 2. **Never bypass** branch protection
-3. **Always verify** CI passes before merge
+3. **Verify CI passes** before merge
 4. **Stop on conflicts** - require human resolution
 5. **Max 5 fix cycles** - prevent infinite loops
-6. **Log all actions** for audit trail
+6. **Log all actions** for audit
 
-See `quick-reference.md` for full gh CLI reference.
-See `decision-tree.md` for edge case handling.
+See `quick-reference.md` for gh CLI reference.
+See `decision-tree.md` for edge cases.

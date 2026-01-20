@@ -92,7 +92,7 @@ Task(
 **User request:** "Summarize all markdown docs"
 
 **Analysis:**
-- Task type: Cognitive (requires reading and summarizing)
+- Task type: Cognitive (reading and summarizing)
 - Parallelizable units: Each markdown file
 - Method: Claude agents (files grouped into partitions)
 
@@ -178,7 +178,7 @@ Step 3 - Apply:
 
 ## Example 7: Concurrent Dependency Checks
 
-**User request:** "Check all dependencies for vulnerabilities"
+**User request:** "Check dependencies for vulnerabilities"
 
 **Analysis:**
 - Task type: Command

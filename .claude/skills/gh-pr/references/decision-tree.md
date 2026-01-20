@@ -48,7 +48,7 @@ START: PR #N
 
 ### 1. Stale Review
 
-**Condition:** Review is APPROVED but commits pushed after review
+**Condition:** APPROVED but commits pushed after review
 
 ```bash
 # Check if review is stale
@@ -59,11 +59,11 @@ last_commit=$(gh api repos/{owner}/{repo}/pulls/$PR/commits --jq '.[-1].commit.c
 # If last_commit > last_review, review may be stale
 ```
 
-**Action:** Request fresh review from original reviewer
+**Action:** Request fresh review from original reviewer.
 
 ### 2. Multiple Reviewers
 
-**Condition:** PR has multiple reviewers (human + bot)
+**Condition:** Multiple reviewers (human + bot)
 
 ```bash
 # Get all review states
@@ -74,7 +74,7 @@ gh api repos/{owner}/{repo}/pulls/$PR/reviews \
 **Action:**
 - All required reviewers must approve
 - Address each reviewer's comments separately
-- Track which reviewers have approved vs requested changes
+- Track approval vs changes requested per reviewer
 
 ### 3. Required Status Checks
 
@@ -86,17 +86,17 @@ gh api repos/{owner}/{repo}/branches/main/protection/required_status_checks \
   --jq '.contexts[]'
 ```
 
-**Action:** Wait for all required checks to pass, do not merge early
+**Action:** Wait for all required checks, do not merge early.
 
 ### 4. Draft PR
 
-**Condition:** PR is in draft state
+**Condition:** Draft state
 
 ```bash
 gh pr view $PR --json isDraft --jq '.isDraft'
 ```
 
-**Action:** Skip in queue processing, report as "DRAFT - skipping"
+**Action:** Skip in queue, report as "DRAFT - skipping".
 
 ### 5. Merge Queue
 
@@ -108,11 +108,11 @@ gh pr view $PR --json mergeStateStatus --jq '.mergeStateStatus'
 # Returns "QUEUED" if in merge queue
 ```
 
-**Action:** Use `gh pr merge --auto` instead of direct merge
+**Action:** Use `gh pr merge --auto` instead of direct merge.
 
 ### 6. CI Flaky Tests
 
-**Condition:** CI fails intermittently on same code
+**Condition:** CI fails intermittently on same code.
 
 **Detection:**
 
@@ -124,7 +124,7 @@ gh run list --commit $(git rev-parse HEAD) --json conclusion --jq '.[].conclusio
 **Action:**
 1. Re-run failed workflow: `gh run rerun $RUN_ID --failed`
 2. If fails 2x on same commit, treat as real failure
-3. Max 2 re-runs for flaky tests
+3. Max 2 re-runs for flaky tests.
 
 ### 7. Rate Limiting
 
@@ -142,12 +142,12 @@ fi
 
 ### 8. Large PR Queue
 
-**Condition:** Many PRs in queue (>5)
+**Condition:** Many PRs (>5).
 
 **Action:**
-1. Sort by: APPROVED first, then by age (oldest first)
+1. Sort: APPROVED first, then oldest first
 2. Process in batches of 3
-3. Report progress after each batch
+3. Report progress after each batch.
 
 ```bash
 # Sort PRs by review state and creation date
@@ -163,7 +163,7 @@ gh pr list --state open --json number,reviewDecision,createdAt \
 gh pr view $PR --json autoMergeRequest --jq '.autoMergeRequest'
 ```
 
-**Action:** Skip merge step, just monitor and report status
+**Action:** Skip merge, monitor and report status.
 
 ### 10. Required Approvals Not Met
 
@@ -179,7 +179,7 @@ gh api repos/{owner}/{repo}/pulls/$PR/reviews \
   --jq '[.[] | select(.state == "APPROVED")] | length'
 ```
 
-**Action:** Report missing approvals, wait for reviewers
+**Action:** Report missing approvals, wait for reviewers.
 
 ## Retry Logic
 
@@ -203,14 +203,14 @@ No retry:
 
 ## Abort Conditions
 
-Stop processing immediately if:
+Stop immediately if:
 
-1. **Merge conflict detected** - Requires human resolution
-2. **Authentication failure** - Token expired or invalid
-3. **Repository not found** - Wrong remote or permissions
+1. **Merge conflict** - Requires human resolution
+2. **Auth failure** - Token expired/invalid
+3. **Repo not found** - Wrong remote or permissions
 4. **Branch deleted** - PR source branch removed
 5. **User cancellation** - Manual interrupt
-6. **Max fix cycles reached** - 5 attempts exhausted
+6. **Max fix cycles** - 5 attempts exhausted
 
 ## Status Codes
 
