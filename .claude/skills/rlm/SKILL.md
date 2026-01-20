@@ -1,6 +1,6 @@
 ---
 name: rlm
-description: Process massive codebases with parallel agents using the RLM paradigm. Use when: investigating code behavior across large codebases (100+ files), analyzing patterns without loading all files into context, scanning for issues across entire repos. Triggers: "how are errors handled in this codebase", "analyze this large codebase", "scan all files for security issues", "find all usages of X".
+description: "Process massive codebases with parallel agents using the RLM paradigm. Use when: investigating code behavior across large codebases (100+ files), analyzing patterns without loading all files into context, scanning for issues across entire repos. Triggers: how are errors handled in this codebase, analyze this large codebase, scan all files for security issues, find all usages of X."
 ---
 
 # Recursive Language Model (RLM) Skill

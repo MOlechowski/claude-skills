@@ -1,6 +1,6 @@
 ---
 name: jq
-description: JSON processing and transformation. Use for: (1) extracting data from API responses, (2) filtering and transforming JSON structures, (3) combining or restructuring JSON data, (4) JSON processing in shell pipelines. Triggers: parse JSON, extract from JSON, filter JSON array, transform JSON, pretty-print JSON.
+description: "JSON processing and transformation. Use for: (1) extracting data from API responses, (2) filtering and transforming JSON structures, (3) combining or restructuring JSON data, (4) JSON processing in shell pipelines. Triggers: parse JSON, extract from JSON, filter JSON array, transform JSON, pretty-print JSON."
 ---
 
 # jq Expertise Skill

@@ -1,6 +1,6 @@
 ---
 name: speckit-retro
-description: Update specs with implementation learnings. Use when: (1) implementation is complete, (2) bugs were fixed that weren't in spec, (3) discovered edge cases, timing issues, or environment quirks, (4) improving spec quality for future features. Triggers: "run speckit-retro", "update spec with learnings", "what did we learn", "retroactively improve spec".
+description: "Update specs with implementation learnings. Use when: (1) implementation is complete, (2) bugs were fixed that weren't in spec, (3) discovered edge cases, timing issues, or environment quirks, (4) improving spec quality for future features. Triggers: run speckit-retro, update spec with learnings, what did we learn, retroactively improve spec."
 ---
 
 # Speckit Retro: Capture Implementation Learnings

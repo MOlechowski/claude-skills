@@ -1,6 +1,6 @@
 ---
 name: self-improvement
-description: Capture learnings into documentation. Use when: completing work that revealed missing instructions, finding workarounds for undocumented blockers, discovering patterns that work better than documented, capturing session learnings. Triggers: "update the instructions based on what we learned", "add this pattern to the docs", "capture this workaround", "improve the workflow documentation".
+description: "Capture learnings into documentation. Use when: completing work that revealed missing instructions, finding workarounds for undocumented blockers, discovering patterns that work better than documented, capturing session learnings. Triggers: update the instructions based on what we learned, add this pattern to the docs, capture this workaround, improve the workflow documentation."
 ---
 
 # Self-Improvement Protocol

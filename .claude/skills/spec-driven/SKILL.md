@@ -1,6 +1,6 @@
 ---
 name: spec-driven
-description: Autonomous spec-driven development loop. Use when: (1) working through spec repos with tasks.md, (2) implementing features from specs, (3) processing spec backlogs, (4) managing implementation PRs against specs. Triggers: "work through specs", "implement pending tasks", "process spec backlog", "what tasks are left".
+description: "Autonomous spec-driven development loop. Use when: (1) working through spec repos with tasks.md, (2) implementing features from specs, (3) processing spec backlogs, (4) managing implementation PRs against specs. Triggers: work through specs, implement pending tasks, process spec backlog, what tasks are left."
 ---
 
 # Spec-Driven Development Skill

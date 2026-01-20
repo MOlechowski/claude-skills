@@ -1,6 +1,6 @@
 ---
 name: speckit-flow
-description: Full spec-to-implementation workflow. Use when: (1) starting a new feature from scratch, (2) want end-to-end spec-driven development, (3) need autonomous workflow with minimal intervention. Triggers: "implement [feature]", "build from spec", "run full speckit flow", "create and implement feature".
+description: "Full spec-to-implementation workflow. Use when: (1) starting a new feature from scratch, (2) want end-to-end spec-driven development, (3) need autonomous workflow with minimal intervention. Triggers: implement [feature], build from spec, run full speckit flow, create and implement feature."
 ---
 
 # Speckit Flow: Full Spec-to-Implementation Workflow

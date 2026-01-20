@@ -1,6 +1,6 @@
 ---
 name: git-worktree
-description: Work on multiple branches simultaneously. Use when: working on multiple branches, reviewing PRs without stashing, parallel builds/tests, bare repo workflows. Triggers: /git-worktree, "work on two branches", "create worktree", "set up bare repo".
+description: "Work on multiple branches simultaneously. Use when: working on multiple branches, reviewing PRs without stashing, parallel builds/tests, bare repo workflows. Triggers: /git-worktree, work on two branches, create worktree, set up bare repo."
 ---
 
 # Git Worktree

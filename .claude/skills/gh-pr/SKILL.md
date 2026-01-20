@@ -1,6 +1,6 @@
 ---
 name: gh-pr
-description: Autonomous PR lifecycle management. Use when: checking PR status, merging PRs, processing reviews, handling CI failures. Triggers: /gh-pr, "merge the PR", "check PR status", "is this ready to merge?", "handle review comments".
+description: "Autonomous PR lifecycle management. Use when: checking PR status, merging PRs, processing reviews, handling CI failures. Triggers: /gh-pr, merge the PR, check PR status, is this ready to merge?, handle review comments."
 ---
 
 # GH-PR

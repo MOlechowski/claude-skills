@@ -1,6 +1,6 @@
 ---
 name: commit
-description: Generate Conventional Commits messages. Use when: creating commits, writing commit messages, committing changes. Triggers: /commit, "commit this", "commit my changes", finishing code changes.
+description: "Generate Conventional Commits messages. Use when: creating commits, writing commit messages, committing changes. Triggers: /commit, commit this, commit my changes, finishing code changes."
 ---
 
 # Commit

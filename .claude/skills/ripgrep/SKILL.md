@@ -1,6 +1,6 @@
 ---
 name: ripgrep
-description: Fast recursive code search. Use for: (1) searching large codebases for patterns, (2) finding code references and function calls, (3) filtering by file type or path, (4) security audits and pattern detection. Triggers: search codebase, find occurrences, grep files, search for pattern, find all usages.
+description: "Fast recursive code search. Use for: (1) searching large codebases for patterns, (2) finding code references and function calls, (3) filtering by file type or path, (4) security audits and pattern detection. Triggers: search codebase, find occurrences, grep files, search for pattern, find all usages."
 ---
 
 # ripgrep (rg) Expertise Skill

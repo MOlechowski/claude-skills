@@ -1,6 +1,6 @@
 ---
 name: parallel
-description: Execute shell jobs in parallel using GNU parallel. Use when: batch processing files, running same command on multiple inputs, CPU-intensive transforms, replacing slow loops. Triggers: "run in parallel", "batch process", "parallelize", "convert all images", "process files concurrently".
+description: "Execute shell jobs in parallel using GNU parallel. Use when: batch processing files, running same command on multiple inputs, CPU-intensive transforms, replacing slow loops. Triggers: run in parallel, batch process, parallelize, convert all images, process files concurrently."
 ---
 
 # GNU Parallel Skill
