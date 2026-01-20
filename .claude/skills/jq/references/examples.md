@@ -1,8 +1,8 @@
 # jq Examples
 
-## API Response Processing
+## API Processing
 
-### Extract User Data from API
+### Extract User Data
 ```bash
 curl -s 'https://api.github.com/users/octocat/repos' | jq '.[].name'
 
@@ -15,7 +15,7 @@ curl -s 'https://api.github.com/users/octocat/repos' | \
   jq '[.[] | select(.archived == false) | {name, url: .html_url}]'
 ```
 
-### Transform API Response Structure
+### Transform Response Structure
 ```bash
 # Convert GitHub API format to simplified structure
 curl -s 'https://api.github.com/repos/jq/jq' | \
@@ -34,7 +34,7 @@ curl -s 'https://api.github.com/repos/jq/jq' | \
   }'
 ```
 
-### Pagination and Data Aggregation
+### Pagination and Aggregation
 ```bash
 # Combine multiple API pages
 for page in {1..3}; do
@@ -69,7 +69,7 @@ cat app.log | jq '
 '
 ```
 
-### Performance Metrics Analysis
+### Performance Metrics
 ```bash
 # Calculate average response time
 cat access.log | jq -s '
@@ -113,9 +113,9 @@ cat app.log | jq -s '
 '
 ```
 
-## Configuration Management
+## Configuration
 
-### Update Configuration Files
+### Update Config Files
 ```bash
 # Change database host
 jq '.database.host = "localhost"' config.json > config.tmp.json
@@ -131,7 +131,7 @@ jq '.services.api.endpoints.users = "https://api.example.com/v2/users"' \
 mv config.tmp.json config.json
 ```
 
-### Merge Configuration Files
+### Merge Configs
 ```bash
 # Merge environment-specific config
 jq -s '.[0] * .[1]' base-config.json prod-config.json > final-config.json
@@ -144,7 +144,7 @@ jq -s 'reduce .[] as $item ({}; . * $item)' \
 jq -s '.[0] + .[1] | unique' plugins1.json plugins2.json
 ```
 
-### Extract Configuration Subsets
+### Extract Config Subsets
 ```bash
 # Extract database config only
 jq '.database' config.json > db-config.json
@@ -156,16 +156,16 @@ jq '.services | to_entries | map({name: .key, url: .value.url})' \
 
 ## Data Transformation
 
-### CSV-Like Data to JSON
+### CSV to JSON
 ```bash
-# Parse simple CSV (with external tool)
+# Parse CSV (with external tool)
 echo "name,age,city
 Alice,30,NYC
 Bob,25,LA" | \
   csvtojson | jq '.[] | {name, age: (.age | tonumber), city}'
 ```
 
-### Flatten Nested Structures
+### Flatten Structures
 ```bash
 # Flatten deeply nested object
 echo '{
@@ -214,7 +214,7 @@ echo '[
 
 ## Package.json Operations
 
-### Dependency Management
+### Dependencies
 ```bash
 # List all dependencies
 jq '.dependencies + .devDependencies' package.json
@@ -234,7 +234,7 @@ jq '.dependencies | to_entries | map({
 })' package.json
 ```
 
-### Script Management
+### Scripts
 ```bash
 # List all scripts
 jq '.scripts' package.json
@@ -251,7 +251,7 @@ mv package.tmp.json package.json
 
 ## Docker and Kubernetes
 
-### Parse Docker Inspect Output
+### Docker Inspect
 ```bash
 # Get container IP addresses
 docker inspect $(docker ps -q) | \
@@ -266,7 +266,7 @@ docker inspect container_name | \
   jq '.[0].Mounts | map({source: .Source, destination: .Destination, mode: .Mode})'
 ```
 
-### Kubernetes Resource Analysis
+### Kubernetes Resources
 ```bash
 # Get pod names and statuses
 kubectl get pods -o json | \
@@ -290,7 +290,7 @@ kubectl get pods -o json | \
 
 ## Testing and Validation
 
-### Validate JSON Structure
+### Validate Structure
 ```bash
 # Check if field exists
 echo '{"name": "Alice"}' | \
@@ -305,7 +305,7 @@ echo '{"age": "30"}' | \
   jq 'if (.age | type) == "number" then . else error("age must be number") end'
 ```
 
-### Test Data Generation
+### Generate Test Data
 ```bash
 # Generate mock users
 jq -n '[range(5) | {
@@ -328,9 +328,9 @@ jq -n '{
 }'
 ```
 
-## Git and Version Control
+## Git
 
-### Parse Git Log JSON
+### Parse Git Log
 ```bash
 # Custom git log format
 git log --pretty=format:'{"commit":"%H","author":"%an","date":"%ad","message":"%s"}' | \
@@ -341,7 +341,7 @@ git log --pretty=format:'{"author":"%an","message":"%s"}' | \
   jq -s 'group_by(.author) | map({author: .[0].author, commits: length})'
 ```
 
-### GitHub CLI Integration
+### GitHub CLI
 ```bash
 # List open PRs
 gh pr list --json number,title,author | \
@@ -352,9 +352,9 @@ gh pr view 123 --json reviews | \
   jq '.reviews | group_by(.state) | map({state: .[0].state, count: length})'
 ```
 
-## AWS CLI Operations
+## AWS CLI
 
-### EC2 Instance Management
+### EC2 Instances
 ```bash
 # List instances with specific tag
 aws ec2 describe-instances | \
@@ -372,7 +372,7 @@ aws ec2 describe-security-groups | \
   }'
 ```
 
-### S3 Bucket Analysis
+### S3 Buckets
 ```bash
 # List bucket sizes
 aws s3api list-buckets | \
@@ -384,11 +384,11 @@ aws s3api list-buckets | \
   done | jq -s '.'
 ```
 
-## Multi-Step Workflows
+## Workflows
 
 ### ETL Pipeline
 ```bash
-# Extract, transform, load pattern
+# Extract, transform, load
 curl -s 'https://api.example.com/data' | \
   jq '.results[] |
     select(.active == true) |
@@ -405,7 +405,7 @@ curl -s 'https://api.example.com/data' | \
   done
 ```
 
-### Report Generation
+### Reports
 ```bash
 # Generate HTML report from JSON
 cat data.json | jq -r '
@@ -434,7 +434,7 @@ done | jq -s 'group_by(.category) | map({
 
 ## Advanced Patterns
 
-### Recursive Processing
+### Recursion
 ```bash
 # Find all values matching key anywhere in structure
 echo '{
@@ -451,7 +451,7 @@ echo '{
   else . end)'
 ```
 
-### Custom Aggregations
+### Aggregations
 ```bash
 # Calculate weighted average
 echo '[
@@ -474,7 +474,7 @@ echo '[
 })'
 ```
 
-### Conditional Transformation
+### Conditionals
 ```bash
 # Apply different transforms based on condition
 echo '[
@@ -500,18 +500,18 @@ jq '
 '
 ```
 
-## Performance Optimization
+## Performance
 
-### Stream Processing Large Files
+### Stream Large Files
 ```bash
 jq -c '.[]' huge-array.json | while IFS= read -r obj; do
   echo "$obj" | jq 'select(.important == true)'
 done
 
-jq 'limit(100; .items[])' large-file.json  # First N items
+jq 'limit(100; .items[])' large-file.json               # First N items
 ```
 
-### Efficient Filtering
+### Filtering
 ```bash
 jq 'first(.items[] | select(.id == 123))' data.json  # Early exit
 jq -c '.items[]' data.json | process-items.sh         # Compact for pipelines

@@ -100,7 +100,7 @@ git push origin main  # Spec repos typically allow direct push
 
 ## Multi-Spec Implementation (REQUIRED: Use Worktrees)
 
-**When implementing multiple specs, ALWAYS use git worktrees.** This prevents:
+**When implementing multiple specs, use git worktrees.** This prevents:
 - Branch conflicts when switching specs
 - Lost uncommitted work
 - Context confusion
@@ -155,7 +155,7 @@ git branch -d 014-feature-name 015-feature-name
 | `git checkout` loses uncommitted work | Isolated directories |
 | Easy to commit to wrong branch | One worktree = one branch |
 | Must track current branch | Directory name = context |
-| Sequential only | Parallel work |
+| Sequential only | Parallel work possible |
 
 ## Parallel Work
 
@@ -285,10 +285,10 @@ func TestFeature(t *testing.T) {
 After completing tasks, reflect on learnings using self-improvement skill:
 
 ### Trigger Questions
-- Did I figure out something not in the docs?
-- Did I find a workaround for a blocker?
-- Did I discover a better pattern?
-- Was anything confusing or ambiguous?
+- Figured out something not in the docs?
+- Found a workaround for a blocker?
+- Discovered a better pattern?
+- Anything confusing or ambiguous?
 
 ### What to Update
 | Learning Type | Update Location |

@@ -142,7 +142,7 @@ Debug/troubleshoot?        -> quick-reference.md
 
 ## Cross-Spec Propagation Signals
 
-When learning applies to multiple specs:
+When a learning applies to multiple specs:
 
 ```
 Shared infrastructure:

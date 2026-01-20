@@ -2,7 +2,7 @@
 
 ## React Refactoring
 
-### Convert Class Components to Functional
+### Convert Class to Functional Components
 ```bash
 # Find class components
 sg -p 'class $NAME extends React.Component {
@@ -23,7 +23,7 @@ sg -p 'class $NAME extends React.Component {
 
 ### useState Hook Patterns
 ```bash
-# Find all useState declarations
+# Find useState declarations
 sg -p 'const [$STATE, $SETTER] = useState($INIT)' --lang tsx
 
 # Find useState with complex initial state
@@ -40,15 +40,15 @@ sg -p 'const [$STATE, $SETTER] = useState($COMPLEX_INIT)' \
 
 ### useEffect Dependency Arrays
 ```bash
-# Find useEffect with empty deps
+# useEffect with empty deps
 sg -p 'useEffect(() => { $$$BODY }, [])' --lang tsx
 
-# Find useEffect without deps (risky)
+# useEffect without deps (risky)
 sg -p 'useEffect(() => { $$$BODY })' \
    --not-has '}, [$$$DEPS]' \
    --lang tsx
 
-# Find useEffect using state not in deps
+# useEffect using state not in deps
 sg -p 'useEffect(() => { $$$BODY }, [$$$DEPS])' \
    --has '$STATE' \
    --lang tsx
@@ -56,7 +56,7 @@ sg -p 'useEffect(() => { $$$BODY }, [$$$DEPS])' \
 
 ### Props Destructuring
 ```bash
-# Find components not destructuring props
+# Components not destructuring props
 sg -p 'function $NAME(props) { $$$BODY }' --lang tsx
 
 # Convert to destructured props
@@ -66,7 +66,7 @@ sg -p 'function $NAME(props) {
   return <div>{$PROP}</div>
 }' --lang tsx
 
-# Find components with many props
+# Components with many props
 sg -p 'function $NAME({ $$$PROPS })' \
    --lang tsx --json | \
    jq 'select(.metavars.PROPS | length > 5)'
@@ -76,11 +76,11 @@ sg -p 'function $NAME({ $$$PROPS })' \
 
 ### Type Annotations
 ```bash
-# Find untyped function parameters
+# Untyped function parameters
 sg -p 'function $NAME($PARAM) { $$$BODY }' \
    --lang ts
 
-# Find functions missing return type
+# Functions missing return type
 sg -p 'function $NAME($$$PARAMS) { $$$BODY }' \
    --not-has '):' \
    --lang ts
@@ -95,10 +95,10 @@ sg -p 'function $NAME($$$PARAMS) {
 
 ### Interface vs Type
 ```bash
-# Find all type aliases
+# Type aliases
 sg -p 'type $NAME = $DEF' --lang ts
 
-# Find all interfaces
+# Interfaces
 sg -p 'interface $NAME { $$$PROPS }' --lang ts
 
 # Convert type to interface
@@ -111,12 +111,12 @@ sg -p 'type $NAME = {
 
 ### Generic Constraints
 ```bash
-# Find unconstrained generics
+# Unconstrained generics
 sg -p 'function $NAME<$T>($$$PARAMS) { $$$BODY }' \
    --not-has 'extends' \
    --lang ts
 
-# Find overly broad generics
+# Overly broad generics
 sg -p '<$T extends any>' --lang ts
 
 # Add constraint
@@ -129,12 +129,12 @@ sg -p 'function $NAME<$T>($PARAM: $T) { $$$BODY }' \
 
 ### Missing Try-Catch
 ```bash
-# Find await without try-catch
+# await without try-catch
 sg -p 'await $PROMISE' \
    --not-inside 'try { $$$BODY } catch ($ERR) { $$$HANDLER }' \
    --lang js
 
-# Find async functions lacking error handling
+# async functions lacking error handling
 sg -p 'async function $NAME() {
   await $PROMISE
   $$$REST
@@ -152,7 +152,7 @@ sg -p 'await $PROMISE' \
 
 ### Promise Chains vs Async/Await
 ```bash
-# Find Promise.then chains
+# Promise.then chains
 sg -p '$PROMISE.then($HANDLER)' --lang js
 
 # Convert to async/await
@@ -164,7 +164,7 @@ sg -p '$PROMISE.then($SUCCESS).catch($ERROR)' \
   $ERROR(error);
 }' --lang js
 
-# Find unhandled rejections
+# Unhandled rejections
 sg -p '$PROMISE.then($HANDLER)' \
    --not-has '.catch' \
    --lang js
@@ -172,12 +172,12 @@ sg -p '$PROMISE.then($HANDLER)' \
 
 ### Error Throwing Patterns
 ```bash
-# Find throw without Error object
+# throw without Error object
 sg -p 'throw $MSG' \
    --not-has 'new Error' \
    --lang js
 
-# Find caught errors not logged
+# Caught errors not logged
 sg -p 'catch ($ERR) { $$$BODY }' \
    --not-has 'console.error' \
    --not-has 'logger' \
@@ -193,12 +193,12 @@ sg -p 'throw $MSG' \
 
 ### Magic Numbers
 ```bash
-# Find numeric literals in code
+# Numeric literals in code
 sg -p '$VAR * $NUM' \
    --lang js | \
    grep -E '[0-9]{2,}'
 
-# Find array index access
+# Array index access
 sg -p '$ARR[$NUM]' --lang js
 
 # Extract to constant
@@ -210,7 +210,7 @@ if ($VAR > THRESHOLD)' \
 
 ### Long Parameter Lists
 ```bash
-# Find functions with many params
+# Functions with many params
 sg -p 'function $NAME($P1, $P2, $P3, $P4, $P5, $$$MORE)' --lang js
 
 # Suggest object parameter pattern
@@ -221,7 +221,7 @@ sg -p 'function $NAME($P1, $P2, $P3, $P4)' \
 
 ### Nested Conditionals
 ```bash
-# Find deeply nested if statements
+# Deeply nested if statements
 sg -p 'if ($COND1) {
   if ($COND2) {
     if ($COND3) {
@@ -230,7 +230,7 @@ sg -p 'if ($COND1) {
   }
 }' --lang js
 
-# Find nested ternaries
+# Nested ternaries
 sg -p '$COND1 ? ($COND2 ? $A : $B) : $C' --lang js
 ```
 
@@ -238,13 +238,13 @@ sg -p '$COND1 ? ($COND2 ? $A : $B) : $C' --lang js
 
 ### SQL Injection Risks
 ```bash
-# Find string concatenation in SQL
+# String concatenation in SQL
 sg -p 'query($SQL + $VAR)' --lang js
 
-# Find template literals in SQL
+# Template literals in SQL
 sg -p 'query(`$$$SQL ${$VAR} $$$`)' --lang js
 
-# Find execute with interpolation
+# Execute with interpolation
 sg -p 'execute(`SELECT * FROM users WHERE id = ${$ID}`)' --lang js
 
 # Suggest parameterized queries
@@ -255,29 +255,29 @@ sg -p 'query(`SELECT * FROM users WHERE id = ${$ID}`)' \
 
 ### XSS Vulnerabilities
 ```bash
-# Find innerHTML assignments
+# innerHTML assignments
 sg -p '$EL.innerHTML = $HTML' --lang js
 
-# Find dangerouslySetInnerHTML
+# dangerouslySetInnerHTML
 sg -p '<$COMP dangerouslySetInnerHTML={{ __html: $HTML }} />' --lang tsx
 
-# Find document.write
+# document.write
 sg -p 'document.write($CONTENT)' --lang js
 
-# Find eval usage
+# eval usage
 sg -p 'eval($CODE)' --lang js
 ```
 
 ### Hardcoded Credentials
 ```bash
-# Find hardcoded passwords
+# Hardcoded passwords
 sg -p '$VAR = "password"' --lang js
 sg -p 'password: "$PASSWORD"' --lang js
 
-# Find API keys
+# API keys
 sg -p 'const API_KEY = "$KEY"' --lang js
 
-# Find secret assignments
+# Secret assignments
 sg -p '$VAR = { secret: "$SECRET" }' --lang js
 ```
 
@@ -285,12 +285,12 @@ sg -p '$VAR = { secret: "$SECRET" }' --lang js
 
 ### Fetch Patterns
 ```bash
-# Find fetch without error handling
+# fetch without error handling
 sg -p 'fetch($URL)' \
    --not-inside 'try { $$$BODY } catch ($ERR) { $$$HANDLER }' \
    --lang js
 
-# Find fetch without await
+# fetch without await
 sg -p 'fetch($URL)' \
    --not-has 'await' \
    --not-inside 'then' \
@@ -306,15 +306,15 @@ sg -p 'const $RES = await fetch($URL)' \
 
 ### REST API Endpoints
 ```bash
-# Find all API route definitions
+# API route definitions
 sg -p 'app.$METHOD($PATH, $HANDLER)' --lang js
 
-# Find unprotected routes
+# Unprotected routes
 sg -p 'router.post($PATH, $HANDLER)' \
    --not-has 'auth' \
    --lang js
 
-# Find routes without validation
+# Routes without validation
 sg -p 'app.post($PATH, async ($REQ, $RES) => {
   $$$BODY
 })' --not-has 'validate' --lang js
@@ -322,14 +322,14 @@ sg -p 'app.post($PATH, async ($REQ, $RES) => {
 
 ### GraphQL Patterns
 ```bash
-# Find GraphQL queries
+# GraphQL queries
 sg -p 'gql`
   query $NAME {
     $$$FIELDS
   }
 `' --lang js
 
-# Find mutations lacking error handling
+# Mutations lacking error handling
 sg -p 'mutation $NAME {
   $$$BODY
 }' --not-has 'catch' --lang js
@@ -339,14 +339,14 @@ sg -p 'mutation $NAME {
 
 ### Loop Optimization
 ```bash
-# Find nested loops
+# Nested loops
 sg -p 'for ($I of $ARR1) {
   for ($J of $ARR2) {
     $$$BODY
   }
 }' --lang js
 
-# Find array ops in loops
+# Array ops in loops
 sg -p 'for ($I of $ARR) {
   $ARR2.push($ITEM)
 }' --lang js
@@ -359,13 +359,13 @@ sg -p 'for ($ITEM of $ARR) {
 
 ### Unnecessary Re-renders (React)
 ```bash
-# Find inline function props
+# Inline function props
 sg -p '<$COMP onClick={() => $HANDLER} />' --lang tsx
 
-# Find inline object props
+# Inline object props
 sg -p '<$COMP style={{ $$$PROPS }} />' --lang tsx
 
-# Find missing React.memo
+# Missing React.memo
 sg -p 'function $COMP({ $$$PROPS }) {
   return $JSX
 }' --not-has 'React.memo' --lang tsx
@@ -373,7 +373,7 @@ sg -p 'function $COMP({ $$$PROPS }) {
 
 ### Bundle Size
 ```bash
-# Find large library imports
+# Large library imports
 sg -p 'import $SPEC from "lodash"' --lang js
 
 # Suggest specific imports
@@ -381,7 +381,7 @@ sg -p 'import _ from "lodash"' \
    -r 'import { $METHOD } from "lodash/$METHOD"' \
    --lang js
 
-# Find moment.js (suggest date-fns)
+# moment.js (suggest date-fns)
 sg -p 'import moment from "moment"' --lang js
 ```
 
@@ -389,7 +389,7 @@ sg -p 'import moment from "moment"' --lang js
 
 ### Missing Tests
 ```bash
-# Find exported functions without tests
+# Exported functions without tests
 sg -p 'export function $NAME($$$PARAMS) { $$$BODY }' --lang js | \
   while read -r match; do
     name=$(echo "$match" | jq -r '.metavars.NAME')
@@ -399,17 +399,17 @@ sg -p 'export function $NAME($$$PARAMS) { $$$BODY }' --lang js | \
 
 ### Test Structure
 ```bash
-# Find tests without assertions
+# Tests without assertions
 sg -p 'it($DESC, () => {
   $$$BODY
 })' --not-has 'expect' --lang js
 
-# Find async tests without await
+# Async tests without await
 sg -p 'it($DESC, async () => {
   $$$BODY
 })' --not-has 'await' --lang js
 
-# Find tests with console.log
+# Tests with console.log
 sg -p 'it($DESC, () => {
   console.log($MSG)
   $$$BODY
@@ -418,13 +418,13 @@ sg -p 'it($DESC, () => {
 
 ### Mock Patterns
 ```bash
-# Find unmocked API calls in tests
+# Unmocked API calls in tests
 sg -p 'fetch($URL)' \
    --inside 'describe($SUITE, () => { $$$TESTS })' \
    --not-has 'jest.mock' \
    --lang js
 
-# Find jest.fn() without implementation
+# jest.fn() without implementation
 sg -p 'jest.fn()' \
    --not-has 'mockImplementation' \
    --lang js
@@ -434,17 +434,17 @@ sg -p 'jest.fn()' \
 
 ### JSDoc Patterns
 ```bash
-# Find exported functions without JSDoc
+# Exported functions without JSDoc
 sg -p 'export function $NAME($$$PARAMS) { $$$BODY }' \
    --not-precedes '/**' \
    --lang js
 
-# Find @param without type
+# @param without type
 sg -p '* @param $NAME' \
    --not-has '{' \
    --lang js
 
-# Find incomplete JSDoc
+# Incomplete JSDoc
 sg -p '/**
  * $DESC
  * @param $PARAM
@@ -455,7 +455,7 @@ sg -p '/**
 
 ### CommonJS to ESM
 ```bash
-# Find require statements
+# require statements
 sg -p 'const $VAR = require($MODULE)' --lang js
 
 # Convert to import
@@ -463,7 +463,7 @@ sg -p 'const $VAR = require($MODULE)' \
    -r 'import $VAR from $MODULE' \
    --lang js
 
-# Find module.exports
+# module.exports
 sg -p 'module.exports = $EXPORT' --lang js
 
 # Convert to export
@@ -474,7 +474,7 @@ sg -p 'module.exports = $EXPORT' \
 
 ### Deprecated API Migration
 ```bash
-# Find deprecated lifecycle methods
+# Deprecated lifecycle methods
 sg -p 'componentWillMount() { $$$BODY }' --lang tsx
 
 # Suggest useEffect
@@ -483,7 +483,7 @@ sg -p 'componentDidMount() { $$$BODY }' \
   $$$BODY
 }, [])' --lang tsx
 
-# Find findDOMNode usage
+# findDOMNode usage
 sg -p 'ReactDOM.findDOMNode($COMP)' --lang js
 ```
 
@@ -519,7 +519,7 @@ rule:
 ```yaml
 # rules/no-eval.yml
 id: no-eval
-message: eval() is dangerous and should not be used
+message: eval() is dangerous
 severity: error
 language: JavaScript
 rule:
@@ -535,7 +535,7 @@ rule:
 
 ### Modernize Callbacks to Promises
 ```bash
-# Find callback pattern
+# Callback pattern
 sg -p 'function $NAME($PARAMS, callback) {
   $$$BODY
   callback($ERR, $RESULT)
@@ -553,7 +553,7 @@ sg -p 'function $NAME($PARAMS, callback) {
 
 ### Refactor Large Functions
 ```bash
-# Find long functions
+# Long functions
 sg -p 'function $NAME() { $$$BODY }' --lang js | \
   jq 'select(.metavars.BODY | length > 50)'
 

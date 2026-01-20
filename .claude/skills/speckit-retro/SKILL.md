@@ -5,7 +5,7 @@ description: "Update specs with implementation learnings. Use when: (1) implemen
 
 # Speckit Retro: Capture Implementation Learnings
 
-Analyze implementation history to extract learnings for feature specifications. Bridges the gap between what was planned and what was discovered.
+Analyze implementation history to extract learnings for feature specifications. Bridges the gap between planned and discovered.
 
 ## Purpose
 
@@ -109,7 +109,7 @@ Map each learning to appropriate file and section:
 
 ### 5. GENERATE Updates
 
-For each learning, generate spec update:
+For each learning, generate a spec update:
 
 **Edge Cases (Q&A format):**
 ```markdown
@@ -257,12 +257,12 @@ Changelog entries added.
 
 ## Rules
 
-1. **Semantic analysis** - Read and understand context, don't just grep for `fix:` tags.
-2. **Prove before adding** - Only add verified learnings.
-3. **Cite sources** - Reference commit or PR for each learning.
-4. **Preview first** - Show proposed changes before editing.
-5. **Preserve existing content** - Add to sections, don't replace unless correcting.
-6. **One spec at a time** - Focus on thorough analysis of single spec.
+1. **Semantic analysis** - Read and understand context, don't grep for `fix:` tags
+2. **Prove before adding** - Add only verified learnings
+3. **Cite sources** - Reference commit or PR for each learning
+4. **Preview first** - Show proposed changes before editing
+5. **Preserve existing content** - Add to sections, don't replace unless correcting
+6. **One spec at a time** - Focus on thorough analysis of single spec
 
 ## Quick Reference
 

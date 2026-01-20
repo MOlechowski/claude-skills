@@ -3,11 +3,11 @@ name: jq
 description: "JSON processing and transformation. Use for: (1) extracting data from API responses, (2) filtering and transforming JSON structures, (3) combining or restructuring JSON data, (4) JSON processing in shell pipelines. Triggers: parse JSON, extract from JSON, filter JSON array, transform JSON, pretty-print JSON."
 ---
 
-# jq Expertise Skill
+# jq Skill
 
-## Fundamental Concepts
+## Fundamentals
 
-### Identity and Basic Filters
+### Identity and Filters
 
 **Identity (`.`)**
 ```bash
@@ -67,13 +67,13 @@ echo '{"users":[{"name":"Alice"},{"name":"Bob"}]}' | jq '.users | .[0] | .name'
 # Output: "Alice"
 ```
 
-## Essential jq Syntax
+## Syntax Reference
 
-### Filters and Selectors
+### Filters
 
 | Syntax | Description | Example |
 |--------|-------------|---------|
-| `.` | Identity (current input) | `jq '.'` |
+| `.` | Identity | `jq '.'` |
 | `.field` | Access field | `jq '.name'` |
 | `.field?` | Optional field access | `jq '.age?'` |
 | `.[index]` | Array index | `jq '.[0]'` |
@@ -95,21 +95,10 @@ echo '{"users":[{"name":"Alice"},{"name":"Bob"}]}' | jq '.users | .[0] | .name'
 
 **Core Functions:**
 ```bash
-# length - Get length of array/object/string
-echo '["a","b","c"]' | jq 'length'
-# Output: 3
-
-# keys - Get object keys as array
-echo '{"a":1,"b":2}' | jq 'keys'
-# Output: ["a", "b"]
-
-# type - Get type of value
-echo '{"name":"Alice"}' | jq '.name | type'
-# Output: "string"
-
-# has - Check if key exists
-echo '{"name":"Alice"}' | jq 'has("name")'
-# Output: true
+echo '["a","b","c"]' | jq 'length'    # Output: 3
+echo '{"a":1,"b":2}' | jq 'keys'      # Output: ["a", "b"]
+echo '{"name":"Alice"}' | jq '.name | type'  # Output: "string"
+echo '{"name":"Alice"}' | jq 'has("name")'   # Output: true
 ```
 
 **String Functions:**
@@ -125,26 +114,11 @@ echo '["a","b","c"]' | jq 'join(",")'
 
 **Array Functions:**
 ```bash
-# map - Apply expression to each element
-echo '[1,2,3]' | jq 'map(. * 2)'
-# Output: [2, 4, 6]
-
-# select - Filter elements
-echo '[1,2,3,4]' | jq '.[] | select(. > 2)'
-# Output: 3
-#         4
-
-# sort/sort_by
-echo '[3,1,2]' | jq 'sort'
-# Output: [1, 2, 3]
-
-# unique
-echo '[1,2,2,3]' | jq 'unique'
-# Output: [1, 2, 3]
-
-# add - Sum array
-echo '[1,2,3]' | jq 'add'
-# Output: 6
+echo '[1,2,3]' | jq 'map(. * 2)'           # Output: [2, 4, 6]
+echo '[1,2,3,4]' | jq '.[] | select(. > 2)' # Output: 3, 4
+echo '[3,1,2]' | jq 'sort'                  # Output: [1, 2, 3]
+echo '[1,2,2,3]' | jq 'unique'              # Output: [1, 2, 3]
+echo '[1,2,3]' | jq 'add'                   # Output: 6
 ```
 
 ## Common Patterns
@@ -215,14 +189,14 @@ echo '{"name":"Alice"}' | jq '.age // 0'
 
 ## Command-Line Options
 
-### Essential Flags
+### Flags
 
 ```bash
--r, --raw-output          # Output raw strings (no quotes)
--c, --compact-output      # Compact JSON (no pretty-print)
+-r, --raw-output          # Raw strings (no quotes)
+-c, --compact-output      # Compact JSON
 -S, --sort-keys           # Sort object keys
 -s, --slurp               # Read entire input into array
--n, --null-input          # Don't read input, start with null
+-n, --null-input          # Start with null
 --arg name value          # Pass string variable
 --argjson name json       # Pass JSON variable
 ```
@@ -250,7 +224,7 @@ echo '{"a":1}
 jq --arg name "Alice" '.name = $name' input.json
 ```
 
-## Real-World Workflows
+## Workflows
 
 ### API Response Processing
 
@@ -330,6 +304,6 @@ echo '{"name":"Alice"}' | jq '.age // empty'
 # Output: (nothing)
 ```
 
-## Additional Resources
+## Resources
 
 See `examples.md` and `quick-reference.md`.

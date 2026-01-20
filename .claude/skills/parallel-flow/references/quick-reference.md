@@ -17,7 +17,7 @@ Input -> Analyze -> Partition -> Execute -> Aggregate -> Output
 | < 10 complex items | Agents | analysis tasks |
 | > 50 simple items | Shell | batch operations |
 
-## Agent Parallelism Pattern
+## Agent Parallelism
 
 **Launch (single message, multiple calls):**
 ```
@@ -42,7 +42,7 @@ TaskOutput(task_id=<id_0>, block=true)
 TaskOutput(task_id=<id_1>, block=true)
 ```
 
-## Shell Parallelism Pattern
+## Shell Parallelism
 
 **GNU parallel:**
 ```bash
@@ -55,7 +55,7 @@ find . -name "*.txt" | parallel process {}
 Bash(command="...", run_in_background=true)
 ```
 
-## Output Structure
+## Output
 
 ```
 /tmp/parallel_flow_{id}/

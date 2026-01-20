@@ -7,18 +7,18 @@ description: "Semantic code search and transformation using ASTs. Use for: (1) s
 
 ## Core Capabilities
 
-1. **Semantic Search**: Match code by structure, not text patterns
-2. **Language Aware**: Understands syntax of multiple languages
-3. **Metavariables**: Capture and reuse code fragments in patterns
+1. **Semantic Search**: Match code by structure, not text
+2. **Language Aware**: Understands multiple language syntaxes
+3. **Metavariables**: Capture and reuse code fragments
 4. **Structural Rewriting**: Transform code preserving semantics
 5. **Multi-Language**: TypeScript, JavaScript, Python, Rust, Go, etc.
-6. **Rule Engine**: Define custom linting and refactoring rules
+6. **Rule Engine**: Custom linting and refactoring rules
 
 ## Basic Usage
 
-### Simple Pattern Search
+### Pattern Search
 ```bash
-# Find all console.log calls
+# Find console.log calls
 sg -p 'console.log($ARG)' src/
 
 # Find function definitions
@@ -28,9 +28,9 @@ sg -p 'function $NAME($PARAMS) { $BODY }' src/
 sg -p 'useState($INIT)' --lang tsx
 ```
 
-### Pattern Syntax Basics
+### Pattern Syntax
 ```bash
-# $VAR matches any single AST node
+# $VAR matches single AST node
 sg -p 'if ($COND) { $BODY }'
 
 # $$$ARGS matches multiple nodes (variadic)
@@ -68,7 +68,7 @@ sg -p 'function $NAME() { $$$BODY }'
 
 ### Anonymous Wildcards
 ```bash
-# Match any expression without capturing
+# Match without capturing
 sg -p 'console.log($_$)'
 
 # Match any condition
@@ -79,40 +79,40 @@ sg -p 'if ($_$) { return true }'
 
 ### JavaScript/TypeScript
 ```bash
-# Find arrow functions
+# Arrow functions
 sg -p '($$$PARAMS) => $BODY' --lang ts
 
-# Find async functions
+# Async functions
 sg -p 'async function $NAME($$$PARAMS) { $$$BODY }' --lang js
 
-# Find JSX elements
+# JSX elements
 sg -p '<$COMPONENT $$$PROPS />' --lang tsx
 
-# Find import statements
+# Import statements
 sg -p 'import $SPEC from $SOURCE' --lang ts
 ```
 
 ### React Patterns
 ```bash
-# Find useState hooks
+# useState hooks
 sg -p 'const [$STATE, $SETTER] = useState($INIT)' --lang tsx
 
-# Find useEffect hooks
+# useEffect hooks
 sg -p 'useEffect(() => { $$$BODY }, [$$$DEPS])' --lang tsx
 
-# Find component definitions
+# Component definitions
 sg -p 'function $NAME($PROPS) { return $JSX }' --lang tsx
 ```
 
 ### Python
 ```bash
-# Find function definitions
+# Function definitions
 sg -p 'def $NAME($$$PARAMS): $$$BODY' --lang py
 
-# Find class definitions
+# Class definitions
 sg -p 'class $NAME($$$BASES): $$$BODY' --lang py
 
-# Find list comprehensions
+# List comprehensions
 sg -p '[$EXPR for $VAR in $ITER]' --lang py
 ```
 
@@ -120,13 +120,13 @@ sg -p '[$EXPR for $VAR in $ITER]' --lang py
 
 ### Inside/Has/Follows/Precedes
 ```bash
-# Pattern inside another pattern
+# Pattern inside another
 sg -p '$VAR' --inside 'function $NAME() { $$$BODY }' --lang js
 
-# Pattern has another pattern
+# Pattern containing another
 sg -p 'function $NAME() { $$$BODY }' --has 'return $VALUE' --lang js
 
-# Pattern follows another
+# Pattern following another
 sg -p 'console.log($MSG)' --follows 'const $VAR =' --lang js
 ```
 
@@ -140,7 +140,7 @@ sg -p 'console.log($ARG)' -r 'logger.info($ARG)' --lang js
 # Convert var to const
 sg -p 'var $NAME = $VALUE' -r 'const $NAME = $VALUE' --lang js
 
-# Add await to fetch calls
+# Add await to fetch
 sg -p 'fetch($URL)' -r 'await fetch($URL)' --lang js
 ```
 
@@ -151,7 +151,7 @@ sg -p 'fetch($URL).then($HANDLER)' \
    -r 'const response = await fetch($URL); $HANDLER(response)' \
    --lang js
 
-# Add error handling to API calls
+# Add error handling
 sg -p 'const $VAR = await fetch($URL)' \
    -r 'const $VAR = await fetch($URL).catch(error => {
      console.error("Fetch failed:", error);
@@ -162,7 +162,7 @@ sg -p 'const $VAR = await fetch($URL)' \
 
 ### Interactive Rewrite
 ```bash
-# Interactive mode to review each change
+# Review each change interactively
 sg -p 'var $NAME' -r 'const $NAME' --lang js --interactive
 
 # Update files in place
@@ -199,20 +199,20 @@ sg scan -r rule.yml src/ --json
 
 ### Code Refactoring
 ```bash
-# Step 1: Find all instances
+# 1: Find instances
 sg -p 'oldFunction($$$ARGS)' --lang js
 
-# Step 2: Preview changes
+# 2: Preview changes
 sg -p 'oldFunction($$$ARGS)' -r 'newFunction($$$ARGS)' --lang js
 
-# Step 3: Apply changes
+# 3: Apply changes
 sg -p 'oldFunction($$$ARGS)' -r 'newFunction($$$ARGS)' --lang js --update-all
 ```
 
 ### Code Review
 ```bash
-# Find potential bugs
-sg -p 'if ($VAR = $VALUE)' --lang js  # Assignment instead of comparison
+# Find potential bugs (assignment in condition)
+sg -p 'if ($VAR = $VALUE)' --lang js
 
 # Find security issues
 sg -p 'eval($CODE)' --lang js
@@ -221,10 +221,10 @@ sg -p 'innerHTML = $VALUE' --lang js
 
 ### Architecture Analysis
 ```bash
-# Find all API endpoints
+# Find API endpoints
 sg -p 'app.$METHOD($PATH, $HANDLER)' --lang js
 
-# Find all database queries
+# Find database queries
 sg -p 'db.query($SQL, $$$PARAMS)' --lang js
 ```
 
@@ -234,7 +234,7 @@ sg -p 'db.query($SQL, $$$PARAMS)' --lang js
 - Start simple, add constraints incrementally
 - Use metavariables ($VAR) for captures
 - Use wildcards ($_$) when capture unnecessary
-- Test patterns on small examples first
+- Test on small examples first
 - Use --debug-query to understand AST structure
 
 ### Refactoring
@@ -249,7 +249,7 @@ sg -p 'db.query($SQL, $$$PARAMS)' --lang js
 - Verify language (--lang)
 - Check AST structure with --debug-query
 - Simplify pattern to isolate issue
-- Ensure whitespace isn't affecting match
+- Check whitespace effects
 
 ### False Positives
 - Add constraints (inside, has, not)
@@ -263,4 +263,4 @@ See `examples.md` and `quick-reference.md` for detailed examples.
 - Official Documentation: https://ast-grep.github.io/
 - Pattern Playground: https://ast-grep.github.io/playground.html
 
-Emphasize semantic matching over text patterns. Test patterns in the playground. Start simple, add constraints for precision.
+Prioritize semantic matching over text patterns. Test in playground. Start simple, add constraints for precision.

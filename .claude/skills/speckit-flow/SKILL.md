@@ -27,7 +27,7 @@ CREATE -> CLARIFY -> ANALYZE -> TASKS -> CHECKLIST -> PR -> [IMPLEMENT]
                                                   (only if impl repo)
 ```
 
-Fully autonomous - halts only on errors. Creates PR for spec artifacts. Implementation conditional on repo type.
+Fully autonomous, halts only on errors. Creates PR for spec artifacts. Implementation conditional on repo type.
 
 ## Phase Scripts
 
@@ -45,7 +45,7 @@ Each phase is implemented as a Python script in `scripts/`:
 | 8. IMPLEMENT | `speckit_implement.py` | `python scripts/speckit_implement.py` |
 | Validate | `speckit_validate.py` | `python scripts/speckit_validate.py` |
 
-All scripts support `--json` for machine output, `--help` for usage, consistent exit codes (0=success, 1=validation error, 2=bash error).
+All scripts support `--json` for machine output, `--help` for usage, and consistent exit codes (0=success, 1=validation error, 2=bash error).
 
 ## Quick Start
 
@@ -104,8 +104,8 @@ python scripts/common.py --is-impl-repo
 ```
 
 **Detection:**
-- Source dirs (src/, lib/, app/) or project files (package.json, go.mod) exist -> Implementation repo
-- Only `.specify/` and `specs/` exist -> Spec-only repo
+- Source dirs (src/, lib/, app/) or project files (package.json, go.mod) exist -> implementation repo
+- Only `.specify/` and `specs/` exist -> spec-only repo
 
 ---
 
@@ -336,7 +336,7 @@ Summary: 0 errors, 1 warning
 
 ## Shared Utilities
 
-`common.py` provides: Status emojis (SUCCESS, ERROR), exit codes, bash wrapper (`run_bash_script()`), path utilities (`get_repo_root()`, `get_feature_paths()`), template loading, Git/GH commands.
+`common.py` provides status emojis (SUCCESS, ERROR), exit codes, bash wrapper (`run_bash_script()`), path utilities (`get_repo_root()`, `get_feature_paths()`), template loading, and Git/GH commands.
 
 ---
 
@@ -345,5 +345,5 @@ Summary: 0 errors, 1 warning
 - Python scripts wrap bash scripts in `.specify/scripts/bash/`
 - Context passes through artifacts and git branch state
 - Resume detection allows partial workflow continuation
-- PR created but NOT auto-merged
-- IMPLEMENT phase only runs in implementation repos
+- PR created but not auto-merged
+- IMPLEMENT phase runs only in implementation repos

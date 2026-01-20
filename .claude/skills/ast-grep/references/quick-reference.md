@@ -11,39 +11,39 @@ sg [OPTIONS] -p <PATTERN> [PATH...]
 |------|-------------|
 | `-p <PATTERN>` / `--pattern` | Search pattern |
 | `-r <REPLACE>` / `--rewrite` | Replacement pattern |
-| `-l <LANG>` / `--lang` | Specify language (js, ts, py, etc.) |
-| `--json` | Output as JSON |
-| `--update-all` | Update all files in place |
-| `--interactive` | Interactive replacement mode |
+| `-l <LANG>` / `--lang` | Language (js, ts, py, etc.) |
+| `--json` | JSON output |
+| `--update-all` | Update files in place |
+| `--interactive` | Interactive replacement |
 
 ## Metavariables
 
 | Syntax | Description | Example |
 |--------|-------------|---------|
-| `$VAR` | Match single AST node | `$NAME($ARGS)` |
-| `$$$VAR` | Match multiple nodes (variadic) | `function f($$$PARAMS)` |
-| `$_$` | Anonymous wildcard (don't capture) | `console.log($_$)` |
+| `$VAR` | Single AST node | `$NAME($ARGS)` |
+| `$$$VAR` | Multiple nodes (variadic) | `function f($$$PARAMS)` |
+| `$_$` | Wildcard (no capture) | `console.log($_$)` |
 
 ## Pattern Constraints
 
 | Flag | Description |
 |------|-------------|
-| `--inside <PATTERN>` | Match only inside another pattern |
-| `--has <PATTERN>` | Match only if contains pattern |
-| `--follows <PATTERN>` | Match only if follows pattern |
-| `--precedes <PATTERN>` | Match only if precedes pattern |
-| `--not <PATTERN>` | Exclude matches containing pattern |
+| `--inside <PATTERN>` | Match inside another pattern |
+| `--has <PATTERN>` | Match if contains pattern |
+| `--follows <PATTERN>` | Match if follows pattern |
+| `--precedes <PATTERN>` | Match if precedes pattern |
+| `--not <PATTERN>` | Exclude matches with pattern |
 
 ## Output Control
 
 | Flag | Description |
 |------|-------------|
-| `-A <NUM>` | Show NUM lines after match |
-| `-B <NUM>` | Show NUM lines before match |
-| `-C <NUM>` | Show NUM lines before and after |
-| `--heading` | Group output by file |
-| `--color` / `--no-color` | Control color output |
-| `--format <FMT>` | Output format (short, json) |
+| `-A <NUM>` | Lines after match |
+| `-B <NUM>` | Lines before match |
+| `-C <NUM>` | Lines before and after |
+| `--heading` | Group by file |
+| `--color` / `--no-color` | Color output |
+| `--format <FMT>` | Format (short, json) |
 
 ## Rule Files
 
@@ -54,7 +54,7 @@ sg scan -r rule.yml src/
 # Run all rules in directory
 sg scan -c rules/ src/
 
-# Output as JSON
+# JSON output
 sg scan -r rule.yml --json
 ```
 
@@ -91,43 +91,43 @@ fix: <replacement>
 ## Quick Patterns
 
 ```bash
-# Find function calls
+# Function calls
 sg -p '$FUNC($$$ARGS)' --lang js
 
-# Find function definitions
+# Function definitions
 sg -p 'function $NAME($$$PARAMS) { $$$BODY }' --lang js
 
-# Find variable declarations
+# Variable declarations
 sg -p 'const $VAR = $VALUE' --lang js
 
-# Find imports
+# Imports
 sg -p 'import $SPEC from $SOURCE' --lang js
 
-# Find React hooks
+# React hooks
 sg -p 'use$HOOK($$$ARGS)' --lang tsx
 
-# Find class definitions
+# Class definitions
 sg -p 'class $NAME extends $BASE { $$$BODY }' --lang js
 
-# Find arrow functions
+# Arrow functions
 sg -p '($$$PARAMS) => $BODY' --lang js
 
-# Find async functions
+# Async functions
 sg -p 'async function $NAME() { $$$BODY }' --lang js
 
-# Find try-catch blocks
+# Try-catch blocks
 sg -p 'try { $$$TRY } catch ($ERR) { $$$CATCH }' --lang js
 
-# Find object destructuring
+# Object destructuring
 sg -p 'const { $$$PROPS } = $OBJ' --lang js
 
-# Find JSX elements
+# JSX elements
 sg -p '<$COMPONENT $$$PROPS />' --lang tsx
 
-# Find API calls
+# API calls
 sg -p 'fetch($URL)' --lang js
 
-# Find console statements
+# Console statements
 sg -p 'console.$METHOD($$$ARGS)' --lang js
 ```
 
@@ -155,7 +155,7 @@ sg -p 'await $PROMISE' \
 ## Common Workflows
 
 ```bash
-# Find and preview changes
+# Find and preview
 sg -p 'OLD' -r 'NEW' --lang js
 
 # Interactive replacement
@@ -173,27 +173,27 @@ sg scan -c rules/ src/
 # Debug pattern
 sg -p '$PATTERN' --lang js --debug-query
 
-# List supported languages
+# List languages
 sg --list-langs
 
-# Test pattern on file
+# Test pattern
 sg -p '$PATTERN' --lang js --test file.js
 ```
 
 ## Constraints Example
 
 ```bash
-# Find useState not in useEffect
+# useState not in useEffect
 sg -p 'useState($INIT)' \
    --not-inside 'useEffect(() => { $$$BODY }, [$$$DEPS])' \
    --lang tsx
 
-# Find fetch without error handling
+# fetch without error handling
 sg -p 'fetch($URL)' \
    --not-inside 'try { $$$BODY } catch ($ERR) { $$$HANDLER }' \
    --lang js
 
-# Find console.log after variable declaration
+# console.log after variable declaration
 sg -p 'console.log($VAR)' \
    --follows 'const $VAR =' \
    --lang js

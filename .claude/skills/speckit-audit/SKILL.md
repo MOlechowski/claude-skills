@@ -5,7 +5,7 @@ description: "Find unspecced work and fix spec drift. Use when: (1) auditing spe
 
 # Speckit Audit: Find Unspecced Work and Fix Drift
 
-Audit implementation repos for work without specs and drift between specs and implementation. Identifies gaps, fixes drift, offers retroactive specs.
+Audit implementation repos for work without specs and drift between specs and implementation. Identifies gaps, fixes drift, and offers retroactive specs.
 
 ## Purpose
 
@@ -14,7 +14,7 @@ In spec-driven development, all significant work needs a spec, and specs must st
 2. Compares against existing specs
 3. Reports gaps (work without specs)
 4. Auto-fixes drift in matched specs
-5. Offers to create specs via `/speckit-flow`
+5. Offers spec creation via `/speckit-flow`
 
 ## Workflow
 
@@ -214,7 +214,7 @@ Audit detected and fixed drift from implementation:
 
 ### 7. OFFER Spec Creation
 
-For each unspecced item user wants to spec:
+For each unspecced item the user wants to spec:
 
 ```markdown
 ## Create Spec for PR #415?
@@ -235,7 +235,7 @@ Create spec with /speckit-flow? [Y/n]
 
 ### 8. INVOKE speckit-flow
 
-When user approves, invoke `/speckit-flow` to create full spec package.
+When approved, invoke `/speckit-flow` to create full spec package.
 
 **Retroactive spec handling:**
 - Note that spec documents existing functionality
@@ -248,7 +248,7 @@ See `references/quick-reference.md` for rules and templates.
 
 ## Rules
 
-1. **Be conservative** - Only flag significant work
+1. **Be conservative** - Flag only significant work
 2. **Skip infrastructure** - CI/CD, tooling rarely need specs
 3. **User decides** - Present findings, let user choose
 4. **Full pipeline** - Use `/speckit-flow` for complete packages

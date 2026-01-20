@@ -2,11 +2,11 @@
 
 ## Example 1: Multi-Module Security Analysis
 
-**User request:** "Analyze all modules for security issues"
+**Request:** "Analyze all modules for security issues"
 
 **Analysis:**
-- Task type: Cognitive (requires understanding code)
-- Parallelizable units: Modules (src/auth, src/api, src/db)
+- Type: Cognitive (requires understanding code)
+- Units: Modules (src/auth, src/api, src/db)
 - Dependencies: None
 - Method: Claude agents
 
@@ -43,11 +43,11 @@ jq -s '[.[].findings] | add | group_by(.severity) |
 
 ## Example 2: Batch Image Conversion
 
-**User request:** "Convert all images to webp"
+**Request:** "Convert all images to webp"
 
 **Analysis:**
-- Task type: Command (simple transformation)
-- Parallelizable units: Each image file
+- Type: Command (simple transformation)
+- Units: Each image file
 - Dependencies: None
 - Method: GNU parallel
 
@@ -60,11 +60,11 @@ parallel cwebp -q 80 {} -o {.}.webp ::: images/*.png images/*.jpg
 
 ## Example 3: Parallel API Testing
 
-**User request:** "Test all API endpoints"
+**Request:** "Test all API endpoints"
 
 **Analysis:**
-- Task type: Hybrid (run commands, analyze results)
-- Parallelizable units: Each endpoint
+- Type: Hybrid (run commands, analyze results)
+- Units: Each endpoint
 - Dependencies: None
 - Method: Shell for requests, agent for analysis
 
@@ -89,11 +89,11 @@ Task(
 
 ## Example 4: Parallel Documentation Summary
 
-**User request:** "Summarize all markdown docs"
+**Request:** "Summarize all markdown docs"
 
 **Analysis:**
-- Task type: Cognitive (reading and summarizing)
-- Parallelizable units: Each markdown file
+- Type: Cognitive (reading and summarizing)
+- Units: Each markdown file
 - Method: Claude agents (files grouped into partitions)
 
 **Partition:**
@@ -129,11 +129,11 @@ Output JSON to /tmp/pf_002/agent_2.json",
 
 ## Example 5: Parallel Linting
 
-**User request:** "Run linting on all packages"
+**Request:** "Run linting on all packages"
 
 **Analysis:**
-- Task type: Command
-- Parallelizable units: Each package
+- Type: Command
+- Units: Each package
 - Method: GNU parallel
 
 **Execution:**
@@ -145,10 +145,10 @@ parallel --tag 'cd {} && npm run lint 2>&1' ::: packages/*
 
 ## Example 6: Mixed Agent + Shell
 
-**User request:** "Find and fix all TODO comments"
+**Request:** "Find and fix all TODO comments"
 
 **Analysis:**
-- Task type: Hybrid
+- Type: Hybrid
 - Phase 1: Shell (find TODOs)
 - Phase 2: Agents (generate fixes)
 - Phase 3: Shell (apply fixes)
@@ -178,11 +178,11 @@ Step 3 - Apply:
 
 ## Example 7: Concurrent Dependency Checks
 
-**User request:** "Check dependencies for vulnerabilities"
+**Request:** "Check dependencies for vulnerabilities"
 
 **Analysis:**
-- Task type: Command
-- Parallelizable units: Each package.json location
+- Type: Command
+- Units: Each package.json location
 - Method: Shell parallel
 
 **Execution:**
