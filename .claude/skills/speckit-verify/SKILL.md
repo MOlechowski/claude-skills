@@ -61,6 +61,24 @@ Extract claims and categorize:
 - Edge cases: "Handles empty input"
 - Security: "Validates user input"
 
+### 2b. IDENTIFY New Artifacts
+
+Find new files and exports:
+
+```bash
+# New files from git
+git diff --name-only origin/main | grep -E '\.(ts|js|go|py)$'
+
+# New exports
+git diff origin/main -- '*.ts' '*.js' | grep "^+.*export"
+```
+
+Track:
+- New files created
+- New exports added
+- New routes defined
+- New services registered
+
 ### 3. TIER 1 - Static Checks (grep)
 
 ```bash
@@ -75,6 +93,21 @@ grep -rn "const\|MAX\|LIMIT\|DEFAULT" src/
 
 # Error codes
 grep -rn "error\|Error\|ERROR" src/
+```
+
+**Wiring checks:**
+```bash
+# Export exists
+grep -rn "export.*NewThing" src/
+
+# Import exists
+grep -rn "import.*NewThing" src/
+
+# Route defined
+grep -rn "router\.\|app\.\|Route" src/
+
+# Service registered
+grep -rn "register\|provide\|bind" src/
 ```
 
 Build results table:
@@ -109,6 +142,21 @@ grep -r "log\.\|logger\." src/ | grep -i "connection"
 ```bash
 # Find flag definitions
 grep -rn "flag\.\|--\|addFlag" src/
+```
+
+**Wiring patterns:**
+```bash
+# Export-import match
+sg -p 'export { $NAME }' src/
+sg -p 'import { $NAME }' src/
+
+# Route-handler connection
+sg -p 'router.get($PATH, $HANDLER)' src/
+
+# Usage outside tests
+for f in $(git diff --name-only origin/main); do
+  grep -rl "$(basename $f .ts)" src/ | grep -v test
+done
 ```
 
 Build results:
@@ -160,6 +208,12 @@ Impl: src/
 Tier 1 (Static):     12/12 OK
 Tier 2 (Pattern):     8/10 OK, 2 issues
 Tier 3 (Analysis):    5/6 OK, 1 issue
+
+Wiring:
+  Exports:     3/3 imported
+  Routes:      2/2 registered
+  Services:    1/1 wired
+  Usage:       4/4 called (non-test)
 
 Issues found:
   [T1] Timeout: 10s → 30s (DRIFT)
