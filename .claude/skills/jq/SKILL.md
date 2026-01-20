@@ -1,23 +1,9 @@
 ---
 name: jq
-description: JSON processing and transformation.
+description: JSON processing and transformation. Use for: (1) extracting data from API responses, (2) filtering and transforming JSON structures, (3) combining or restructuring JSON data, (4) JSON processing in shell pipelines. Triggers: parse JSON, extract from JSON, filter JSON array, transform JSON, pretty-print JSON.
 ---
 
 # jq Expertise Skill
-
-Use this skill when:
-- Processing JSON output from APIs, logs, or configuration files
-- Filtering, transforming, or extracting data from complex JSON structures
-- Combining or restructuring JSON data
-- Working with JSON in shell scripts or pipelines
-- Debugging API responses or JSON-based workflows
-
-Examples:
-- "Extract all user names from this JSON API response"
-- "Filter JSON array to only include items where status is 'active'"
-- "Transform this JSON structure to match a different schema"
-- "Combine multiple JSON files into a single array"
-- "Pretty-print and colorize JSON output"
 
 You are an expert in `jq`, a powerful command-line JSON processor that provides a complete query language for filtering, transforming, and manipulating JSON data streams.
 
@@ -53,9 +39,6 @@ You are an expert in `jq`, a powerful command-line JSON processor that provides 
 ```bash
 # Pass through unchanged (pretty-print)
 echo '{"name":"Alice"}' | jq '.'
-# Output: {
-#   "name": "Alice"
-# }
 ```
 
 **Field Access (`.field`)**
@@ -66,7 +49,6 @@ echo '{"name":"Alice","age":30}' | jq '.name'
 
 # Nested access
 echo '{"user":{"name":"Alice"}}' | jq '.user.name'
-# Output: "Alice"
 ```
 
 **Optional Field Access (`.field?`)**
@@ -94,10 +76,6 @@ echo '[1,2,3]' | jq '.[-1]'
 # Get range
 echo '[1,2,3,4,5]' | jq '.[1:3]'
 # Output: [2, 3]
-
-# From start to index
-echo '[1,2,3,4,5]' | jq '.[:2]'
-# Output: [1, 2]
 ```
 
 **Array Iterator (`.[]`)**
@@ -118,14 +96,6 @@ echo '{"users":[{"name":"Alice"},{"name":"Bob"}]}' | jq '.users | .[0] | .name'
 # Output: "Alice"
 ```
 
-**Multiple Operations**
-```bash
-# Apply multiple filters
-echo '{"a":1,"b":2}' | jq '.a, .b'
-# Output: 1
-#         2
-```
-
 ## Essential jq Syntax
 
 ### Filters and Selectors
@@ -139,7 +109,6 @@ echo '{"a":1,"b":2}' | jq '.a, .b'
 | `.[]` | Array iterator | `jq '.[]'` |
 | `.[start:end]` | Array slice | `jq '.[1:3]'` |
 | `.field.nested` | Nested access | `jq '.user.name'` |
-| `.. | .field` | Recursive descent | `jq '.. | .name?'` |
 
 ### Operators
 
@@ -148,12 +117,7 @@ echo '{"a":1,"b":2}' | jq '.a, .b'
 | `\|` | Pipe | `jq '.users \| .[]'` |
 | `,` | Comma (multiple outputs) | `jq '.a, .b'` |
 | `+` | Addition/concatenation | `jq '.a + .b'` |
-| `-` | Subtraction | `jq '.total - .used'` |
-| `*` | Multiplication/merge | `jq '.price * .qty'` |
-| `/` | Division | `jq '.total / .count'` |
 | `==` | Equal | `jq '.status == "active"'` |
-| `!=` | Not equal | `jq '.status != "deleted"'` |
-| `<`, `>`, `<=`, `>=` | Comparisons | `jq '.age > 18'` |
 | `and`, `or`, `not` | Boolean logic | `jq '.active and .verified'` |
 
 ### Functions
@@ -168,11 +132,6 @@ echo '["a","b","c"]' | jq 'length'
 echo '{"a":1,"b":2}' | jq 'keys'
 # Output: ["a", "b"]
 
-# values - Get all values
-echo '{"a":1,"b":2}' | jq '.[]'
-# Output: 1
-#         2
-
 # type - Get type of value
 echo '{"name":"Alice"}' | jq '.name | type'
 # Output: "string"
@@ -184,14 +143,6 @@ echo '{"name":"Alice"}' | jq 'has("name")'
 
 **String Functions:**
 ```bash
-# startswith/endswith
-echo '"hello world"' | jq 'startswith("hello")'
-# Output: true
-
-# contains
-echo '"hello world"' | jq 'contains("world")'
-# Output: true
-
 # split
 echo '"a,b,c"' | jq 'split(",")'
 # Output: ["a", "b", "c"]
@@ -199,10 +150,6 @@ echo '"a,b,c"' | jq 'split(",")'
 # join
 echo '["a","b","c"]' | jq 'join(",")'
 # Output: "a,b,c"
-
-# tostring/tonumber
-echo '123' | jq 'tostring'
-# Output: "123"
 ```
 
 **Array Functions:**
@@ -224,27 +171,9 @@ echo '[3,1,2]' | jq 'sort'
 echo '[1,2,2,3]' | jq 'unique'
 # Output: [1, 2, 3]
 
-# reverse
-echo '[1,2,3]' | jq 'reverse'
-# Output: [3, 2, 1]
-
 # add - Sum array
 echo '[1,2,3]' | jq 'add'
 # Output: 6
-```
-
-**Aggregation Functions:**
-```bash
-# group_by
-echo '[{"name":"Alice","age":30},{"name":"Bob","age":30}]' | jq 'group_by(.age)'
-
-# min/max
-echo '[3,1,2]' | jq 'min'
-# Output: 1
-
-# min_by/max_by
-echo '[{"name":"Alice","age":30},{"name":"Bob","age":25}]' | jq 'min_by(.age)'
-# Output: {"name": "Bob", "age": 25}
 ```
 
 ## Common Patterns
@@ -299,19 +228,6 @@ echo '{"first":"Alice","last":"Smith"}' | \
 # Merge two objects
 echo '{"a":1}' | jq '. + {"b":2}'
 # Output: {"a": 1, "b": 2}
-
-# Merge with override
-echo '{"a":1,"b":2}' | jq '. + {"b":3}'
-# Output: {"a": 1, "b": 3}
-```
-
-### Array to Object
-
-```bash
-# Create object from array
-echo '[{"key":"a","value":1},{"key":"b","value":2}]' | \
-  jq 'map({(.key): .value}) | add'
-# Output: {"a": 1, "b": 2}
 ```
 
 ### Conditional Logic
@@ -334,15 +250,10 @@ echo '{"name":"Alice"}' | jq '.age // 0'
 -r, --raw-output          # Output raw strings (no quotes)
 -c, --compact-output      # Compact JSON (no pretty-print)
 -S, --sort-keys           # Sort object keys
--e, --exit-status         # Set exit code based on output
 -s, --slurp               # Read entire input into array
 -n, --null-input          # Don't read input, start with null
--f, --from-file <file>    # Read jq program from file
 --arg name value          # Pass string variable
 --argjson name json       # Pass JSON variable
---slurpfile name file     # Read JSON file into variable
--M, --monochrome-output   # No colors
--C, --color-output        # Force colors
 ```
 
 ### Usage Examples
@@ -366,12 +277,6 @@ echo '{"a":1}
 ```bash
 # Pass external values
 jq --arg name "Alice" '.name = $name' input.json
-```
-
-**Multiple Files**
-```bash
-# Process multiple files
-jq '.users[]' file1.json file2.json
 ```
 
 ## Real-World Workflows
@@ -408,16 +313,6 @@ jq '.database.host = "localhost"' config.json > config.new.json
 jq -s '.[0] * .[1]' base-config.json env-config.json
 ```
 
-### Data Transformation
-
-```bash
-# Convert CSV-like data to JSON (with external tool)
-csvtojson data.csv | jq '.[] | {name: .Name, age: (.Age | tonumber)}'
-
-# Flatten nested structure
-echo '{"a":{"b":{"c":1}}}' | jq 'flatten'
-```
-
 ## Advanced Techniques
 
 ### Recursive Descent
@@ -444,22 +339,6 @@ jq 'def double: . * 2; map(double)' <<< '[1,2,3]'
 # Custom aggregation
 echo '[1,2,3,4]' | jq 'reduce .[] as $x (0; . + $x)'
 # Output: 10  (sum)
-
-# Build object
-echo '["a","b","c"]' | jq 'reduce .[] as $x ({}; . + {($x): true})'
-# Output: {"a": true, "b": true, "c": true}
-```
-
-### Path Expressions
-
-```bash
-# Get path to all matching values
-echo '{"a":{"b":1},"c":{"b":2}}' | jq 'getpath(["a","b"])'
-# Output: 1
-
-# Set value at path
-echo '{"a":{"b":1}}' | jq 'setpath(["a","b"]; 999)'
-# Output: {"a": {"b": 999}}
 ```
 
 ## Error Handling
@@ -470,9 +349,6 @@ echo '{"a":{"b":1}}' | jq 'setpath(["a","b"]; 999)'
 # Handle errors gracefully
 echo '{"name":"Alice"}' | jq 'try .age catch 0'
 # Output: 0
-
-# With error message
-echo 'invalid' | jq -R 'try fromjson catch "Invalid JSON: \(.)"'
 ```
 
 ### Empty and Error
@@ -481,34 +357,6 @@ echo 'invalid' | jq -R 'try fromjson catch "Invalid JSON: \(.)"'
 # Return empty instead of error
 echo '{"name":"Alice"}' | jq '.age // empty'
 # Output: (nothing)
-
-# Error with message
-jq 'if .age < 0 then error("Age cannot be negative") else . end'
-```
-
-## Performance Tips
-
-### Streaming for Large Files
-
-```bash
-# Stream large JSON arrays without loading into memory
-jq -c '.[]' huge-array.json | while read -r obj; do
-  echo "$obj" | jq '.field'
-done
-```
-
-### Limit Output
-
-```bash
-# Process only first N elements
-jq 'limit(10; .users[])' large-file.json
-```
-
-### Use Compact Output for Performance
-
-```bash
-# Faster parsing downstream
-jq -c '.[]' input.json | process-each-line.sh
 ```
 
 ## Common Pitfalls
@@ -521,16 +369,6 @@ jq ".name" file.json  # May fail if $name is shell variable
 
 # CORRECT: Use single quotes
 jq '.name' file.json
-```
-
-### Array vs Object Iteration
-
-```bash
-# Iterate array elements
-echo '[1,2,3]' | jq '.[]'  # Outputs: 1, 2, 3
-
-# Iterate object values
-echo '{"a":1,"b":2}' | jq '.[]'  # Outputs: 1, 2
 ```
 
 ### Null Handling
@@ -552,13 +390,6 @@ jq '.field // default_value'
 jq '.users | debug | .[0]' input.json
 ```
 
-### Type checking
-
-```bash
-# Verify types during processing
-jq '.items[] | if type != "object" then error("Expected object") else . end'
-```
-
 ## Integration Examples
 
 ### With curl
@@ -576,17 +407,11 @@ curl -s 'https://api.github.com/repos/jq/jq' | \
 find . -name '*.json' -exec jq '.version' {} +
 ```
 
-### With grep
-
-```bash
-# Filter then parse
-grep '"status"' logfile.jsonl | jq 'select(.status == "error")'
-```
-
 ## Additional Resources
+
+For detailed examples and reference, see `examples.md` and `quick-reference.md`.
 
 - Official Manual: https://jqlang.github.io/jq/manual/
 - jq Play (Interactive): https://jqplay.org/
-- Cookbook: https://github.com/stedolan/jq/wiki/Cookbook
 
 When providing jq guidance, always consider the complexity of the JSON structure, provide clear examples, and suggest testing with jqplay.org for complex queries before production use.

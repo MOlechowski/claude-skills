@@ -1,23 +1,9 @@
 ---
 name: fzf
-description: Interactive fuzzy finder for files, history, and lists.
+description: Interactive fuzzy finder for files, history, and lists. Use for: (1) interactive file/directory selection, (2) command history search with preview, (3) building selection menus in scripts, (4) filtering large lists or command outputs. Triggers: fuzzy search, interactive selector, pick from list, file finder with preview.
 ---
 
 # fzf Expertise Skill
-
-Use this skill when:
-- Interactively searching through files, directories, or command history
-- Building interactive selection menus for shell scripts
-- Filtering large lists or command outputs
-- Creating powerful keyboard-driven workflows
-- Integrating fuzzy search into custom tools and aliases
-
-Examples:
-- "Create interactive file selector for editing"
-- "Search command history with preview"
-- "Build git branch selector with fuzzy search"
-- "Filter running processes and kill selected"
-- "Create custom fuzzy file finder with preview"
 
 You are an expert in `fzf`, a general-purpose command-line fuzzy finder that provides an interactive interface for filtering and selecting items from any list.
 
@@ -55,25 +41,6 @@ You are an expert in `fzf`, a general-purpose command-line fuzzy finder that pro
 - Custom picker interfaces
 - Filtering large datasets
 
-## Installation
-
-```bash
-# macOS (Homebrew)
-brew install fzf
-# Install key bindings and fuzzy completion
-$(brew --prefix)/opt/fzf/install
-
-# Linux (apt)
-sudo apt install fzf
-
-# Linux (git)
-git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
-~/.fzf/install
-
-# Verify installation
-fzf --version
-```
-
 ## Basic Usage
 
 ### Simple Selection
@@ -83,9 +50,6 @@ echo -e "apple\nbanana\ncherry" | fzf
 
 # Select file in current directory
 find . -type f | fzf
-
-# Select from command output
-ls | fzf
 
 # Use selected value
 file=$(find . -type f | fzf)
@@ -103,7 +67,6 @@ Shift-Tab        Unmark items
 Ctrl-A           Select all
 Ctrl-D           Deselect all
 Ctrl-U           Clear query
-Ctrl-W           Delete word
 ```
 
 ## Search Syntax
@@ -111,31 +74,28 @@ Ctrl-W           Delete word
 ### Fuzzy Matching
 ```bash
 # Fuzzy match (default)
-fzf  # Type "abc" → matches "a_b_c", "a123b456c", etc.
+fzf  # Type "abc" matches "a_b_c", "a123b456c", etc.
 
 # Exact match (prefix with ')
-fzf  # Type "'exact" → matches "exact" only
+fzf  # Type "'exact" matches "exact" only
 
 # Prefix match (suffix with ^)
-fzf  # Type "^start" → matches lines starting with "start"
+fzf  # Type "^start" matches lines starting with "start"
 
 # Suffix match (prefix with $)
-fzf  # Type "end$" → matches lines ending with "end"
+fzf  # Type "end$" matches lines ending with "end"
 
 # Negation (prefix with !)
-fzf  # Type "!exclude" → matches lines not containing "exclude"
+fzf  # Type "!exclude" matches lines not containing "exclude"
 ```
 
 ### Combining Patterns
 ```bash
 # AND (space-separated)
-# Type "foo bar" → matches lines with both "foo" AND "bar"
+# Type "foo bar" matches lines with both "foo" AND "bar"
 
 # OR (pipe-separated)
-# Type "foo | bar" → matches lines with "foo" OR "bar"
-
-# Complex combinations
-# Type "^start end$ !exclude" → lines starting with "start", ending with "end", not containing "exclude"
+# Type "foo | bar" matches lines with "foo" OR "bar"
 ```
 
 ## Options and Customization
@@ -148,9 +108,6 @@ fzf --multi
 # Reverse layout (prompt at top)
 fzf --reverse
 
-# Full screen height
-fzf --height 100%
-
 # Partial height
 fzf --height 40%
 
@@ -162,10 +119,6 @@ fzf --prompt "Select file> "
 
 # Header
 fzf --header "Choose an option"
-
-# Info style
-fzf --info=inline  # Show info inline
-fzf --info=hidden  # Hide info
 ```
 
 ### Search Behavior
@@ -175,9 +128,6 @@ fzf --case-sensitive
 
 # Exact match by default
 fzf --exact
-
-# Enable multi-line matching
-fzf --multi-line
 
 # Disable sort
 fzf --no-sort
@@ -200,14 +150,8 @@ fzf --preview 'cat {}' --preview-window=up:40%
 # Hide preview by default (toggle with Ctrl-/)
 fzf --preview 'cat {}' --preview-window=hidden
 
-# Scroll preview
-fzf --preview 'cat {}' --bind 'ctrl-d:preview-page-down,ctrl-u:preview-page-up'
-
-# Custom preview command
+# Custom preview with bat
 fzf --preview 'bat --color=always --style=numbers {}'
-
-# Preview for different file types
-fzf --preview '[[ -f {} ]] && bat --color=always {} || tree -C {}'
 ```
 
 ## Key Bindings
@@ -223,20 +167,8 @@ fzf --bind 'ctrl-r:reload(find . -type f)'
 # Toggle preview
 fzf --bind 'ctrl-/:toggle-preview'
 
-# Toggle selection
-fzf --bind 'ctrl-t:toggle'
-
 # Select all
 fzf --bind 'ctrl-a:select-all'
-
-# Deselect all
-fzf --bind 'ctrl-d:deselect-all'
-
-# Execute command and reload
-fzf --bind 'ctrl-r:reload(git branch | cut -c 3-)'
-
-# Print query
-fzf --bind 'ctrl-e:print-query'
 ```
 
 ### Custom Actions
@@ -247,9 +179,6 @@ fzf --bind 'ctrl-e:execute(echo {} >> selected.txt)' \
 
 # Chain actions
 fzf --bind 'enter:execute(vim {})+abort'
-
-# Conditional execution
-fzf --bind 'enter:execute-silent([ -d {} ] && ls {} || cat {})'
 ```
 
 ## Integration Patterns
@@ -267,9 +196,6 @@ find . -type f | fzf --preview 'bat --color=always {}'
 
 # Open multiple files
 vim $(fzf --multi)
-
-# Better file finder with bat preview
-fd --type f | fzf --preview 'bat --color=always --style=numbers --line-range=:500 {}'
 ```
 
 ### Git Integration
@@ -285,12 +211,6 @@ git add $(git status -s | fzf --multi | awk '{print $2}')
 
 # Interactive git diff
 git diff --name-only | fzf --preview 'git diff --color=always {}'
-
-# Search commits
-git log --oneline | fzf --preview 'git show --color=always {1}'
-
-# Delete merged branches
-git branch --merged | fzf --multi | xargs -I {} git branch -d {}
 ```
 
 ### Process Management
@@ -299,31 +219,16 @@ git branch --merged | fzf --multi | xargs -I {} git branch -d {}
 ps aux | fzf | awk '{print $2}' | xargs kill
 
 # With preview showing process details
-ps aux | fzf --preview 'ps -f -p {2}' | awk '{print $2}' | xargs kill -9
-
-# Interactive htop-style selector
 ps aux | fzf --header-lines=1 --preview 'pstree -p {2}'
 ```
 
 ### Command History
 ```bash
-# Search command history (Ctrl-R)
-# Already bound if you ran fzf installer
-
 # Manual history search
 history | fzf --tac | sed 's/^[[:space:]]*[0-9]*[[:space:]]*//'
 
 # Execute selected command
 eval "$(history | fzf --tac | sed 's/^[[:space:]]*[0-9]*[[:space:]]*//')"
-```
-
-### Environment Variables
-```bash
-# Select and export env var
-export VAR=$(env | fzf | cut -d= -f1)
-
-# Browse environment
-env | fzf --preview 'echo {}'
 ```
 
 ## Shell Integration
@@ -333,20 +238,14 @@ After running `fzf` installer:
 
 ```bash
 # Ctrl-T: Paste selected files/directories
-# Usage: vim <Ctrl-T>
-
 # Ctrl-R: Command history
-# Usage: <Ctrl-R> to search history
-
 # Alt-C: Change directory
-# Usage: <Alt-C> to fuzzy cd
 ```
 
 ### Custom Functions
 
 **Interactive Git Branch Checkout:**
 ```bash
-# ~/.bashrc or ~/.zshrc
 fco() {
   local branches branch
   branches=$(git branch -vv) &&
@@ -361,15 +260,6 @@ fe() {
   local file
   file=$(fd --type f | fzf --preview 'bat --color=always {}') &&
   ${EDITOR:-vim} "$file"
-}
-```
-
-**Interactive Docker Container:**
-```bash
-fdc() {
-  local container
-  container=$(docker ps | fzf --header-lines=1 | awk '{print $1}') &&
-  docker exec -it "$container" /bin/bash
 }
 ```
 
@@ -404,9 +294,6 @@ fzf --preview '[[ -d {} ]] && tree -C {} || bat --color=always {}'
 # Git log preview
 git log --oneline | fzf --preview 'git show --color=always --stat {1}'
 
-# Image preview (with chafa or catimg)
-fzf --preview 'chafa {}'
-
 # JSON preview
 find . -name "*.json" | fzf --preview 'jq -C . {}'
 ```
@@ -417,45 +304,8 @@ find . -name "*.json" | fzf --preview 'jq -C . {}'
 fzf --bind 'ctrl-r:reload(rg --files)' \
     --bind 'ctrl-g:reload(git ls-files)'
 
-# Search with ripgrep reload
-rg --files | fzf --bind "change:reload:rg --files | rg {q}"
-
 # Live grep
 fzf --disabled --bind "change:reload:rg --column --line-number --no-heading --color=always {q}"
-```
-
-### Custom Color Scheme
-```bash
-# Dark theme
-fzf --color=dark \
-    --color=fg:#d0d0d0,bg:#1a1a1a,hl:#5f87af \
-    --color=fg+:#ffffff,bg+:#262626,hl+:#5fd7ff
-
-# Light theme
-fzf --color=light \
-    --color=fg:#3c3836,bg:#fbf1c7,hl:#9d0006
-
-# Nord theme
-fzf --color=bg+:#3b4252,bg:#2e3440,spinner:#81a1c1,hl:#616e88 \
-    --color=fg:#d8dee9,header:#616e88,info:#81a1c1,pointer:#81a1c1 \
-    --color=marker:#81a1c1,fg+:#d8dee9,prompt:#81a1c1,hl+:#81a1c1
-```
-
-### Headers and Layout
-```bash
-# Multi-line header
-fzf --header=$'First line\nSecond line\nThird line'
-
-# Header from file
-fzf --header="$(cat header.txt)"
-
-# Layout options
-fzf --layout=reverse  # Prompt at top
-fzf --layout=default  # Prompt at bottom
-fzf --layout=reverse-list  # Reverse list order
-
-# Padding
-fzf --padding=1,2,3,4  # top, right, bottom, left
 ```
 
 ## Scripting with fzf
@@ -467,7 +317,6 @@ option=$(cat << EOF | fzf --prompt="Select action> "
 Build project
 Run tests
 Deploy to staging
-Deploy to production
 View logs
 EOF
 )
@@ -476,7 +325,6 @@ case "$option" in
   "Build project") make build ;;
   "Run tests") npm test ;;
   "Deploy to staging") ./deploy.sh staging ;;
-  "Deploy to production") ./deploy.sh production ;;
   "View logs") tail -f logs/app.log ;;
 esac
 ```
@@ -497,58 +345,8 @@ CONFIRM=$(echo -e "Yes\nNo" | \
   fzf --prompt="Deploy $SERVICE to $ENV? " --height=40%)
 
 if [[ "$CONFIRM" == "Yes" ]]; then
-  echo "Deploying $SERVICE to $ENV..."
   ./deploy.sh "$SERVICE" "$ENV"
 fi
-```
-
-### File Browser
-```bash
-#!/bin/bash
-while true; do
-  file=$(find . -type f -o -type d | \
-    fzf --preview='[[ -d {} ]] && ls -la {} || bat --color=always {}' \
-    --preview-window=right:60% \
-    --bind 'ctrl-/:toggle-preview' \
-    --header 'Enter: Open | Ctrl-C: Exit')
-
-  [[ -z "$file" ]] && break
-
-  if [[ -d "$file" ]]; then
-    cd "$file"
-  else
-    ${EDITOR:-vim} "$file"
-  fi
-done
-```
-
-## Performance Tips
-
-### Large Lists
-```bash
-# Stream large lists
-find / -type f 2>/dev/null | fzf
-
-# Limit initial results
-fzf --height 40% --reverse
-
-# Use fast file finder
-fd --type f | fzf  # Faster than find
-
-# Parallel processing
-fd | fzf --preview 'bat --color=always {}'
-```
-
-### Fast Preview
-```bash
-# Limit preview lines
-fzf --preview 'head -100 {}'
-
-# Use faster preview tool
-fzf --preview 'bat --color=always --line-range :500 {}'
-
-# Conditional preview
-fzf --preview '[[ $(wc -l < {}) -lt 1000 ]] && bat {} || echo "File too large"'
 ```
 
 ## Best Practices
@@ -567,15 +365,6 @@ fzf --preview '[[ $(wc -l < {}) -lt 1000 ]] && bat {} || echo "File too large"'
 - Use without quoting variables
 - Ignore exit codes
 - Overload with too many bindings
-- Skip preview for complex selections
-
-### Tips
-- Install shell integrations for Ctrl-R, Ctrl-T, Alt-C
-- Set `FZF_DEFAULT_OPTS` for global config
-- Use `FZF_DEFAULT_COMMAND` for custom file listing
-- Combine with `bat`, `fd`, `rg` for better UX
-- Create aliases for common patterns
-- Use `--bind` for workflow-specific actions
 
 ## Environment Variables
 
@@ -593,9 +382,6 @@ export FZF_CTRL_T_OPTS="--preview 'bat --color=always --line-range :500 {}'"
 # Alt-C command and options
 export FZF_ALT_C_COMMAND='fd --type d'
 export FZF_ALT_C_OPTS="--preview 'tree -C {} | head -100'"
-
-# Ctrl-R options
-export FZF_CTRL_R_OPTS="--preview 'echo {}' --preview-window down:3:wrap"
 ```
 
 ## Troubleshooting
@@ -603,27 +389,23 @@ export FZF_CTRL_R_OPTS="--preview 'echo {}' --preview-window down:3:wrap"
 ### Common Issues
 ```bash
 # No results shown
-# → Check if input is piped correctly
+# Check if input is piped correctly
 echo "test" | fzf  # Should work
 
 # Preview not working
-# → Check preview command
+# Check preview command
 fzf --preview 'echo {}' <<< "test"
 
 # Key binding not working
-# → Re-run installer
+# Re-run installer
 $(brew --prefix)/opt/fzf/install
-
-# Colors not showing
-# → Check terminal supports colors
-export TERM=xterm-256color
 ```
 
 ## Additional Resources
 
+For detailed examples and reference, see `examples.md` and `quick-reference.md`.
+
 - Official Repository: https://github.com/junegunn/fzf
-- Wiki Examples: https://github.com/junegunn/fzf/wiki
-- Advanced Examples: https://github.com/junegunn/fzf/wiki/examples
-- Color Schemes: https://github.com/junegunn/fzf/wiki/Color-schemes
+- Wiki Examples: https://github.com/junegunn/fzf/wiki/examples
 
 When providing fzf guidance, emphasize interactive workflows, suggest useful key bindings, recommend preview windows for context, and show integration patterns with other tools.

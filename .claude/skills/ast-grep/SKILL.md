@@ -1,23 +1,9 @@
 ---
 name: ast-grep
-description: Semantic code search and transformation using ASTs.
+description: Semantic code search and transformation using ASTs. Use for: (1) structural pattern matching beyond regex, (2) AST-based refactoring with metavariables, (3) finding architectural patterns or anti-patterns, (4) language-aware code transformations. Triggers: semantic search, find code patterns, refactor class/function structure, AST matching.
 ---
 
 # ast-grep (sg) Expertise Skill
-
-Use this skill when:
-- Searching for code patterns that text regex can't express precisely
-- Refactoring code based on semantic meaning, not just text
-- Finding code structure patterns (function calls, class definitions, etc.)
-- Performing AST-based code transformations with metavariables
-- Analyzing code for architectural patterns or anti-patterns
-
-Examples:
-- "Find all React components that use useState but not useEffect"
-- "Refactor all class components to functional components"
-- "Find functions with more than 3 parameters"
-- "Change all Promise.then chains to async/await"
-- "Find all API calls missing error handling"
 
 You are an expert in `ast-grep` (`sg`), a semantic code search and transformation tool that uses Abstract Syntax Tree (AST) pattern matching to find and modify code based on its structure, not just text patterns.
 
@@ -52,22 +38,6 @@ You are an expert in `ast-grep` (`sg`), a semantic code search and transformatio
 - Finding architectural patterns
 - Safe code transformations
 - Language-specific pattern matching
-
-## Installation and Setup
-
-```bash
-# Install via cargo
-cargo install ast-grep
-
-# Install via npm
-npm install -g @ast-grep/cli
-
-# Install via homebrew (macOS)
-brew install ast-grep
-
-# Verify installation
-sg --version
-```
 
 ## Basic Usage
 
@@ -117,9 +87,6 @@ sg -p 'function $NAME($$$PARAMS)'
 # Capture all array elements
 sg -p '[$$$ELEMENTS]'
 
-# Capture all object properties
-sg -p '{ $$$PROPS }'
-
 # Capture function body statements
 sg -p 'function $NAME() { $$$BODY }'
 ```
@@ -131,9 +98,6 @@ sg -p 'console.log($_$)'
 
 # Match any condition
 sg -p 'if ($_$) { return true }'
-
-# Match any object
-sg -p '$_$.method()'
 ```
 
 ## Language-Specific Patterns
@@ -151,9 +115,6 @@ sg -p '<$COMPONENT $$$PROPS />' --lang tsx
 
 # Find import statements
 sg -p 'import $SPEC from $SOURCE' --lang ts
-
-# Find destructuring
-sg -p 'const { $$$PROPS } = $OBJ' --lang js
 ```
 
 ### React Patterns
@@ -166,9 +127,6 @@ sg -p 'useEffect(() => { $$$BODY }, [$$$DEPS])' --lang tsx
 
 # Find component definitions
 sg -p 'function $NAME($PROPS) { return $JSX }' --lang tsx
-
-# Find props destructuring
-sg -p 'function $COMPONENT({ $$$PROPS })' --lang tsx
 ```
 
 ### Python
@@ -181,39 +139,6 @@ sg -p 'class $NAME($$$BASES): $$$BODY' --lang py
 
 # Find list comprehensions
 sg -p '[$EXPR for $VAR in $ITER]' --lang py
-
-# Find with statements
-sg -p 'with $EXPR as $VAR: $$$BODY' --lang py
-```
-
-### Rust
-```bash
-# Find function definitions
-sg -p 'fn $NAME($$$PARAMS) -> $RET { $$$BODY }' --lang rs
-
-# Find struct definitions
-sg -p 'struct $NAME { $$$FIELDS }' --lang rs
-
-# Find match expressions
-sg -p 'match $EXPR { $$$ARMS }' --lang rs
-
-# Find impl blocks
-sg -p 'impl $TRAIT for $TYPE { $$$METHODS }' --lang rs
-```
-
-### Go
-```bash
-# Find function definitions
-sg -p 'func $NAME($$$PARAMS) $$$RET { $$$BODY }' --lang go
-
-# Find struct definitions
-sg -p 'type $NAME struct { $$$FIELDS }' --lang go
-
-# Find defer statements
-sg -p 'defer $CALL' --lang go
-
-# Find goroutines
-sg -p 'go $FUNC($$$ARGS)' --lang go
 ```
 
 ## Pattern Constraints
@@ -228,9 +153,6 @@ sg -p 'function $NAME() { $$$BODY }' --has 'return $VALUE' --lang js
 
 # Pattern follows another
 sg -p 'console.log($MSG)' --follows 'const $VAR =' --lang js
-
-# Pattern precedes another
-sg -p 'fetch($URL)' --precedes '.then($HANDLER)' --lang js
 ```
 
 ## Rewriting and Transformation
@@ -253,13 +175,6 @@ sg -p 'fetch($URL)' -r 'await fetch($URL)' --lang js
 sg -p 'fetch($URL).then($HANDLER)' \
    -r 'const response = await fetch($URL); $HANDLER(response)' \
    --lang js
-
-# Refactor class to function component
-sg -p 'class $NAME extends React.Component {
-  render() { return $JSX }
-}' \
-   -r 'function $NAME() { return $JSX }' \
-   --lang tsx
 
 # Add error handling to API calls
 sg -p 'const $VAR = await fetch($URL)' \
@@ -305,102 +220,6 @@ sg scan -c rules/ src/
 sg scan -r rule.yml src/ --json
 ```
 
-### Advanced Rule with Constraints
-```yaml
-id: missing-error-handling
-message: API calls should have error handling
-severity: error
-language: TypeScript
-rule:
-  pattern: await fetch($URL)
-  not:
-    inside:
-      pattern: |
-        try {
-          $$$BODY
-        } catch ($ERR) {
-          $$$HANDLER
-        }
-```
-
-### Multiple Patterns (Any/All)
-```yaml
-id: unused-import
-message: Import is never used
-language: TypeScript
-rule:
-  any:
-    - pattern: import { $NAME } from $SOURCE
-    - pattern: import $NAME from $SOURCE
-  not:
-    has:
-      pattern: $NAME
-```
-
-## Output and Formatting
-
-### Output Modes
-```bash
-# Default output (human-readable)
-sg -p 'function $NAME()' --lang js
-
-# JSON output
-sg -p 'function $NAME()' --lang js --json
-
-# Compact output
-sg -p 'function $NAME()' --lang js --format short
-
-# Color output (default)
-sg -p 'function $NAME()' --lang js --color
-
-# No color
-sg -p 'function $NAME()' --lang js --no-color
-```
-
-### Context Display
-```bash
-# Show context lines
-sg -p 'console.log($ARG)' --lang js -A 3 -B 3
-
-# Show only matches
-sg -p 'function $NAME()' --lang js --heading=never
-```
-
-## Advanced Features
-
-### Debugging Patterns
-```bash
-# Show AST for code snippet
-sg -p 'console.log("test")' --lang js --debug-query
-
-# Test pattern against specific file
-sg -p '$PATTERN' --lang js --test file.js
-```
-
-### Performance
-```bash
-# Limit to specific files
-sg -p '$PATTERN' src/**/*.ts
-
-# Parallel search
-sg -p '$PATTERN' --lang js --threads 8
-
-# Cache results
-sg -p '$PATTERN' --lang js --no-ignore
-```
-
-### Language Support
-```bash
-# List supported languages
-sg --list-langs
-
-# Auto-detect language
-sg -p '$PATTERN' file.js  # Detects JS
-
-# Force language
-sg -p '$PATTERN' --lang tsx file.js
-```
-
 ## Common Workflows
 
 ### Code Refactoring
@@ -420,9 +239,6 @@ sg -p 'oldFunction($$$ARGS)' -r 'newFunction($$$ARGS)' --lang js --update-all
 # Find potential bugs
 sg -p 'if ($VAR = $VALUE)' --lang js  # Assignment instead of comparison
 
-# Find performance issues
-sg -p 'for ($INIT; $COND; $UPDATE) { for ($$$) { $$$BODY } }' --lang js
-
 # Find security issues
 sg -p 'eval($CODE)' --lang js
 sg -p 'innerHTML = $VALUE' --lang js
@@ -435,35 +251,6 @@ sg -p 'app.$METHOD($PATH, $HANDLER)' --lang js
 
 # Find all database queries
 sg -p 'db.query($SQL, $$$PARAMS)' --lang js
-
-# Find all event handlers
-sg -p 'addEventListener($EVENT, $HANDLER)' --lang js
-```
-
-## Integration with Other Tools
-
-### With Ripgrep
-```bash
-# Use ripgrep to find files, ast-grep for precise matching
-rg -l "useState" | xargs sg -p 'const [$STATE, $SETTER] = useState($INIT)' --lang tsx
-```
-
-### With Git
-```bash
-# Search in git diff
-git diff | sg -p '$PATTERN' --lang js
-
-# Search specific commit
-git show COMMIT | sg -p '$PATTERN' --lang js
-```
-
-### With CI/CD
-```bash
-# Lint in CI
-sg scan -c rules/ src/ --json > lint-results.json
-
-# Fail on errors
-sg scan -c rules/ src/ --error-on-warnings
 ```
 
 ## Best Practices
@@ -480,53 +267,6 @@ sg scan -c rules/ src/ --error-on-warnings
 - Use --interactive for large refactorings
 - Test after transformations
 - Commit changes incrementally
-- Document pattern rationale in rule files
-
-### Rule Files
-- One rule per file for clarity
-- Use descriptive IDs and messages
-- Include severity levels
-- Add fix suggestions when possible
-- Organize rules by category/language
-
-## Common Patterns Library
-
-### Error Handling
-```yaml
-id: missing-try-catch
-pattern: await $PROMISE
-not:
-  inside:
-    pattern: |
-      try {
-        $$$BODY
-      } catch ($ERR) {
-        $$$HANDLER
-      }
-```
-
-### React Best Practices
-```yaml
-id: missing-key-prop
-pattern: <$COMPONENT $$$PROPS />
-inside:
-  pattern: $ARRAY.map($CALLBACK)
-not:
-  has:
-    pattern: key=$KEY
-```
-
-### Performance
-```yaml
-id: nested-loops
-pattern: |
-  for ($$$) {
-    for ($$$) {
-      $$$BODY
-    }
-  }
-message: Nested loops may cause performance issues
-```
 
 ## Troubleshooting
 
@@ -535,25 +275,17 @@ message: Nested loops may cause performance issues
 - Check AST structure with --debug-query
 - Simplify pattern to isolate issue
 - Ensure whitespace doesn't affect match
-- Try wildcard ($_$) instead of metavariable
 
 ### False Positives
 - Add constraints (inside, has, not)
 - Be more specific in pattern
 - Use kind constraints for node types
-- Test on diverse codebase samples
-
-### Performance Issues
-- Limit search scope to specific directories
-- Use file type filters
-- Increase --threads for large codebases
-- Cache results when possible
 
 ## Additional Resources
 
+For detailed examples and advanced patterns, see `examples.md` and `quick-reference.md`.
+
 - Official Documentation: https://ast-grep.github.io/
 - Pattern Playground: https://ast-grep.github.io/playground.html
-- Rule Examples: https://github.com/ast-grep/ast-grep/tree/main/crates/config/src/rule
-- Language Support: https://ast-grep.github.io/guide/introduction.html#supported-languages
 
 When providing ast-grep guidance, emphasize semantic matching over text patterns, suggest testing patterns in the playground, and recommend starting simple then adding constraints for precision.

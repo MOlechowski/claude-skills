@@ -1,23 +1,9 @@
 ---
 name: yq
-description: YAML/JSON/XML processing with jq-like syntax.
+description: YAML/JSON/XML processing with jq-like syntax. Use for: (1) querying and updating YAML configs (Kubernetes, Docker Compose, CI/CD), (2) converting between YAML/JSON/XML formats, (3) merging configuration files, (4) automating config management. Triggers: parse YAML, update config file, convert YAML to JSON, merge YAML files, edit Kubernetes manifest.
 ---
 
 # yq Expertise Skill
-
-Use this skill when:
-- Processing YAML configuration files (Kubernetes, Docker Compose, CI/CD)
-- Converting between YAML, JSON, XML, CSV formats
-- Querying and transforming structured data files
-- Automating configuration management workflows
-- Validating and formatting YAML/JSON files
-
-Examples:
-- "Extract all image names from Kubernetes manifests"
-- "Convert docker-compose.yml to JSON"
-- "Update version in all YAML config files"
-- "Merge multiple YAML files"
-- "Validate and format YAML files"
 
 You are an expert in `yq`, a lightweight and portable command-line YAML, JSON, XML, CSV, and properties processor that uses jq-like syntax for querying and transforming structured data.
 
@@ -48,26 +34,10 @@ You are an expert in `yq`, a lightweight and portable command-line YAML, JSON, X
 
 **When to use yq:**
 - YAML configuration files (K8s, Docker, CI/CD)
-- Format conversions (YAML ↔ JSON ↔ XML)
+- Format conversions (YAML to JSON to XML)
 - Infrastructure as code updates
 - Configuration management
 - Multi-environment configs
-
-## Installation
-
-```bash
-# macOS (Homebrew)
-brew install yq
-
-# Linux (snap)
-snap install yq
-
-# Go install
-go install github.com/mikefarah/yq/v4@latest
-
-# Verify installation
-yq --version
-```
 
 **Important:** This skill covers yq v4+ (mikefarah/yq). There's an older Python-based yq with different syntax.
 
@@ -104,9 +74,6 @@ yq -o xml '.' file.yml
 
 # Properties format
 yq -o props '.' file.yml
-
-# CSV output
-yq -o csv '.' file.yml
 
 # Compact (no colors or formatting)
 yq -o json -I=0 '.' file.yml
@@ -145,9 +112,6 @@ yq '.metadata.*' file.yml
 
 # Recursive descent (all matching keys)
 yq '.. | select(has("name")) | .name' file.yml
-
-# Find all matching paths
-yq '.. | select(. == "target-value")' file.yml
 ```
 
 ### Optional Paths
@@ -171,9 +135,6 @@ yq '.items[] | select(.age > 18 and .verified == true)' file.yml
 
 # Regex matching
 yq '.items[] | select(.name | test("^prod-"))' file.yml
-
-# Type filtering
-yq '.items[] | select(type == "string")' file.yml
 ```
 
 ### Map and Transform
@@ -183,9 +144,6 @@ yq '.items | map(.name)' file.yml
 
 # Transform structure
 yq '.items[] | {"name": .name, "value": .value}' file.yml
-
-# Flatten nested arrays
-yq '.items[] | .[]' file.yml
 
 # Sort array
 yq '.items | sort_by(.name)' file.yml
@@ -216,9 +174,6 @@ yq '.replicas = 5 | .version = "2.0"' file.yml
 # Update if condition matches
 yq '(.items[] | select(.name == "target")).value = "new"' file.yml
 
-# Update with alternative
-yq '.port = (.port // 8080)' file.yml
-
 # Set default if missing
 yq '.timeout //= 30' file.yml
 ```
@@ -230,9 +185,6 @@ yq '.items += ["new-item"]' file.yml
 
 # Prepend to array
 yq '.items = ["first"] + .items' file.yml
-
-# Remove from array
-yq '.items -= ["item-to-remove"]' file.yml
 
 # Update array element
 yq '.items[0].status = "updated"' file.yml
@@ -268,9 +220,6 @@ yq ea 'select(fileIndex == 0) * select(fileIndex == 1)' base.yml override.yml
 
 # Deep merge
 yq eval-all '. as $item ireduce ({}; . *+ $item)' base.yml env.yml
-
-# Merge arrays
-yq ea '[.]' file1.yml file2.yml
 ```
 
 ### Process Multiple Files
@@ -283,22 +232,6 @@ yq '.metadata.name' *.yml
 
 # Update all files
 yq -i '.version = "2.0"' *.yml
-
-# Different operations per file
-yq eval-all 'select(fileIndex == 0) .= .base | select(fileIndex == 1) .= .override' base.yml override.yml
-```
-
-### Split Files
-```bash
-# Split by key
-yq eval -N '.items[] | split_doc' multi-doc.yml > output.yml
-
-# Extract to separate files
-yq eval '.items[] | . as $item | $item' list.yml | \
-  split -l $(yq '.items | length' list.yml) - item-
-
-# Split YAML stream
-yq -N '.' multi-doc.yml  # -N = no document separator
 ```
 
 ## Format Conversion
@@ -322,9 +255,6 @@ yq -P '.' file.json > file.yml
 
 # With custom indentation
 yq -P -I 4 '.' file.json
-
-# Preserve order
-yq -P --preserve-order '.' file.json
 ```
 
 ### XML Conversion
@@ -337,18 +267,6 @@ yq -p xml '.' file.xml
 
 # XML to JSON
 yq -p xml -o json '.' file.xml
-```
-
-### Other Formats
-```bash
-# YAML to properties
-yq -o props '.' config.yml
-
-# CSV to JSON
-yq -p csv -o json '.' data.csv
-
-# TOML to YAML
-yq -p toml '.' config.toml
 ```
 
 ## Kubernetes Workflows
@@ -422,9 +340,6 @@ yq -i '.services.app.environment.NEW_VAR = "value"' docker-compose.yml
 
 # Update port mapping
 yq -i '.services.web.ports = ["80:80", "443:443"]' docker-compose.yml
-
-# Add new service
-yq -i '.services.redis = {"image": "redis:alpine", "ports": ["6379:6379"]}' docker-compose.yml
 ```
 
 ## CI/CD Configuration
@@ -433,9 +348,6 @@ yq -i '.services.redis = {"image": "redis:alpine", "ports": ["6379:6379"]}' dock
 ```bash
 # Get workflow jobs
 yq '.jobs | keys' .github/workflows/ci.yml
-
-# Update action version
-yq -i '.jobs.build.steps[] |= select(.uses | test("actions/checkout")).uses = "actions/checkout@v4"' workflow.yml
 
 # Add environment variable
 yq -i '.jobs.test.env.NODE_ENV = "test"' workflow.yml
@@ -462,9 +374,6 @@ yq '.' file.yml  # Anchors preserved by default
 
 # Expand anchors
 yq 'explode(.)' file.yml
-
-# Create anchor
-yq '.default = {"cpu": "100m"} | .services.web = .default | .default | tag = "!!merge"' file.yml
 ```
 
 ### Comments
@@ -479,18 +388,6 @@ yq '.version = "2.0" | . headComment = "Updated version"' file.yml
 yq --no-comments '.' file.yml
 ```
 
-### Custom Functions
-```bash
-# Group by field
-yq 'group_by(.category)' items.yml
-
-# Reduce operation
-yq '.items | map(.value) | add' file.yml
-
-# Custom filtering function
-yq '.items | map(select(.score > 80))' scores.yml
-```
-
 ### Environment Variables
 ```bash
 # Use env vars in query
@@ -498,9 +395,6 @@ NAME=production yq '.envs[] | select(.name == env(NAME))' file.yml
 
 # Substitute env vars in file
 yq '.database.host = env(DB_HOST)' config.yml
-
-# Template with env vars
-yq eval '.port = env(PORT) | .host = env(HOST)' template.yml
 ```
 
 ## Validation and Formatting
@@ -509,9 +403,6 @@ yq eval '.port = env(PORT) | .host = env(HOST)' template.yml
 ```bash
 # Check syntax
 yq '.' file.yml > /dev/null && echo "Valid"
-
-# Validate and pretty-print
-yq '.' file.yml > formatted.yml
 
 # Check for specific structure
 yq 'has("required_field")' file.yml
@@ -527,9 +418,6 @@ yq -I 4 '.' file.yml
 
 # Sort keys
 yq -i 'sort_keys(.)' file.yml
-
-# Remove empty values
-yq 'del(.[] | select(. == null or . == "" or . == []))' file.yml
 ```
 
 ## Best Practices
@@ -548,15 +436,6 @@ yq 'del(.[] | select(. == null or . == "" or . == []))' file.yml
 - Ignore YAML type specifics (strings vs numbers)
 - Use `-i` without testing first
 - Forget to handle multi-document YAML files
-- Mix v3 and v4 yq syntax
-
-### Tips
-- Use `yq --help` for built-in documentation
-- Test complex expressions in yq playground
-- Combine with `find` for batch processing
-- Use `-P` to pretty-print YAML
-- Leverage `-o json` for piping to jq
-- Use `--no-colors` for CI/CD pipelines
 
 ## Common Patterns
 
@@ -569,9 +448,6 @@ done
 
 # Merge base + environment
 yq eval-all 'select(fileIndex == 0) * select(fileIndex == 1)' base.yml $ENV.yml > final.yml
-
-# Extract secrets
-yq '.secrets | to_entries | .[] | .key + "=" + .value' config.yml > .env
 ```
 
 ### Kubernetes Helpers
@@ -581,34 +457,16 @@ yq -i '.spec.replicas = 3' deployments/*.yml
 
 # Update all images to specific tag
 yq -i '(.spec.template.spec.containers[].image | select(test("myapp"))) |= sub(":.*", ":v2.0")' *.yml
-
-# Add resource limits
-yq -i '.spec.template.spec.containers[0].resources = {"requests": {"cpu": "100m", "memory": "128Mi"}, "limits": {"cpu": "200m", "memory": "256Mi"}}' deployment.yml
-```
-
-### Data Transformation
-```bash
-# Convert list to map
-yq '[.items[] | {(.name): .value}] | add' list.yml
-
-# Flatten nested structure
-yq '.[] | to_entries | .[] | .key + ": " + .value' nested.yml
-
-# Pivot data
-yq 'group_by(.category) | map({category: .[0].category, items: map(.name)})' data.yml
 ```
 
 ## Troubleshooting
 
 ### Common Errors
 ```bash
-# "bad file descriptor" → Check file path
-yq '.' non-existent.yml  # Error
-
-# "null" output → Check path expression
+# "null" output Check path expression
 yq '.wrong.path' file.yml  # Returns null
 
-# "Error: bad expression" → Quote your expression
+# "Error: bad expression" Quote your expression
 yq .path file.yml  # May fail due to shell expansion
 yq '.path' file.yml  # Correct
 ```
@@ -620,16 +478,13 @@ yq '.path | debug' file.yml
 
 # Show type
 yq '.field | type' file.yml
-
-# Validate expression
-yq --verbose '.' file.yml
 ```
 
 ## Additional Resources
 
+For detailed examples and reference, see `examples.md` and `quick-reference.md`.
+
 - Official Documentation: https://mikefarah.gitbook.io/yq/
 - GitHub Repository: https://github.com/mikefarah/yq
-- Online Playground: https://mikefarah.gitbook.io/yq/usage/playground
-- Cookbook: https://mikefarah.gitbook.io/yq/recipes
 
 When providing yq guidance, prioritize YAML-specific features (anchors, comments, multi-doc), emphasize in-place editing safety, and suggest format conversions for interoperability.
