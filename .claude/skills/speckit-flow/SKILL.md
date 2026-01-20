@@ -5,23 +5,21 @@ description: "Full spec-to-implementation workflow. Use when: (1) starting a new
 
 # Speckit Flow: Full Spec-to-Implementation Workflow
 
-Orchestrates the complete pipeline from user story to PR creation using Python scripts.
+Orchestrates pipeline from user story to PR using Python scripts.
 
 ## Writing Style
 
-All generated artifacts follow these rules:
+Generated artifacts rules:
 
-- Short sentences
-- Active voice
+- Short sentences, active voice
 - No filler words (just, really, very, basically)
 - No em dashes
-- Natural tone, not robotic
-- Lead with action or outcome
+- Natural tone, lead with action/outcome
 - Match repo language
 
 ## Overview
 
-End-to-end spec-driven development pipeline:
+End-to-end spec-driven development:
 
 ```text
 CREATE -> CLARIFY -> ANALYZE -> TASKS -> CHECKLIST -> PR -> [IMPLEMENT]
@@ -29,7 +27,7 @@ CREATE -> CLARIFY -> ANALYZE -> TASKS -> CHECKLIST -> PR -> [IMPLEMENT]
                                                   (only if impl repo)
 ```
 
-Fully autonomous - halts only on errors. Creates PR for spec artifacts. Implementation is conditional based on repo type.
+Fully autonomous - halts only on errors. Creates PR for spec artifacts. Implementation conditional on repo type.
 
 ## Phase Scripts
 
@@ -47,10 +45,7 @@ Each phase is implemented as a Python script in `scripts/`:
 | 8. IMPLEMENT | `speckit_implement.py` | `python scripts/speckit_implement.py` |
 | Validate | `speckit_validate.py` | `python scripts/speckit_validate.py` |
 
-All scripts support:
-- `--json` for machine-readable output
-- `--help` for usage information
-- Consistent exit codes (0=success, 1=validation error, 2=bash error)
+All scripts support `--json` for machine output, `--help` for usage, consistent exit codes (0=success, 1=validation error, 2=bash error).
 
 ## Quick Start
 
@@ -84,7 +79,7 @@ python scripts/speckit_implement.py
 
 ## Resume Detection
 
-Check for existing artifacts using the common module:
+Check existing artifacts:
 
 ```bash
 python scripts/common.py --check-paths --json
@@ -102,15 +97,15 @@ python scripts/common.py --check-paths --json
 
 ## Implementation Repo Detection
 
-Check if the repo supports implementation:
+Check if repo supports implementation:
 
 ```bash
 python scripts/common.py --is-impl-repo
 ```
 
-**Detection Logic:**
-- If source directories (src/, lib/, app/) or project files (package.json, go.mod) exist -> Implementation repo
-- If only `.specify/` and `specs/` exist -> Spec-only repo
+**Detection:**
+- Source dirs (src/, lib/, app/) or project files (package.json, go.mod) exist -> Implementation repo
+- Only `.specify/` and `specs/` exist -> Spec-only repo
 
 ---
 
@@ -267,12 +262,9 @@ python scripts/speckit_implement.py --force
 - `--force` - Run even in non-implementation repos
 - `--json` - JSON output
 
-**Skips if:** Not an implementation repo (use `--force` to override)
+**Skips if:** Not implementation repo (use `--force` to override)
 
-**Outputs:**
-- Parses tasks.md
-- Reports completion progress
-- Lists remaining tasks
+**Outputs:** Parses tasks.md, reports completion progress, lists remaining tasks.
 
 ---
 
@@ -344,21 +336,14 @@ Summary: 0 errors, 1 warning
 
 ## Shared Utilities
 
-The `common.py` module provides:
-
-- **Status emojis**: `Status.SUCCESS` (✅), `Status.ERROR` (❌), etc.
-- **Exit codes**: `EXIT_SUCCESS`, `EXIT_VALIDATION_ERROR`, `EXIT_BASH_ERROR`
-- **Bash wrapper**: `run_bash_script()` for calling .specify scripts
-- **Path utilities**: `get_repo_root()`, `get_feature_paths()`
-- **Template loading**: `load_template()`
-- **Git/GH commands**: `run_git_command()`, `run_gh_command()`
+`common.py` provides: Status emojis (SUCCESS, ERROR), exit codes, bash wrapper (`run_bash_script()`), path utilities (`get_repo_root()`, `get_feature_paths()`), template loading, Git/GH commands.
 
 ---
 
 ## Notes
 
-- Python scripts wrap existing bash scripts in `.specify/scripts/bash/`
+- Python scripts wrap bash scripts in `.specify/scripts/bash/`
 - Context passes through artifacts and git branch state
 - Resume detection allows partial workflow continuation
-- PR is created but NOT auto-merged
+- PR created but NOT auto-merged
 - IMPLEMENT phase only runs in implementation repos
