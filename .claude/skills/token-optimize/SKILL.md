@@ -1,22 +1,11 @@
 ---
 name: token-optimize
-description: Rewrite markdown for conciseness.
+description: "Rewrite markdown for conciseness. Use when: optimizing markdown for LLM context, making documentation more concise, reducing token count in files. Triggers: optimize this file, make this more concise, reduce tokens, token optimize."
 ---
 
 # Token Optimize
 
 Rewrite markdown files to be more concise while preserving meaning.
-
-Use this skill when:
-- Optimizing markdown for LLM context
-- Making documentation more concise
-- Reducing token count in files
-
-Examples:
-- "optimize this file"
-- "make this more concise"
-- "reduce tokens in README.md"
-- "token optimize docs/guide.md"
 
 ## Workflow
 
