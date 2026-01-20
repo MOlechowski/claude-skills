@@ -292,64 +292,7 @@ When user approves, invoke the full spec creation pipeline:
 
 ## Filtering Rules
 
-### Skip These (Not Spec-Worthy)
-
-| Pattern | Reason |
-|---------|--------|
-| `fix(ci):` | CI/CD infrastructure |
-| `chore:` | Maintenance tasks |
-| `docs:` | Documentation only |
-| `style:` | Code formatting |
-| `refactor:` small scope | Internal improvements |
-| Dependency updates | External dependencies |
-
-### Always Flag (Likely Need Spec)
-
-| Pattern | Reason |
-|---------|--------|
-| `feat:` | New functionality |
-| Large `fix:` | Significant behavior change |
-| New files added | New capability |
-| API changes | Interface changes |
-| Config changes | User-facing changes |
-
-## Output Format
-
-```
-============================================
-SPECKIT-AUDIT COMPLETE
-============================================
-
-Repository: submodules/gh-runner
-Specs Directory: specs/
-
-Coverage:
-  - PRs analyzed: 50
-  - Specced: 42 (84%)
-    - Synced: 38
-    - Drifted: 4 (auto-fixed)
-  - Unspecced: 6 (12%)
-  - Uncertain: 2 (4%)
-
-Specs Updated (Drift Fixed):
-  010-ephemeral-pool:
-    - spec.md: Timeout 10s → 30s
-    - quick-reference.md: Added --force flag
-  014-runner-cache:
-    - spec.md: MAX_CACHE_SIZE 1GB → 5GB
-    - tasks.md: Task 3 marked complete
-
-Actions Taken:
-  - Drift fixed: 4 (across 2 specs)
-  - Specs created: 2 (via /speckit-flow)
-  - Skipped (infra): 3
-  - Pending review: 1
-
-New Specs:
-  - 016-podman-machine-state (PR #xxx)
-  - 017-test-mock-architecture (PR #xxx)
-============================================
-```
+See `quick-reference.md` for filtering rules and output format templates.
 
 ## Rules
 
