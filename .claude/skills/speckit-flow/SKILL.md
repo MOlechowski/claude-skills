@@ -5,7 +5,7 @@ description: "Full spec-to-implementation workflow. Use when: (1) starting a new
 
 # Speckit Flow: Full Spec-to-Implementation Workflow
 
-Orchestrates the complete pipeline from user story to PR creation by delegating to specialized commands.
+Orchestrates the complete pipeline from user story to PR creation using Python scripts.
 
 ## Writing Style
 
@@ -31,29 +31,62 @@ CREATE -> CLARIFY -> ANALYZE -> TASKS -> CHECKLIST -> PR -> [IMPLEMENT]
 
 Fully autonomous - halts only on errors. Creates PR for spec artifacts. Implementation is conditional based on repo type.
 
-## Command Delegation
+## Phase Scripts
 
-This skill delegates to existing commands instead of duplicating logic:
+Each phase is implemented as a Python script in `scripts/`:
 
-| Phase | Command | Purpose |
-|-------|---------|---------|
-| 1. CREATE (specify) | `/speckit.specify` | Create spec.md |
-| 2. CREATE (plan) | `/speckit.plan` | Create plan.md and artifacts |
-| 3. CLARIFY | `/speckit.clarify` | Resolve ambiguities |
-| 4. ANALYZE | `/speckit.analyze` | Validate consistency |
-| 5. TASKS | `/speckit.tasks` | Generate task list |
-| 6. CHECKLIST | `/speckit.checklist` | Generate quality checklists |
-| 7. PR | (inline) | Create PR for spec artifacts |
-| 8. IMPLEMENT | `/speckit.implement` | Execute tasks (conditional) |
+| Phase | Script | Usage |
+|-------|--------|-------|
+| 1. CREATE (specify) | `speckit_specify.py` | `python scripts/speckit_specify.py "feature description"` |
+| 2. CREATE (plan) | `speckit_plan.py` | `python scripts/speckit_plan.py` |
+| 3. CLARIFY | `speckit_clarify.py` | `python scripts/speckit_clarify.py` |
+| 4. ANALYZE | `speckit_analyze.py` | `python scripts/speckit_analyze.py` |
+| 5. TASKS | `speckit_tasks.py` | `python scripts/speckit_tasks.py` |
+| 6. CHECKLIST | `speckit_checklist.py` | `python scripts/speckit_checklist.py` |
+| 7. PR | `speckit_pr.py` | `python scripts/speckit_pr.py` |
+| 8. IMPLEMENT | `speckit_implement.py` | `python scripts/speckit_implement.py` |
+
+All scripts support:
+- `--json` for machine-readable output
+- `--help` for usage information
+- Consistent exit codes (0=success, 1=validation error, 2=bash error)
+
+## Quick Start
+
+```bash
+# 1. Create specification (creates branch and spec.md)
+python scripts/speckit_specify.py "Add user authentication with OAuth2"
+
+# 2. Create implementation plan
+python scripts/speckit_plan.py
+
+# 3. Scan for ambiguities
+python scripts/speckit_clarify.py
+
+# 4. Analyze consistency
+python scripts/speckit_analyze.py
+
+# 5. Generate tasks
+python scripts/speckit_tasks.py
+
+# 6. Generate checklists
+python scripts/speckit_checklist.py
+
+# 7. Create PR
+python scripts/speckit_pr.py
+
+# 8. Track implementation (if impl repo)
+python scripts/speckit_implement.py
+```
 
 ---
 
 ## Resume Detection
 
-Before starting, check for existing artifacts to determine resume point:
+Check for existing artifacts using the common module:
 
 ```bash
-.specify/scripts/bash/check-prerequisites.sh --paths-only --json
+python scripts/common.py --check-paths --json
 ```
 
 **Resume Logic:**
@@ -64,249 +97,181 @@ Before starting, check for existing artifacts to determine resume point:
 - If `spec.md` exists -> Skip to Phase 2 (CREATE - plan)
 - Otherwise -> Start from Phase 1 (CREATE - specify)
 
-Report resume status: `Resuming from Phase N: {PHASE_NAME}`
-
-Store context variables from check-prerequisites output:
-- `FEATURE_DIR`: Path to specs/{branch-name}/
-- `BRANCH_NAME`: Current feature branch name
-- `ARGUMENTS`: Original user input
-
 ---
 
 ## Implementation Repo Detection
 
-Before Phase 8, detect if current repo supports implementation:
+Check if the repo supports implementation:
 
 ```bash
-# Check for implementation indicators
-[ -d "src" ] || [ -d "lib" ] || [ -d "app" ] || [ -d "packages" ] || [ -f "package.json" ] || [ -f "go.mod" ] || [ -f "Cargo.toml" ] || [ -f "pyproject.toml" ]
+python scripts/common.py --is-impl-repo
 ```
 
 **Detection Logic:**
-- If source directories or project files exist -> Implementation repo
+- If source directories (src/, lib/, app/) or project files (package.json, go.mod) exist -> Implementation repo
 - If only `.specify/` and `specs/` exist -> Spec-only repo
-
-Store result in `IS_IMPL_REPO` (true/false).
 
 ---
 
 ## Phase 1: CREATE (Specification)
 
-**Execute:** `/speckit.specify $ARGUMENTS`
+**Script:** `speckit_specify.py`
 
-The command handles:
-- Branch name generation and creation
-- spec.md initialization from template
-- Quality validation iterations
-- Clarification questions if needed
+```bash
+python scripts/speckit_specify.py "Add user authentication" --short-name "user-auth"
+```
 
-**Capture from output:**
-- `BRANCH_NAME`
-- `SPEC_FILE` path
-- `FEATURE_DIR` path
+**Options:**
+- `--short-name <name>` - Custom branch name suffix
+- `--number <N>` - Manual branch number
+- `--json` - JSON output
 
-**Gate:** Command must complete successfully.
-
-**Display:** `Phase 1 complete: CREATE (specification)`
+**Outputs:**
+- Creates feature branch (e.g., `001-user-auth`)
+- Creates `specs/{branch}/spec.md` from template
 
 ---
 
 ## Phase 2: CREATE (Planning)
 
-**Execute:** `/speckit.plan`
+**Script:** `speckit_plan.py`
 
-The command handles:
-- setup-plan.sh execution
-- Phase 0 (research) and Phase 1 (design)
-- Artifact generation: research.md, data-model.md, contracts/, quickstart.md
-- Agent context updates
+```bash
+python scripts/speckit_plan.py --agent claude
+```
 
-**Gate:** Command must complete successfully.
+**Options:**
+- `--agent <type>` - Specific agent to update (claude, gemini, copilot, etc.)
+- `--skip-agent` - Skip agent context update
+- `--json` - JSON output
 
-**Display:** `Phase 2 complete: CREATE (planning)`
+**Outputs:**
+- Creates `specs/{branch}/plan.md` from template
+- Updates agent context files (CLAUDE.md, etc.)
 
 ---
 
 ## Phase 3: CLARIFY
 
-**Execute:** `/speckit.clarify`
+**Script:** `speckit_clarify.py`
 
-The command handles:
-- Ambiguity scanning using taxonomy
-- Up to 5 clarification questions
-- Incremental spec.md updates
-- Coverage summary
+```bash
+python scripts/speckit_clarify.py --max-questions 3
+```
 
-**Gate:** Non-blocking if user declines further questions.
+**Options:**
+- `--max-questions N` - Maximum questions to generate (default: 5)
+- `--json` - JSON output
 
-**Display:** `Phase 3 complete: CLARIFY`
+**Detects:**
+- Explicit markers: `[TODO]`, `[TBD]`, `NEEDS CLARIFICATION`
+- Uncertainty: "should", "might", "could"
+- Vagueness: "etc.", "various", "as needed"
 
 ---
 
 ## Phase 4: ANALYZE
 
-**Execute:** `/speckit.analyze`
+**Script:** `speckit_analyze.py`
 
-The command handles:
-- Cross-artifact consistency check
-- Constitution compliance validation
-- Duplication, ambiguity, coverage gap detection
-- Severity-rated findings report
+```bash
+python scripts/speckit_analyze.py --strict
+```
 
-**Gate:**
-- CRITICAL issues -> Halt, display report, suggest fixes
-- HIGH issues -> Warn, ask user to confirm continuation
-- MEDIUM/LOW -> Continue automatically
+**Options:**
+- `--strict` - Fail on HIGH severity issues
+- `--json` - JSON output
 
-**Display:** `Phase 4 complete: ANALYZE`
+**Checks:**
+- Empty sections in spec.md and plan.md
+- Unresolved markers
+- Cross-artifact consistency
+
+**Severity Levels:**
+- CRITICAL - Blocks progress
+- HIGH - Significant issue
+- MEDIUM - Minor inconsistency
+- LOW - Suggestion
 
 ---
 
 ## Phase 5: TASKS
 
-**Execute:** `/speckit.tasks`
+**Script:** `speckit_tasks.py`
 
-The command handles:
-- spec.md and plan.md parsing
-- tasks.md generation with phases
-- Dependency graph and parallel markers
-- Task count summary
+```bash
+python scripts/speckit_tasks.py
+```
 
-**Gate:** Command must complete successfully.
+**Options:**
+- `--json` - JSON output
 
-**Display:** `Phase 5 complete: TASKS - {N} tasks generated`
+**Outputs:**
+- Creates `specs/{branch}/tasks.md` from template
+- Parses user stories from spec.md
+- Extracts phases from plan.md
 
 ---
 
 ## Phase 6: CHECKLIST
 
-Scan spec.md for domain keywords and invoke checklist generation:
+**Script:** `speckit_checklist.py`
 
-- If API/endpoint/REST -> `/speckit.checklist api`
-- If UI/UX/interface -> `/speckit.checklist ux`
-- If auth/security/permission -> `/speckit.checklist security`
-- If performance/latency -> `/speckit.checklist performance`
+```bash
+python scripts/speckit_checklist.py --type api
+```
 
-Generate at least one general checklist if no keywords match.
+**Options:**
+- `--type <type>` - Force specific type (api, ux, security, performance, general)
+- `--json` - JSON output
 
-**Gate:** Non-blocking - log warnings and continue if generation fails.
-
-**Display:** `Phase 6 complete: CHECKLIST - {N} checklists created`
+**Auto-detects domains from spec.md:**
+- API keywords -> api checklist
+- UI/UX keywords -> ux checklist
+- Auth/security keywords -> security checklist
+- Performance keywords -> performance checklist
 
 ---
 
 ## Phase 7: PR
 
-Create pull request for spec artifacts:
-
-### Step 7.1: Stage Changes
+**Script:** `speckit_pr.py`
 
 ```bash
-git add -A
+python scripts/speckit_pr.py --draft
 ```
 
-### Step 7.2: Create Commit
+**Options:**
+- `--draft` - Create as draft PR
+- `--no-push` - Skip pushing to remote
+- `--json` - JSON output
 
-```bash
-git commit -m "$(cat <<'EOF'
-feat({BRANCH_NAME}): {short_description}
-
-Adds specification for {feature_name}
-
-- spec.md: Feature specification
-- plan.md: Technical design
-- tasks.md: Implementation tasks
-EOF
-)"
-```
-
-### Step 7.3: Push Branch
-
-```bash
-git push -u origin {BRANCH_NAME}
-```
-
-### Step 7.4: Create PR
-
-```bash
-gh pr create --title "spec: {feature_name}" --body "$(cat <<'EOF'
-## Summary
-{Extract from spec.md: 2-3 bullet points}
-
-## Spec Artifacts
-- [spec.md](specs/{BRANCH_NAME}/spec.md) - Feature specification
-- [plan.md](specs/{BRANCH_NAME}/plan.md) - Technical design
-- [tasks.md](specs/{BRANCH_NAME}/tasks.md) - Implementation tasks
-- [research.md](specs/{BRANCH_NAME}/research.md) - Design research
-
-## Checklists
-{List generated checklists}
-
-## Next Steps
-- [ ] Review spec artifacts
-- [ ] Approve for implementation
-EOF
-)"
-```
-
-Capture and store PR URL.
-
-**Display:** `Phase 7 complete: PR - {PR_URL}`
+**Steps:**
+1. Stage all changes
+2. Create commit with conventional commit message
+3. Push branch
+4. Create PR via `gh pr create`
 
 ---
 
 ## Phase 8: IMPLEMENT (Conditional)
 
-**Skip if:** `IS_IMPL_REPO` is false
+**Script:** `speckit_implement.py`
 
-**Execute:** `/speckit.implement`
-
-The command handles:
-- Checklist completion verification
-- Implementation context loading
-- Task execution phase-by-phase
-- tasks.md progress updates
-
-**Gate:** Command must complete successfully. On task failure, halt with details.
-
-**Display:** `Phase 8 complete: IMPLEMENT - all tasks done`
-
----
-
-## Final Report
-
-```text
-============================================
-SPECKIT FLOW COMPLETE
-============================================
-
-Feature: {feature_name}
-Branch:  {BRANCH_NAME}
-PR:      {PR_URL}
-
-Phases:
-  1. CREATE (specify)  [completed/skipped]
-  2. CREATE (plan)     [completed/skipped]
-  3. CLARIFY           [completed/skipped]
-  4. ANALYZE           [completed/skipped]
-  5. TASKS             [completed/skipped]
-  6. CHECKLIST         [completed/skipped]
-  7. PR                [completed]
-  8. IMPLEMENT         [completed/skipped/n/a]
-
-Artifacts:
-  spec.md       [created/updated]
-  plan.md       [created/updated]
-  research.md   [created/updated]
-  tasks.md      [{completed}/{total} tasks]
-  checklists/   [{N} generated]
-
-Next Steps:
-  1. Review PR: {PR_URL}
-  2. Address review comments
-  3. Merge when approved
-============================================
+```bash
+python scripts/speckit_implement.py --force
 ```
+
+**Options:**
+- `--force` - Run even in non-implementation repos
+- `--json` - JSON output
+
+**Skips if:** Not an implementation repo (use `--force` to override)
+
+**Outputs:**
+- Parses tasks.md
+- Reports completion progress
+- Lists remaining tasks
 
 ---
 
@@ -314,20 +279,33 @@ Next Steps:
 
 | Phase | Error | Action |
 |-------|-------|--------|
-| CREATE (specify) | Command fails | Halt, show error |
-| CREATE (plan) | Command fails | Halt, show error |
-| CLARIFY | Command fails | Halt, show context |
+| CREATE (specify) | Script fails | Halt, show error |
+| CREATE (plan) | Script fails | Halt, show error |
+| CLARIFY | Script fails | Halt, show context |
 | ANALYZE | CRITICAL issues | Halt, show report |
-| TASKS | Command fails | Halt, suggest `/speckit.plan` |
+| TASKS | Script fails | Halt, suggest speckit_plan.py |
 | CHECKLIST | Generation fails | **Continue** (non-blocking) |
 | PR | Git/GH error | Halt, show command that failed |
 | IMPLEMENT | Task fails | Halt, show task ID and error |
 
 ---
 
+## Shared Utilities
+
+The `common.py` module provides:
+
+- **Status emojis**: `Status.SUCCESS` (✅), `Status.ERROR` (❌), etc.
+- **Exit codes**: `EXIT_SUCCESS`, `EXIT_VALIDATION_ERROR`, `EXIT_BASH_ERROR`
+- **Bash wrapper**: `run_bash_script()` for calling .specify scripts
+- **Path utilities**: `get_repo_root()`, `get_feature_paths()`
+- **Template loading**: `load_template()`
+- **Git/GH commands**: `run_git_command()`, `run_gh_command()`
+
+---
+
 ## Notes
 
-- Commands handle their own iteration and quality checks
+- Python scripts wrap existing bash scripts in `.specify/scripts/bash/`
 - Context passes through artifacts and git branch state
 - Resume detection allows partial workflow continuation
 - PR is created but NOT auto-merged
