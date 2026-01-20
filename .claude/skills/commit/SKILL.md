@@ -73,7 +73,7 @@ type(scope): description
 
 ## Breaking Changes
 
-Add `!` after type or scope:
+Add exclamation mark after type or scope:
 
 ```
 feat!: remove deprecated API
