@@ -2,7 +2,7 @@
 
 ## File Conversion
 
-### Image Processing
+### Images
 
 ```bash
 # Convert JPG to PNG
@@ -18,7 +18,7 @@ parallel cwebp -q 80 {} -o {.}.webp ::: *.png
 parallel convert {} -thumbnail 150x150 thumbs/{/} ::: photos/*.jpg
 ```
 
-### Video Processing
+### Videos
 
 ```bash
 # Transcode videos
@@ -31,7 +31,7 @@ parallel ffmpeg -i {} -vn -acodec mp3 {.}.mp3 ::: *.mp4
 parallel ffmpeg -i {} -ss 00:00:05 -vframes 1 {.}.jpg ::: *.mp4
 ```
 
-### Document Conversion
+### Documents
 
 ```bash
 # Markdown to HTML
@@ -48,7 +48,7 @@ parallel gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 \
 
 ## Data Processing
 
-### CSV/JSON
+### CSV/JSON Files
 
 ```bash
 # Process CSV rows
@@ -61,29 +61,29 @@ parallel 'jq .data {} > processed/{/.}_data.json' ::: *.json
 parallel 'jq empty {} && echo "{}: valid" || echo "{}: invalid"' ::: *.json
 ```
 
-### Log Processing
+### Logs
 
 ```bash
-# Count errors per log
+# Count errors
 parallel 'echo "{/}: $(grep -c ERROR {})"' ::: logs/*.log
 
 # Extract timestamps
 parallel 'grep -oP "\d{4}-\d{2}-\d{2}" {} | sort -u > {.}_dates.txt' ::: *.log
 
-# Compress old logs
+# Compress old
 find logs/ -name "*.log" -mtime +30 | parallel gzip
 ```
 
-### Text Processing
+### Text
 
 ```bash
-# Word count
+# Total word count
 parallel wc -w ::: *.txt | awk '{sum+=$1} END {print sum}'
 
-# Find pattern in files
+# Find pattern
 parallel grep -l "TODO" ::: src/*.py
 
-# Replace in files
+# Replace
 parallel sed -i 's/old/new/g' ::: *.txt
 ```
 
@@ -92,26 +92,26 @@ parallel sed -i 's/old/new/g' ::: *.txt
 ### Downloads
 
 ```bash
-# Download URLs
+# URLs
 parallel wget -q ::: url1 url2 url3
 
-# Download from file
+# From file
 parallel wget -q :::: urls.txt
 
-# Parallel curl with retry
+# Curl with retry
 parallel --retries 3 'curl -sS {} > {#}.html' :::: urls.txt
 
-# Download with rate limit (2 concurrent)
+# Rate limit (2 concurrent)
 parallel -j2 wget -q ::: urls
 ```
 
-### API Calls
+### APIs
 
 ```bash
-# Fetch API data
+# Fetch data
 parallel 'curl -s "https://api.example.com/users/{}" > user_{}.json' ::: 1 2 3 4 5
 
-# POST requests
+# POST
 parallel 'curl -X POST -d @{} https://api.example.com/submit' ::: data/*.json
 
 # Health checks
@@ -120,45 +120,45 @@ parallel 'curl -s -o /dev/null -w "{}: %{http_code}\n" {}' ::: urls
 
 ## Build & Test
 
-### Compilation
+### Compile
 
 ```bash
-# Compile C files
+# C files
 parallel gcc -c {} -o {.}.o ::: *.c
 
-# Build multiple projects
+# Multiple projects
 parallel 'cd {} && make' ::: project1 project2 project3
 ```
 
-### Testing
+### Test
 
 ```bash
-# Run tests in parallel
+# Run tests
 parallel pytest {} ::: tests/test_*.py
 
-# Test multiple Python versions
+# Multiple Python versions
 parallel 'python{} -m pytest tests/' ::: 3.8 3.9 3.10 3.11
 
-# Run linters
+# Linters
 parallel --tag '{}' ::: 'eslint src/' 'prettier --check src/' 'tsc --noEmit'
 ```
 
 ### Docker
 
 ```bash
-# Build multiple images
+# Build images
 parallel docker build -t myapp:{} -f Dockerfile.{} . ::: dev staging prod
 
-# Pull images
+# Pull
 parallel docker pull ::: nginx:latest redis:latest postgres:latest
 
-# Stop containers
+# Stop
 docker ps -q | parallel docker stop
 ```
 
 ## System Administration
 
-### File Operations
+### Files
 
 ```bash
 # Copy to multiple destinations
@@ -167,59 +167,58 @@ parallel cp important.txt {} ::: /backup1 /backup2 /backup3
 # Sync directories
 parallel rsync -av src/ {}/ ::: dest1 dest2
 
-# Find and delete old files
+# Delete old files
 find /tmp -mtime +7 -type f | parallel rm
 ```
 
-### Remote Execution
+### Remote
 
 ```bash
-# Run command on multiple servers
+# Run on servers
 parallel --sshlogin server1,server2,server3 'df -h'
 
-# Deploy to servers
+# Deploy
 parallel --sshlogin :,server1,server2 'cd /app && git pull && systemctl restart app'
 
-# Collect logs from servers
+# Collect logs
 parallel --sshlogin server1,server2 --return /var/log/app.log \
     'cat /var/log/app.log' ::: ignored
 ```
 
 ## Advanced Patterns
 
-### With Progress Tracking
+### Progress Tracking
 
 ```bash
-# Long job with progress
 parallel --progress --eta 'sleep 1 && echo done: {}' ::: {1..100}
 ```
 
-### Resume Interrupted Jobs
+### Resume Jobs
 
 ```bash
-# Start with logging
+# Start with log
 parallel --joblog jobs.log convert {} {.}.png ::: *.jpg
 
-# Resume if interrupted
+# Resume
 parallel --resume --joblog jobs.log convert {} {.}.png ::: *.jpg
 ```
 
-### Batching Items
+### Batching
 
 ```bash
-# Process 10 items per job
+# 10 items per job
 parallel -N10 'echo "Batch: {}"' ::: {1..50}
 
-# Paired processing
+# Paired
 parallel -N2 'echo "{1} vs {2}"' ::: A B C D E F
 ```
 
-### Output Organization
+### Output
 
 ```bash
-# Structured output directory
+# Structured directory
 parallel --results results/ 'process {}' ::: items
 
-# Tagged output
+# Tagged
 parallel --tag 'wc -l {}' ::: *.txt
 ```

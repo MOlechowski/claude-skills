@@ -2,276 +2,178 @@
 
 ## Matching Patterns
 
-### Explicit Spec References
+### Explicit References
 
 ```regex
-Spec\s*#?\d{3}        # "Spec 010", "Spec #010"
+Spec\s*#?\d{3}        # "Spec 010"
 \(#\d{3}\)            # "(#010)"
-\d{3}-\w+-\w+         # "010-ephemeral-pool" (branch pattern)
+\d{3}-\w+-\w+         # "010-ephemeral-pool"
 spec-\d{3}            # "spec-010"
 ```
 
-### Branch Name Patterns
+### Branch Patterns
 
 ```
-010-ephemeral-pool     -> matches spec 010-ephemeral-pool
-feat/010-feature       -> matches spec 010-*
-feature/pool-mgmt      -> keyword match to pool-related spec
+010-ephemeral-pool     -> spec 010-ephemeral-pool
+feat/010-feature       -> spec 010-*
+feature/pool-mgmt      -> keyword match
 ```
 
-## Filtering Rules
+## Filtering
 
-### Skip (Not Spec-Worthy)
+### Skip
 
-| Commit Prefix | Reason |
-|---------------|--------|
+| Prefix | Reason |
+|--------|--------|
 | `fix(ci):` | CI infrastructure |
-| `fix(e2e):` small | Test infrastructure |
 | `chore:` | Maintenance |
-| `docs:` | Documentation only |
+| `docs:` | Documentation |
 | `style:` | Formatting |
 | `build:` | Build system |
-| `deps:` | Dependency updates |
+| `deps:` | Dependencies |
 
-### Flag (Likely Need Spec)
+### Flag (Needs Spec)
 
-| Commit Prefix | Reason |
-|---------------|--------|
+| Prefix | Reason |
+|--------|--------|
 | `feat:` | New functionality |
 | `feat!:` | Breaking change |
-| Large `fix:` | Significant behavior change |
-| `perf:` | Performance (if user-facing) |
+| Large `fix:` | Significant behavior |
 
-### Scope Assessment
+### Scope
 
-| Files Changed | Scope | Spec Needed? |
-|---------------|-------|--------------|
-| 1-2 files | Small | Probably not |
-| 3-5 files | Medium | Maybe |
-| 6+ files | Large | Likely yes |
-| New package/module | Large | Yes |
+| Files | Spec? |
+|-------|-------|
+| 1-2 | Probably no |
+| 3-5 | Maybe |
+| 6+ | Likely yes |
+| New module | Yes |
 
-## Command Cheatsheet
+## Commands
 
 ```bash
-# Get merged PRs with details
-gh pr list --state merged --limit 50 \
-  --json number,title,body,mergedAt,headRefName
+# Merged PRs
+gh pr list --state merged --limit 50 --json number,title,body,mergedAt,headRefName
 
-# Get PR files changed
+# PR files
 gh pr view 123 --json files
 
-# Get commit scope
+# Commit scope
 git show --stat abc123
 
 # List specs
 ls -d specs/*/
 
-# Get spec titles
-for d in specs/*/; do
-  echo "$d: $(head -1 $d/spec.md)"
-done
-
-# Find PRs referencing spec number
+# Find PRs by spec
 gh pr list --state merged --search "Spec 010"
 ```
 
 ## Drift Detection
 
-### Discover Spec Files
+### Spec Files
 
 ```bash
-# List all files in a spec directory
 ls specs/$SPEC_ID/*.md
-
-# Common files:
-# - spec.md (core specification)
-# - quick-reference.md (commands, patterns)
-# - plan.md (implementation approach)
-# - tasks.md (task tracking)
+# spec.md, quick-reference.md, plan.md, tasks.md
 ```
 
-### Drift Detection Patterns (Tier 1 + Tier 2)
+### Detection Patterns
 
 ```bash
-# Tier 1: Config values with units
+# T1: Config values
 grep -E "[0-9]+(s|ms|m|h|KB|MB|GB)" specs/$SPEC_ID/*.md
 
-# Tier 1: Environment variables
+# T1: Env vars
 grep -E '\$[A-Z_]+|`[A-Z_]+`' specs/$SPEC_ID/*.md
 
-# Tier 1: Constants and limits
+# T1: Constants
 grep -E "MAX|LIMIT|DEFAULT|TIMEOUT" specs/$SPEC_ID/*.md
 
-# Tier 2: Command patterns
+# T2: Commands
 grep -E '^\s*\$|```bash' specs/$SPEC_ID/quick-reference.md
-
-# Tier 2: Feature keywords
-grep -i "support|implement|provide" specs/$SPEC_ID/spec.md
 ```
 
-### Verify Against Implementation
+### Verify vs Implementation
 
 ```bash
 cd $IMPL_REPO
-
-# Check config values
 grep -rn "timeout|Timeout" src/
-
-# Check env vars
-grep -rn "os.Getenv|process.env|os.environ" src/
-
-# Check constants
-grep -rn "const|MAX|LIMIT|DEFAULT" src/
-
-# Check feature presence
-grep -rn "$FEATURE_KEYWORD" src/
+grep -rn "os.Getenv|process.env" src/
 ```
 
-### Drift Classification
+### Classification
 
-| Status | Meaning | Action |
-|--------|---------|--------|
-| SYNCED | Spec matches impl | None |
-| DRIFTED | Spec differs from impl | Auto-fix |
-| UNKNOWN | Cannot verify | Skip |
+| Status | Action |
+|--------|--------|
+| SYNCED | None |
+| DRIFTED | Auto-fix |
+| UNKNOWN | Skip |
 
 ## Output Format
 
 ```
-============================================
 SPECKIT-AUDIT COMPLETE
-============================================
-
-Repository: submodules/gh-runner
-Specs Directory: specs/
 
 Coverage:
-  - PRs analyzed: 50
-  - Specced: 42 (84%)
-    - Synced: 38
-    - Drifted: 4 (auto-fixed)
-  - Unspecced: 6 (12%)
-  - Uncertain: 2 (4%)
+  PRs: 50 | Specced: 42 (84%) | Unspecced: 6 | Uncertain: 2
 
-Specs Updated (Drift Fixed):
-  010-ephemeral-pool:
-    - spec.md: Timeout 10s -> 30s
-    - quick-reference.md: Added --force flag
-  014-runner-cache:
-    - spec.md: MAX_CACHE_SIZE 1GB -> 5GB
-    - tasks.md: Task 3 marked complete
+Drift Fixed:
+  010-ephemeral-pool: spec.md Timeout 10s->30s
+  014-runner-cache: spec.md MAX_CACHE_SIZE 1GB->5GB
 
-Actions Taken:
-  - Drift fixed: 4 (across 2 specs)
-  - Specs created: 2 (via /speckit-flow)
-  - Skipped (infra): 3
-  - Pending review: 1
-
-New Specs:
-  - 016-podman-machine-state (PR #xxx)
-  - 017-test-mock-architecture (PR #xxx)
-============================================
+Actions: 4 drift fixed, 2 specs created, 3 skipped
 ```
 
-## Coverage Report Template
+## Report Template
 
 ```markdown
-## Speckit Audit Report
+## Audit Report
 
-**Repository**: {repo_path}
-**Date**: {date}
+| Category | Count | % |
+|----------|-------|---|
+| Specced (synced) | {n} | |
+| Specced (fixed) | {n} | |
+| Unspecced | {n} | |
+| Uncertain | {n} | |
 
-### Summary
+### Drift Fixed
+| Spec | Change | Source |
+|------|--------|--------|
+| 010-pool | Timeout: 10s->30s | PR #418 |
 
-| Category | Count | Percentage |
-|----------|-------|------------|
-| Specced | {n} | {%} |
-|   - Synced | {n} | |
-|   - Drifted (fixed) | {n} | |
-| Unspecced | {n} | {%} |
-| Uncertain | {n} | {%} |
-| **Total** | {n} | 100% |
-
-### Specs Updated (Drift Fixed)
-
-| Spec | File | Change | Source PR |
-|------|------|--------|-----------|
-| 010-pool | spec.md | Timeout: 10s -> 30s | PR #418 |
-| 010-pool | quick-reference.md | Added --force flag | PR #418 |
-| 014-cache | tasks.md | Task 3 marked done | PR #421 |
-
-### Gaps (Unspecced Work)
-
-| PR | Title | Scope | Recommendation |
-|----|-------|-------|----------------|
-| #123 | Title | Medium | Create spec |
-| #456 | Title | Small | Skip |
-
-### Actions
-
-- [x] Drift auto-fixed in {n} specs
-- [ ] Review uncertain matches
-- [ ] Create specs for gaps
-- [ ] Run speckit-retro for deeper learnings
+### Gaps
+| PR | Title | Recommendation |
+|----|-------|----------------|
+| #123 | Title | Create spec |
 ```
 
-## Generated Description Template
-
-When creating specs for unspecced work:
+## Retroactive Spec Template
 
 ```markdown
 Feature: {Title from PR}
-
 {Summary from PR body}
-
-Context:
-- Originally implemented in PR #{number}
-- Merged on {date}
-- Files affected: {file_list}
-
-This is a retroactive specification documenting existing functionality.
+Originally: PR #{number}, merged {date}
+(Retroactive spec documenting existing functionality)
 ```
 
 ## Decision Tree
 
 ```
-Is this a feat: commit/PR?
-  YES -> Flag as potential spec needed
-  NO  |
-      v
-Is this a large fix: (3+ files)?
-  YES -> Flag as potential spec needed
-  NO  |
-      v
-Does it add new functionality?
-  YES -> Flag as potential spec needed
-  NO  |
-      v
-Is it CI/CD/infra related?
-  YES -> Skip (not spec-worthy)
-  NO  |
-      v
-Is it a refactor with no behavior change?
-  YES -> Skip (not spec-worthy)
-  NO  -> Review manually
+feat: commit?           -> Flag
+Large fix: (3+ files)?  -> Flag
+New functionality?      -> Flag
+CI/CD/infra?            -> Skip
+Refactor (no behavior)? -> Skip
+Otherwise               -> Review
 ```
 
-## Integration Commands
+## Integration
 
 ```bash
-# Run audit (auto-fixes drift, reports gaps)
-/speckit-audit
-
-# After audit, capture deeper behavioral learnings
-/speckit-retro specs/010-ephemeral-pool
-
-# Create full spec for unspecced work
-/speckit-flow "Feature description extracted from PR"
-
-# Verify specific spec (full 3-tier check)
-/speckit-verify specs/010-ephemeral-pool
+/speckit-audit                    # Run audit
+/speckit-retro specs/010-*        # Deeper learnings
+/speckit-flow "Feature desc"      # Create spec
+/speckit-verify specs/010-*       # Full verify
 ```
 
-**Note**: speckit-audit now auto-fixes drift using Tier 1 + Tier 2 checks.
-For deeper Tier 3 behavioral analysis, run `/speckit-verify` or `/speckit-retro`.
+Note: speckit-audit auto-fixes T1+T2 drift. Use `/speckit-verify` or `/speckit-retro` for T3.

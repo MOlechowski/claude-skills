@@ -1,7 +1,5 @@
 # Fastmod Quick Reference
 
-Quick lookup guide for common fastmod patterns and options.
-
 ## Command Syntax
 
 ```bash
@@ -22,21 +20,19 @@ fastmod [OPTIONS] <REGEX_PATTERN> <REPLACEMENT> [PATH]
 
 ## Interactive Commands
 
-During review of each match:
-
 | Key | Action |
 |-----|--------|
-| `y` | Accept this change |
-| `n` | Reject this change |
+| `y` | Accept |
+| `n` | Reject |
 | `e` | Edit in $EDITOR |
-| `d` | Accept this and all remaining in file |
-| `q` | Quit fastmod |
-| `s` | Skip this entire file |
-| `?` | Show help |
+| `d` | Accept all in file |
+| `q` | Quit |
+| `s` | Skip file |
+| `?` | Help |
 
-## Regex Syntax Reminders
+## Regex Syntax
 
-### Rust vs Python/JavaScript
+### Rust vs Python/JS
 
 | Feature | Python/JS | Rust (fastmod) |
 |---------|-----------|----------------|
@@ -48,35 +44,16 @@ During review of each match:
 ### Common Patterns
 
 ```bash
-# Word boundary
-\b
-
-# Whitespace
-\s
-
-# Word character
-\w
-
-# Digit
-\d
-
-# Any character
-.
-
-# Zero or more
-*
-
-# One or more
-+
-
-# Optional
-?
-
-# Capture group
-(pattern)
-
-# Non-capturing group
-(?:pattern)
+\b     # Word boundary
+\s     # Whitespace
+\w     # Word char
+\d     # Digit
+.      # Any char
+*      # Zero or more
++      # One or more
+?      # Optional
+(x)    # Capture group
+(?:x)  # Non-capturing
 ```
 
 ## Quick Patterns
@@ -118,21 +95,18 @@ fastmod 'className="old-class"' 'className="new-class"'
 
 ## Safety Checklist
 
-Before running fastmod:
+Before:
+- [ ] Git clean
+- [ ] Pattern tested
+- [ ] Extensions specified
+- [ ] Build dirs excluded
+- [ ] Interactive mode
 
-- [ ] Git status is clean (all changes committed)
-- [ ] Pattern tested on small sample
-- [ ] Appropriate file extensions specified
-- [ ] Excluded build/dependency directories
-- [ ] Using interactive mode (not --accept-all)
-- [ ] Ready to review each change carefully
-
-After running fastmod:
-
-- [ ] Run build/compile to check for errors
-- [ ] Run test suite
-- [ ] Review `git diff` for unexpected changes
-- [ ] Commit with descriptive message
+After:
+- [ ] Build passes
+- [ ] Tests pass
+- [ ] Review `git diff`
+- [ ] Commit
 
 ## Common Issues
 
@@ -143,50 +117,33 @@ After running fastmod:
 | Pattern invalid | Verify Rust regex syntax (no lookahead/lookbehind) |
 | Replacement wrong | Use `${1}` for capture groups, `$$` for literal `$` |
 
-## Example Workflow
+## Workflow
 
 ```bash
-# 1. Check git status
 git status
-
-# 2. Test pattern on subset
 fastmod -d src/components --extensions tsx 'OldComponent' 'NewComponent'
-
-# 3. Review carefully, accept changes
-
-# 4. Expand scope
+# Review and accept
 fastmod -d src --extensions tsx,ts 'OldComponent' 'NewComponent'
-
-# 5. Validate
 npm run build && npm test
-
-# 6. Commit
 git add -A && git commit -m "refactor: rename OldComponent to NewComponent"
 ```
 
-## When to Use Fastmod
+## When to Use
 
 **Good for:**
-- 20+ files need similar changes
+- 20+ files with similar changes
 - Pattern-based refactoring
-- Human review per file desired
-- Command-line workflow preferred
+- Human review needed
 
 **Not ideal for:**
-- 1-3 file changes (use IDE or Edit)
-- Requires semantic understanding (use AST tools)
-- Fully automated scripts (consider sed)
-- Complex multi-step logic (break into multiple runs)
+- 1-3 files (use IDE)
+- Semantic changes (use AST tools)
+- Full automation (use sed)
 
-## Emergency Rollback
+## Rollback
 
 ```bash
-# Undo all changes
-git restore .
-
-# Undo specific file
-git restore path/to/file.ts
-
-# Stash to review later
-git stash
+git restore .            # Undo all
+git restore path/to/file # Undo file
+git stash                # Stash for later
 ```
