@@ -1,6 +1,6 @@
 ---
 name: parallel-flow
-description: Parallelize tasks using Claude agents. Use when: processing multiple files/items concurrently, running analysis across independent code modules, batch operations with cognitive tasks. Triggers: "parallelize this task", "run on all files in parallel", "analyze modules concurrently", "batch process these items".
+description: "Parallelize tasks using Claude agents. Use when: processing multiple files/items concurrently, running analysis across independent code modules, batch operations with cognitive tasks. Triggers: parallelize this task, run on all files in parallel, analyze modules concurrently, batch process these items."
 ---
 
 # Parallel Flow Skill

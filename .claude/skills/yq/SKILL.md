@@ -1,6 +1,6 @@
 ---
 name: yq
-description: YAML/JSON/XML processing with jq-like syntax. Use for: (1) querying and updating YAML configs (Kubernetes, Docker Compose, CI/CD), (2) converting between YAML/JSON/XML formats, (3) merging configuration files, (4) automating config management. Triggers: parse YAML, update config file, convert YAML to JSON, merge YAML files, edit Kubernetes manifest.
+description: "YAML/JSON/XML processing with jq-like syntax. Use for: (1) querying and updating YAML configs (Kubernetes, Docker Compose, CI/CD), (2) converting between YAML/JSON/XML formats, (3) merging configuration files, (4) automating config management. Triggers: parse YAML, update config file, convert YAML to JSON, merge YAML files, edit Kubernetes manifest."
 ---
 
 # yq Expertise Skill

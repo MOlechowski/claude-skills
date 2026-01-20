@@ -1,6 +1,6 @@
 ---
 name: web-research
-description: Research topics with web search. Use when: researching a topic or concept, finding current information, answering factual questions, comparing options or technologies. Triggers: "research [topic]", "find out about", "what are the best practices for", "research the latest on".
+description: "Research topics with web search. Use when: researching a topic or concept, finding current information, answering factual questions, comparing options or technologies. Triggers: research [topic], find out about, what are the best practices for, research the latest on."
 ---
 
 # Web Research

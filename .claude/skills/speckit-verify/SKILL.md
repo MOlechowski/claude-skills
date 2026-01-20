@@ -1,6 +1,6 @@
 ---
 name: speckit-verify
-description: Verify implementation matches spec, update spec on drift. Use when: (1) checking if spec matches implementation, (2) implementation changed and spec needs updating, (3) before release to ensure spec accuracy, (4) auditing spec drift over time. Triggers: "verify spec matches implementation", "check for spec drift", "sync spec to code", "run speckit-verify".
+description: "Verify implementation matches spec, update spec on drift. Use when: (1) checking if spec matches implementation, (2) implementation changed and spec needs updating, (3) before release to ensure spec accuracy, (4) auditing spec drift over time. Triggers: verify spec matches implementation, check for spec drift, sync spec to code, run speckit-verify."
 ---
 
 # Speckit Verify: Sync Spec to Implementation

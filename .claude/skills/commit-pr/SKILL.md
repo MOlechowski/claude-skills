@@ -1,6 +1,6 @@
 ---
 name: commit-pr
-description: Commit changes and create PR in one flow. Use when: committing and creating PR in one step, shipping a feature, pushing changes with PR. Triggers: /commit-pr, "ship this", "commit and PR", "push and create PR".
+description: "Commit changes and create PR in one flow. Use when: committing and creating PR in one step, shipping a feature, pushing changes with PR. Triggers: /commit-pr, ship this, commit and PR, push and create PR."
 ---
 
 # Commit & PR
