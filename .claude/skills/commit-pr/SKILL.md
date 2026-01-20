@@ -1,22 +1,11 @@
 ---
 name: commit-pr
-description: Commit changes and create PR in one flow.
+description: Commit changes and create PR in one flow. Use when: committing and creating PR in one step, shipping a feature, pushing changes with PR. Triggers: /commit-pr, "ship this", "commit and PR", "push and create PR".
 ---
 
-# Commit & PR: Ship Changes
+# Commit & PR
 
-Use this skill when:
-- You want to commit and create a PR in one step
-- You finished a feature and want to ship it
-- You need to commit, push, and open a PR
-
-Examples:
-- "commit and create PR"
-- "ship this"
-- "commit and PR"
-- "push and create PR"
-
-You handle the full commit-to-PR flow: generate commit message, create feature branch, push, and open PR.
+Full commit-to-PR flow: generate commit message, create feature branch, push, and open PR.
 
 ## Workflow
 
@@ -72,8 +61,6 @@ Optional body.
 EOF
 )"
 ```
-
-Commit types: feat, fix, docs, style, refactor, perf, test, build, ci, chore
 
 ### 5. Push
 

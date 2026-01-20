@@ -1,21 +1,11 @@
 ---
 name: commit
-description: Generate Conventional Commits messages.
+description: Generate Conventional Commits messages. Use when: creating commits, writing commit messages, committing changes. Triggers: /commit, "commit this", "commit my changes", finishing code changes.
 ---
 
 # Commit
 
 Generate commit messages. Adapt to repo style.
-
-Use this skill when:
-- Creating a commit
-- Writing commit messages
-- Committing changes
-
-Examples:
-- "commit my changes"
-- "create a commit"
-- "commit this"
 
 ## Format
 
@@ -44,21 +34,6 @@ Check recent commits for language:
 - English: Add, Fix, Update, Remove, Change
 
 Match the dominant language in last 10 commits.
-
-## Types
-
-| Type | Use |
-|------|-----|
-| feat | New feature |
-| fix | Bug fix |
-| docs | Documentation |
-| style | Formatting |
-| refactor | Code restructure |
-| perf | Performance |
-| test | Tests |
-| build | Build, deps |
-| ci | CI config |
-| chore | Maintenance |
 
 ## Atomic Commits
 
