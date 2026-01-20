@@ -3,9 +3,7 @@ name: tmux
 description: Terminal multiplexer session management. Use for: (1) running commands in persistent sessions, (2) automating interactive CLI workflows, (3) capturing output from long-running processes, (4) managing background tasks. Triggers: run in tmux, create session, send keys, capture output, interactive script automation.
 ---
 
-# Tmux Terminal Multiplexer Skill
-
-You are an expert in tmux (terminal multiplexer) for managing persistent terminal sessions, running commands in background, and automating interactive workflows.
+# Tmux Skill
 
 ## Core Capabilities
 
@@ -250,21 +248,6 @@ tmux new-session -d -s my-session 'command'
 - Session may have exited - check with `tmux has-session`
 - Command may need more time - increase sleep
 - Try capturing earlier in history: `capture-pane -S -50`
-
-## When to Use Tmux vs Regular Bash
-
-**Use Tmux When:**
-- Interactive scripts requiring user input
-- Commands that don't support non-interactive mode
-- Need to persist across shell sessions
-- Multiple yes/no prompts to answer
-- Monitoring long-running processes
-
-**Use Regular Bash When:**
-- Simple, non-interactive commands
-- Scripts with `--yes` or `--no-input` flags
-- Piping input: `echo "y" | command`
-- HEREDOC for multi-line input
 
 ## Best Practices Summary
 
