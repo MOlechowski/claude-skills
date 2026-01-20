@@ -1,25 +1,11 @@
 ---
 name: speckit-audit
-description: Find unspecced work and fix spec drift.
+description: Find unspecced work and fix spec drift. Use when: (1) auditing spec coverage, (2) finding features implemented without specs, (3) creating retroactive specs, (4) identifying technical debt from unspecced changes, (5) detecting and fixing spec drift. Triggers: "run speckit-audit", "find unspecced work", "what PRs don't have specs", "audit spec coverage", "fix spec drift".
 ---
 
 # Speckit Audit: Find Unspecced Work and Fix Drift
 
-Use this skill when:
-- You want to audit spec coverage across your implementation
-- You suspect features were implemented without specs
-- You want to retroactively create specs for undocumented work
-- You need to identify technical debt from unspecced changes
-- You want to detect and fix spec drift automatically
-
-Examples:
-- "run speckit-audit"
-- "find unspecced work"
-- "what PRs don't have specs?"
-- "audit spec coverage"
-- "fix spec drift"
-
-You are an expert at auditing implementation repositories to find work that was done without a corresponding specification, and detecting drift between specs and implementation. This skill helps maintain spec-driven development discipline by identifying gaps, fixing drift, and offering to create retroactive specs.
+Audit implementation repos to find work without specs and detect drift between specs and implementation. Identifies gaps, fixes drift, and offers to create retroactive specs.
 
 ## Purpose
 
