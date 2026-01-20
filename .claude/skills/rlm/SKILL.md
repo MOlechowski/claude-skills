@@ -9,7 +9,7 @@ description: "Process massive codebases with parallel agents using the RLM parad
 
 > **"Context is an external resource, not a local variable."**
 
-Treat filesystem as queryable database instead of loading files into context. Orchestrate sub-agents for parallel code analysis.
+Treat filesystem as queryable database. Orchestrate sub-agents for parallel code analysis.
 
 ## Two Operation Modes
 
@@ -45,18 +45,18 @@ Task(
 |-------|-------|---------|
 | 1 | Broad pattern search | Find all instances |
 | 2 | Architecture/structure | Understand context |
-| 3 | Targeted file analysis | Deep dive specific code |
+| 3 | Targeted file analysis | Deep dive |
 | 4 | (optional) Related code paths | Trace dependencies |
 | 5 | (optional) Test coverage | Verify behavior |
 
 ### Mode 2: Bulk Processing (5-10 Agents)
 
-For systematic analysis of all files. Split by **file groups or categories**:
+For systematic analysis. Split by **file groups or categories**:
 
 ```
-Scaling guidelines:
-- Max 10 concurrent agents (resource limits)
-- 10-20 files per agent (context efficiency)
+Scaling:
+- Max 10 concurrent agents
+- 10-20 files per agent
 - Group by: directory, file type, or domain
 ```
 
@@ -82,52 +82,41 @@ Task(
 ## Four-Stage Pipeline
 
 ### 1. Index
-Scan file structure without loading content.
+Scan structure without loading content.
 
 ```bash
-# Count files by type
 find . -type f -name "*.py" | wc -l
-
-# Structure overview
 ls -laR src/ | head -50
 ```
 
 ### 2. Filter
-Narrow candidates using pattern matching.
+Narrow candidates with pattern matching.
 
 ```bash
-# Find files containing pattern
 rg -l "error" --type py
-
-# Count matches per file
 rg -c "TODO" --type py | grep -v ":0$"
 ```
 
 ### 3. Map (Parallel Processing)
 
-**Choose mode based on task:**
-
 | Task Type | Mode | Agents | Subagent Type |
 |-----------|------|--------|---------------|
-| Answer a question | Investigation | 3-5 | Explore |
+| Answer question | Investigation | 3-5 | Explore |
 | Analyze all files | Bulk | 5-10 | general-purpose |
-| Find specific pattern | Investigation | 2-3 | Explore |
+| Find pattern | Investigation | 2-3 | Explore |
 | Security audit | Bulk | 5-10 | general-purpose |
 
 ### 4. Reduce
-Synthesize findings from all sub-agents:
+Synthesize findings:
 
 ```bash
-# Merge JSON outputs
 jq -s '.' /tmp/rlm_*.json
-
-# Aggregate findings
 jq -s '[.[].findings] | add' /tmp/rlm_*.json
 ```
 
 ## Agent Output Pattern
 
-Agents write to files to avoid context overflow.
+Write to files to avoid context overflow.
 
 ```
 Task(
@@ -150,41 +139,29 @@ TaskOutput(task_id=<agent_id>, block=true, timeout=60000)
 
 **Merge and filter:**
 ```bash
-# Merge all
 jq -s '.' /tmp/rlm_*.json > /tmp/report.json
-
-# Filter by severity
 jq '[.[].findings[] | select(.severity == "high")]' /tmp/report.json
-
-# Filter by file
 jq '[.[].findings[] | select(.file | contains("auth"))]' /tmp/report.json
 ```
 
 ## Key Constraints
 
-### Never Do
-- `cat *` or `cat *.py` - loads too much at once
-- Load many files into main context - use agents instead
+### Never
+- `cat *` or `cat *.py` - loads too much
+- Load many files into main context
 - Spawn more than 10 concurrent agents
 
-### Always Do
-- Use `rg`/`grep` to filter before spawning agents
-- Use Explore agents for investigation tasks
-- Write agent outputs to /tmp/ files
-- Use descriptive agent names (shown in UI)
+### Always
+- Filter with `rg`/`grep` before spawning agents
+- Use Explore agents for investigation
+- Write agent outputs to /tmp/
+- Use descriptive agent names
 
 ## Python Engine (Optional)
 
-For structured analysis, use the bundled Python engine.
-
 ```bash
-# Scan and index files
 python3 ~/.claude/skills/rlm/rlm.py scan
-
-# Search with context
 python3 ~/.claude/skills/rlm/rlm.py peek "searchterm"
-
-# Get chunks for processing
 python3 ~/.claude/skills/rlm/rlm.py chunk --pattern "*.py"
 ```
 

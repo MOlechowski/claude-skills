@@ -9,67 +9,41 @@ description: "Fast recursive code search. Use for: (1) searching large codebases
 
 ### Simple Search
 ```bash
-# Search for pattern in current directory
 rg "pattern"
-
-# Search with case insensitivity
-rg -i "pattern"
-
-# Search for whole words only
-rg -w "function"
-
-# Fixed string search (no regex)
-rg -F "function()"
+rg -i "pattern"       # Case insensitive
+rg -w "function"      # Whole words only
+rg -F "function()"    # Fixed string (no regex)
 ```
 
 ### Common Options
 ```bash
-# Show line numbers (default)
-rg -n "pattern"
-
-# Show file names only (no matches)
-rg -l "pattern"
-
-# Count matches per file
-rg -c "pattern"
-
-# Show context lines
-rg -C 3 "pattern"          # 3 before and after
-rg -B 2 "pattern"          # 2 before
-rg -A 1 "pattern"          # 1 after
+rg -n "pattern"       # Line numbers (default)
+rg -l "pattern"       # File names only
+rg -c "pattern"       # Count per file
+rg -C 3 "pattern"     # 3 lines context
+rg -B 2 "pattern"     # 2 lines before
+rg -A 1 "pattern"     # 1 line after
 ```
 
 ## File Type Filtering
 
 ### Using --type
 ```bash
-# Search only JavaScript files
 rg --type js "pattern"
-
-# Multiple types
 rg --type js --type ts "pattern"
-
-# Short form
-rg -tjs -tts "pattern"
-
-# List available types
-rg --type-list
-
-# Common types: js, ts, py, rust, go, java, cpp, html, css, json, yaml
+rg -tjs -tts "pattern"          # Short form
+rg --type-list                  # List types
+# Common: js, ts, py, rust, go, java, cpp, html, css, json, yaml
 ```
 
 ### Type Negation
 ```bash
-# Exclude specific types
 rg --type-not js "pattern"
-
-# Exclude multiple types
 rg -Tjs -Tcss "pattern"
 ```
 
 ### Custom Type Definitions
 ```bash
-# Add custom type
 rg --type-add 'config:*.{yml,yaml,toml,json}' -tconfig "database"
 ```
 
@@ -77,39 +51,24 @@ rg --type-add 'config:*.{yml,yaml,toml,json}' -tconfig "database"
 
 ### Glob Patterns
 ```bash
-# Include specific paths
 rg -g '*.js' "pattern"
 rg -g 'src/**/*.ts' "pattern"
-
-# Exclude paths
-rg -g '!tests/' "pattern"
+rg -g '!tests/' "pattern"       # Exclude
 rg -g '!*.min.js' "pattern"
-
-# Multiple globs
 rg -g '*.{js,ts}' -g '!node_modules/' "pattern"
 ```
 
 ### Specific Directories
 ```bash
-# Search only in specific directory
 rg "pattern" src/
-
-# Multiple directories
 rg "pattern" src/ lib/
-
-# Exclude directories
 rg "pattern" --glob '!node_modules/**'
 ```
 
 ### Hidden and Ignored Files
 ```bash
-# Include hidden files
-rg --hidden "pattern"
-
-# Include ignored files (.gitignore)
-rg --no-ignore "pattern"
-
-# Include everything
+rg --hidden "pattern"           # Include hidden
+rg --no-ignore "pattern"        # Include gitignored
 rg --hidden --no-ignore "pattern"
 ```
 
@@ -117,37 +76,24 @@ rg --hidden --no-ignore "pattern"
 
 ### Basic Regex
 ```bash
-# Anchors
 rg "^import"              # Start of line
 rg ";\$"                  # End of line
-
-# Character classes
 rg "[0-9]+"               # One or more digits
-rg "[a-zA-Z_]\w*"         # Identifier pattern
-
-# Quantifiers
+rg "[a-zA-Z_]\w*"         # Identifier
 rg "colou?r"              # Optional 'u'
-rg "\d{3}-\d{4}"          # 3 digits, dash, 4 digits
+rg "\d{3}-\d{4}"          # Phone pattern
 ```
 
 ### Advanced Patterns
 ```bash
-# Word boundaries
-rg "\bfunction\b"         # Whole word 'function'
-
-# Alternation
-rg "error|warning|fatal"  # Multiple patterns
-
-# Groups
-rg "(get|set)User"        # Matches getUser or setUser
+rg "\bfunction\b"         # Word boundary
+rg "error|warning|fatal"  # Alternation
+rg "(get|set)User"        # Groups
 ```
 
 ### Multi-line Patterns
 ```bash
-# Enable multiline mode
 rg -U "function.*{.*return" file.js
-
-# Across multiple lines with context
 rg -U "class \w+ {[\s\S]*?constructor" src/
 ```
 
@@ -155,110 +101,67 @@ rg -U "class \w+ {[\s\S]*?constructor" src/
 
 ### Display Options
 ```bash
-# No line numbers
 rg --no-line-number "pattern"
-
-# No filename
 rg --no-filename "pattern"
-
-# Only filename (no matches)
-rg -l "pattern"
-
-# Only matches (no filename or line numbers)
-rg --only-matching "pattern"
+rg -l "pattern"               # Filenames only
+rg --only-matching "pattern"  # Matches only
 ```
 
-### Colors and Highlighting
+### Colors and JSON
 ```bash
-# Force colors (for piping)
-rg --color always "pattern"
-
-# No colors
-rg --color never "pattern"
-```
-
-### JSON Output
-```bash
-# Output as JSON
-rg --json "pattern"
-
-# Pretty JSON
+rg --color always "pattern"   # Force colors
+rg --color never "pattern"    # No colors
+rg --json "pattern"           # JSON output
 rg --json "pattern" | jq '.'
 ```
 
-## Context and Grouping
-
-### Context Lines
+## Context Lines
 ```bash
-# Show context around matches
-rg -C 3 "error"           # 3 lines before and after
-rg -B 5 "TODO"            # 5 lines before
-rg -A 2 "FIXME"           # 2 lines after
+rg -C 3 "error"           # 3 before and after
+rg -B 5 "TODO"            # 5 before
+rg -A 2 "FIXME"           # 2 after
 ```
 
 ## Replace Operations
 
 ### Preview Replacements
 ```bash
-# See what would be replaced
 rg "old_name" --replace "new_name"
-
-# With context
 rg -C 1 "old_name" --replace "new_name"
 ```
 
 ### Execute Replacements
 ```bash
-# Using sed with ripgrep
 rg -l "old_pattern" | xargs sed -i '' 's/old_pattern/new_pattern/g'
-
-# Using fastmod (safer)
 rg -l "old_pattern" | xargs fastmod "old_pattern" "new_pattern"
 ```
 
 ## Performance Optimization
 
-### Speed Tips
 ```bash
-# Limit search depth
-rg --max-depth 3 "pattern"
-
-# Stop after first match per file
-rg --max-count 1 "pattern"
-
-# Use fixed strings for speed
-rg -F "literal_string"
-
-# Specify file types
-rg -tjs "pattern"  # Much faster than searching all files
+rg --max-depth 3 "pattern"    # Limit depth
+rg --max-count 1 "pattern"    # First match per file
+rg -F "literal_string"        # Fixed string (faster)
+rg -tjs "pattern"             # Specify type (faster)
 ```
 
 ## Integration Patterns
 
 ### With Git
 ```bash
-# Search unstaged changes
 git diff | rg "pattern"
-
-# Find files changed that contain pattern
 rg -l "pattern" $(git diff --name-only)
 ```
 
 ### With Xargs
 ```bash
-# Process matches
 rg -l "TODO" | xargs -I {} echo "TODO found in: {}"
-
-# Open files in editor
 rg -l "FIXME" | xargs vim
 ```
 
-### Piping to Other Tools
+### Piping
 ```bash
-# Count unique matches
 rg -o "\w+@\w+\.\w+" emails.txt | sort -u | wc -l
-
-# Format output
 rg "error" --json | jq -r '.data.lines.text'
 ```
 
@@ -266,45 +169,29 @@ rg "error" --json | jq -r '.data.lines.text'
 
 ### Find and Review
 ```bash
-# Find all TODOs with context
 rg -C 2 "TODO|FIXME|HACK"
-
-# Find security issues
 rg -i "password|secret|api_key" --type-not test
-
-# Find deprecated usage
 rg "deprecated|obsolete" --stats
 ```
 
 ### Code Analysis
 ```bash
-# Find all function definitions
 rg "function \w+\(" -tjs
-
-# Find all imports
 rg "^import " -tts
-
-# Find unused variables (combined with other tools)
 rg "\bvar \w+" -o | sort | uniq -c | sort -rn
 ```
 
 ### Refactoring Support
 ```bash
-# Find all usages before rename
 rg "\boldName\b" -C 1
-
-# Verify rename completeness
 rg "oldName" --count-matches
-
-# Find similar patterns
 rg "get[A-Z]\w+" -o | sort -u
 ```
 
 ## Configuration
 
-### Config File
+### Config File (~/.ripgreprc)
 ```bash
-# Create ~/.ripgreprc
 --smart-case
 --hidden
 --glob=!.git/*
@@ -315,35 +202,24 @@ rg "get[A-Z]\w+" -o | sort -u
 
 ### Environment Variable
 ```bash
-# Set config file location
 export RIPGREP_CONFIG_PATH=~/.ripgreprc
 ```
 
-## Debugging and Troubleshooting
-
-### Common Issues
+## Troubleshooting
 
 **No matches found:**
 ```bash
-# Check if files are ignored
 rg --no-ignore "pattern"
-
-# Check file types
 rg --files | head
-
-# Verify pattern
 rg --debug "pattern"
 ```
 
 **Too many matches:**
 ```bash
-# Limit results
 rg --max-count 100 "pattern"
-
-# Be more specific
 rg "\bpattern\b" -tjs -g 'src/**'
 ```
 
 ## Additional Resources
 
-See `examples.md` and `quick-reference.md` for detailed examples and reference.
+See `examples.md` and `quick-reference.md` for detailed examples.

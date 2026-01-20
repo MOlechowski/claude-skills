@@ -2,10 +2,10 @@
 
 ## Two Operation Modes
 
-| Mode | When | Agents | Subagent Type |
-|------|------|--------|---------------|
-| **Investigation** | Answer questions about code | 3-5 | Explore |
-| **Bulk Processing** | Analyze all files systematically | 5-10 | general-purpose |
+| Mode | When | Agents | Type |
+|------|------|--------|------|
+| **Investigation** | Answer code questions | 3-5 | Explore |
+| **Bulk Processing** | Analyze all files | 5-10 | general-purpose |
 
 ## Mode 1: Investigation Pattern
 
@@ -38,10 +38,7 @@ Task(
 )
 ```
 
-**Scaling:**
-- Max 10 concurrent agents
-- 10-20 files per agent
-- Group by: directory, file type, or domain
+**Scaling:** Max 10 agents, 10-20 files each, group by directory/type/domain
 
 ## Four-Stage Pipeline
 
@@ -55,26 +52,16 @@ Task(
 ## Index Commands
 
 ```bash
-# Count files by type
 find . -type f -name "*.py" | wc -l
-
-# List file structure
 find . -type f \( -name "*.ts" -o -name "*.tsx" \) | head -50
-
-# Tree view
 tree -I 'node_modules|.git' --dirsfirst
 ```
 
 ## Filter Commands
 
 ```bash
-# Files containing pattern (ripgrep)
 rg -l "pattern" --type py
-
-# Files with match count
 rg -c "TODO" --type py | grep -v ":0$" | sort -t: -k2 -rn
-
-# grep alternative
 grep -rl "pattern" --include="*.go" .
 ```
 
@@ -97,29 +84,17 @@ Write findings to /tmp/rlm_0.json as JSON:
 ## Collect & Merge Results
 
 ```bash
-# Merge all agent outputs
 jq -s '.' /tmp/rlm_*.json > /tmp/report.json
-
-# Aggregate findings
 jq -s '[.[].findings] | add' /tmp/rlm_*.json
-
-# Filter by severity
 jq '[.[].findings[] | select(.severity == "high")]' /tmp/report.json
-
-# Filter by file
 jq '[.[].findings[] | select(.file | contains("auth"))]' /tmp/report.json
 ```
 
 ## Python Engine (Optional)
 
 ```bash
-# Scan and index
 python3 ~/.claude/skills/rlm/rlm.py scan
-
-# Search with context
 python3 ~/.claude/skills/rlm/rlm.py peek "search_term"
-
-# Get chunks
 python3 ~/.claude/skills/rlm/rlm.py chunk --pattern "*.py"
 ```
 
@@ -127,11 +102,11 @@ python3 ~/.claude/skills/rlm/rlm.py chunk --pattern "*.py"
 
 | Do | Don't |
 |----|-------|
-| Use Explore agents for questions | `cat *` or `cat *.py` |
-| Use general-purpose for bulk | Spawn > 10 concurrent agents |
-| Filter before spawning agents | Load many files into main context |
-| Write agent outputs to /tmp/ | Sequential processing in main context |
-| Use descriptive agent names | Generic descriptions |
+| Use Explore for questions | `cat *` or `cat *.py` |
+| Use general-purpose for bulk | Spawn > 10 agents |
+| Filter before spawning | Load many files into main context |
+| Write outputs to /tmp/ | Sequential processing in main |
+| Use descriptive names | Generic descriptions |
 
 ## Quick Decision Tree
 
@@ -139,16 +114,12 @@ python3 ~/.claude/skills/rlm/rlm.py chunk --pattern "*.py"
 What's your task?
     |
     +-> Question about code
-    |   -> Investigation mode (3-5 Explore agents)
-    |       - Broad search agent
-    |       - Structure/architecture agent
-    |       - Targeted analysis agent
+    |   -> Investigation (3-5 Explore agents)
     |
     +-> Analyze all files
-    |   -> Bulk mode (5-10 general-purpose agents)
-    |       - Group by directory or file type
-    |       - Max 10-20 files per agent
-    |       - Write outputs to /tmp/rlm_*.json
+    |   -> Bulk (5-10 general-purpose agents)
+    |       - Group by directory/type
+    |       - Write to /tmp/rlm_*.json
     |
     +-> Simple file read
         -> Standard tools (no RLM needed)
