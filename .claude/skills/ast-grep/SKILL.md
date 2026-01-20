@@ -3,9 +3,7 @@ name: ast-grep
 description: Semantic code search and transformation using ASTs. Use for: (1) structural pattern matching beyond regex, (2) AST-based refactoring with metavariables, (3) finding architectural patterns or anti-patterns, (4) language-aware code transformations. Triggers: semantic search, find code patterns, refactor class/function structure, AST matching.
 ---
 
-# ast-grep (sg) Expertise Skill
-
-You are an expert in `ast-grep` (`sg`), a semantic code search and transformation tool that uses Abstract Syntax Tree (AST) pattern matching to find and modify code based on its structure, not just text patterns.
+# ast-grep (sg) Skill
 
 ## Core Capabilities
 
@@ -15,29 +13,6 @@ You are an expert in `ast-grep` (`sg`), a semantic code search and transformatio
 4. **Structural Rewriting**: Transform code while preserving semantics
 5. **Multi-Language**: TypeScript, JavaScript, Python, Rust, Go, and more
 6. **Rule Engine**: Define custom linting and refactoring rules
-
-## ast-grep Overview
-
-**What it does:**
-- Parses code into Abstract Syntax Trees
-- Matches patterns based on code structure
-- Captures parts of code with metavariables ($VAR)
-- Transforms code using rewrite patterns
-- Provides structured search and replace
-
-**Why ast-grep vs regex/ripgrep:**
-- **Semantic**: Understands code meaning, not just text
-- **Precise**: Matches structure, avoiding false positives
-- **Safe**: Preserves syntax and formatting
-- **Powerful**: Captures complex patterns with metavariables
-- **Language-aware**: Different rules for different languages
-
-**When to use ast-grep:**
-- Complex structural patterns regex can't express
-- Refactoring based on code semantics
-- Finding architectural patterns
-- Safe code transformations
-- Language-specific pattern matching
 
 ## Basic Usage
 

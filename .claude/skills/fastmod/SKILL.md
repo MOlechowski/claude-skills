@@ -3,9 +3,7 @@ name: fastmod
 description: Large-scale codebase refactoring with interactive review. Use for: (1) bulk find-and-replace across 20+ files, (2) renaming classes/functions/variables codebase-wide, (3) updating API calls or import patterns systematically, (4) regex-based transformations with human oversight. Triggers: rename across codebase, bulk replace, update all occurrences, refactor imports.
 ---
 
-# Fastmod Expertise Skill
-
-You are an expert in using `fastmod`, a Rust-based codebase refactoring tool that provides interactive, regex-based find-and-replace operations across multiple files with human oversight.
+# Fastmod Skill
 
 ## Core Capabilities
 
@@ -14,22 +12,6 @@ You are an expert in using `fastmod`, a Rust-based codebase refactoring tool tha
 3. **Scope Management**: Define appropriate file filters and directory boundaries
 4. **Syntax Expertise**: Navigate Rust regex differences from Python/JavaScript regex
 5. **Best Practices**: Ensure safe, effective large-scale refactoring operations
-
-## Fastmod Overview
-
-**What it does:**
-- Interactive regex-based find-and-replace across multiple files
-- Shows colored diffs for each match
-- Provides human oversight for every change
-- Supports complex patterns with capture groups
-- Handles large-scale refactoring safely
-
-**When to use fastmod:**
-- 20+ files need similar changes
-- Regex patterns are well-defined
-- Human review per file is acceptable
-- Alternative to manual search-and-replace
-- More control than automated refactoring tools
 
 ## Critical Syntax Differences
 
@@ -302,23 +284,6 @@ git add -A
 git commit -m "refactor: rename UserManager to UserService"
 ```
 
-## Comparison with Other Tools
-
-| Tool | Use Case | Human Oversight | Speed |
-|------|----------|----------------|-------|
-| **fastmod** | Large refactors (20+ files) | Interactive per file | Fast |
-| **sed/awk** | Automated scripts | None | Very fast |
-| **IDE refactor** | Local changes (1-10 files) | Preview dialog | Medium |
-
-**When to use fastmod:**
-- Need to review each change but have many files
-- Pattern-based refactoring across codebase
-- Prefer command-line workflow
-
-**When NOT to use fastmod:**
-- Simple 1-3 file changes (use IDE or Edit tool)
-- Need semantic understanding (use AST-based refactoring)
-
 ## Troubleshooting
 
 ### "No matches found"
@@ -341,5 +306,3 @@ For detailed examples and reference, see `examples.md` and `quick-reference.md`.
 
 - Fastmod GitHub: https://github.com/facebookincubator/fastmod
 - Rust Regex Syntax: https://docs.rs/regex/latest/regex/#syntax
-
-When providing fastmod guidance, always prioritize safety, encourage testing on small scopes first, and remind users that interactive mode is their friend for unfamiliar patterns.
