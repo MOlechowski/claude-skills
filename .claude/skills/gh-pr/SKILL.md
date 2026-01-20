@@ -15,8 +15,6 @@ Status Check -> Fix Issues -> Request Review -> Merge
 
 ## Decision Matrix
 
-Apply for every PR action:
-
 | Review State | CI Status | Action |
 |--------------|-----------|--------|
 | Any | FAILING | Fix lint/test errors, push |
@@ -40,15 +38,11 @@ Never ask "Merge?" - merge if conditions met.
 
 ### 1. Status Check
 
-Single call for all open PRs:
-
 ```bash
+# All open PRs
 gh pr list --state open --json number,title,headRefName,reviewDecision,mergeStateStatus,mergeable,isDraft
-```
 
-For specific PR:
-
-```bash
+# Specific PR
 gh pr view $PR --json number,title,reviewDecision,mergeStateStatus,mergeable
 ```
 
@@ -70,137 +64,95 @@ gh api repos/{owner}/{repo}/pulls/$PR/reviews \
 
 ### 3. Fix Cycle
 
-When CI fails or comments need addressing:
-
 ```bash
 MAX_FIX_CYCLES=5
 fix_count=0
 
 while [ $fix_count -lt $MAX_FIX_CYCLES ]; do
-    # 1. Read failure logs
+    # 1. Read failures
     gh pr checks $PR --json name,state,conclusion \
       --jq '.[] | select(.conclusion == "FAILURE")'
 
-    # 2. Fix the issues (lint, test, review comments)
+    # 2. Fix issues
     # ... apply fixes ...
 
     # 3. Commit and push
     git add -A && git commit -m "fix: address review feedback" && git push
 
-    # 4. Wait for CI
+    # 4. Wait and re-check
     sleep 30
-
-    # 5. Re-check status
     status=$(gh pr view $PR --json mergeStateStatus --jq '.mergeStateStatus')
-    if [ "$status" = "CLEAN" ]; then
-        break
-    fi
+    [ "$status" = "CLEAN" ] && break
 
     ((fix_count++))
 done
 
-if [ $fix_count -ge $MAX_FIX_CYCLES ]; then
-    echo "ERROR: Max fix cycles ($MAX_FIX_CYCLES) reached. Manual intervention required."
-    exit 1
-fi
+[ $fix_count -ge $MAX_FIX_CYCLES ] && echo "ERROR: Max fix cycles reached" && exit 1
 ```
 
 ### 4. Request Re-review
 
-After addressing CHANGES_REQUESTED:
-
 ```bash
-# For human reviewers - re-request review
+# Human reviewers
 gh pr edit $PR --add-reviewer $REVIEWER
 
-# For bot reviewers - typically triggered by:
-# - Pushing new commits (automatic)
-# - Comment with @bot review (check bot's docs)
+# Bot reviewers - push new commits or comment @bot review
 ```
 
 ### 5. Merge
 
-When APPROVED + CLEAN:
-
 ```bash
-# Squash merge (recommended)
-gh pr merge $PR --squash --delete-branch
-
-# Merge commit (preserves history)
-gh pr merge $PR --merge --delete-branch
-
-# Auto-merge when checks pass
-gh pr merge $PR --auto --squash
+gh pr merge $PR --squash --delete-branch    # Squash (recommended)
+gh pr merge $PR --merge --delete-branch     # Merge commit
+gh pr merge $PR --auto --squash             # Auto-merge when checks pass
 ```
 
 ## Multi-PR Queue Processing
 
 ```bash
-# List all open PRs
 prs=$(gh pr list --state open --json number --jq '.[].number')
 
-# Process each
 for pr in $prs; do
     echo "Processing PR #$pr"
-
-    # Get status
     status=$(gh pr view $pr --json reviewDecision,mergeStateStatus,isDraft \
       --jq '{review: .reviewDecision, merge: .mergeStateStatus, draft: .isDraft}')
 
     # Skip drafts
-    if echo "$status" | grep -q '"draft":true'; then
-        echo "  SKIPPED (draft)"
-        continue
-    fi
+    echo "$status" | grep -q '"draft":true' && echo "  SKIPPED (draft)" && continue
 
-    # Apply decision matrix
-    # ... process based on status ...
+    # Apply decision matrix...
 done
 
-# Summary
 gh pr list --state open --json number,title,reviewDecision
 ```
 
 ## Error Handling
 
 ### Rate Limits
-
 ```bash
 remaining=$(gh api rate_limit --jq '.rate.remaining')
 if [ "$remaining" -lt 100 ]; then
     reset=$(gh api rate_limit --jq '.rate.reset')
-    sleep_time=$((reset - $(date +%s)))
-    echo "Rate limited. Waiting ${sleep_time}s"
-    sleep $sleep_time
+    sleep $((reset - $(date +%s)))
 fi
 ```
 
 ### Merge Conflicts
-
-If `mergeable: CONFLICTING`:
-1. Report conflict to user
-2. Do NOT auto-resolve
-3. Suggest: `git fetch origin && git rebase origin/main`
+If `mergeable: CONFLICTING`: Report to user, do NOT auto-resolve. Suggest: `git fetch origin && git rebase origin/main`
 
 ### Branch Protection
-
-If merge blocked by protection:
-1. Check required reviewers
-2. Report missing approvals
-3. Do NOT bypass
+If blocked: Check required reviewers, report missing approvals, do NOT bypass.
 
 ## Output Format
 
-Action mode (merging):
-
+Action mode:
 ```
 Merging #18, #20...
 #18: merged
 #20: merged
 ```
 
-Status mode (check only):
-
+Status mode:
 ```
 #18: CLEAN, mergeable
 #20: BLOCKED (conflicts)
@@ -217,4 +169,3 @@ Status mode (check only):
 6. **Log all actions** for audit
 
 See `quick-reference.md` for gh CLI reference.
-See `decision-tree.md` for edge cases.
