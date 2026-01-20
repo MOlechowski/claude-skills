@@ -5,28 +5,28 @@
 ### Phrases Indicating Learnings
 
 ```
-turns out          → Something behaved differently than expected
-actually           → Correction to an assumption
-discovered         → New finding during implementation
-had to             → Workaround or requirement discovered
-needed to          → Missing requirement found
-can't / cannot     → Limitation discovered
-only works when    → Environment or config requirement
-takes longer       → Timing assumption incorrect
-race condition     → Concurrency issue found
-timeout            → Timing-related discovery
-cleanup            → Lifecycle issue found
+turns out          -> Something behaved differently than expected
+actually           -> Correction to an assumption
+discovered         -> New finding during implementation
+had to             -> Workaround or requirement discovered
+needed to          -> Missing requirement found
+can't / cannot     -> Limitation discovered
+only works when    -> Environment or config requirement
+takes longer       -> Timing assumption incorrect
+race condition     -> Concurrency issue found
+timeout            -> Timing-related discovery
+cleanup            -> Lifecycle issue found
 ```
 
 ### NOT Learnings (Skip These)
 
 ```
-refactor           → Code quality, not spec issue
-cleanup code       → Internal improvement
-add tests          → Unless revealing new edge case
-update docs        → Unless correcting spec
-rename             → Internal naming
-style / format     → Code style changes
+refactor           -> Code quality, not spec issue
+cleanup code       -> Internal improvement
+add tests          -> Unless revealing new edge case
+update docs        -> Unless correcting spec
+rename             -> Internal naming
+style / format     -> Code style changes
 ```
 
 ## Section Formats
@@ -118,19 +118,19 @@ git show --stat abc123
 
 ```
 Is it about timing/delays?
-  → Testability Requirements (env var) + Assumptions
+  -> Testability Requirements (env var) + Assumptions
 
 Is it about something failing?
-  → State Machine (failure modes table)
+  -> State Machine (failure modes table)
 
 Is it about unexpected behavior?
-  → Edge Cases (Q&A format)
+  -> Edge Cases (Q&A format)
 
 Is it about environment/config?
-  → Testability Requirements (env var table)
+  -> Testability Requirements (env var table)
 
 Is it correcting an original assumption?
-  → Assumptions section
+  -> Assumptions section
 ```
 
 ## File Selection Guide
@@ -139,16 +139,16 @@ Is it correcting an original assumption?
 Which file should receive the learning?
 
 Is it core behavior or contract?
-  → spec.md
+  -> spec.md
 
 Is it a quick command or snippet?
-  → quick-reference.md
+  -> quick-reference.md
 
 Is it explaining WHY a decision was made?
-  → decision-tree.md
+  -> decision-tree.md
 
 Is it how to debug or troubleshoot?
-  → quick-reference.md
+  -> quick-reference.md
 ```
 
 | Learning Type | Target File | Target Section |
@@ -166,19 +166,19 @@ When a learning might apply to multiple specs:
 
 ```
 Shared infrastructure signals:
-  "GitHub API"     → All specs using GH API
-  "rate limit"     → All specs making external calls
-  "authentication" → All specs using auth tokens
+  "GitHub API"     -> All specs using GH API
+  "rate limit"     -> All specs making external calls
+  "authentication" -> All specs using auth tokens
 
 Platform constraint signals:
-  "Podman"         → All container specs
-  "Docker"         → All container specs
-  "systemd"        → All service specs
+  "Podman"         -> All container specs
+  "Docker"         -> All container specs
+  "systemd"        -> All service specs
 
 Common pattern signals:
-  "timeout"        → All async operation specs
-  "retry"          → All network operation specs
-  "cleanup"        → All resource lifecycle specs
+  "timeout"        -> All async operation specs
+  "retry"          -> All network operation specs
+  "cleanup"        -> All resource lifecycle specs
 ```
 
 ### Cross-Spec Commands
