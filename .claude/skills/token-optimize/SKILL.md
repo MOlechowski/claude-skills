@@ -86,4 +86,4 @@ Simplify:
 - Report before/after line count
 - List major changes made
 
-See `quick-reference.md` for optimization checklist.
+See `references/quick-reference.md` for optimization checklist.
