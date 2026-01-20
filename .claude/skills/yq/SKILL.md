@@ -5,7 +5,7 @@ description: "YAML/JSON/XML processing with jq-like syntax. Use for: (1) queryin
 
 # yq Expertise Skill
 
-**Note:** Covers yq v4+ (mikefarah/yq). Older Python yq has different syntax.
+Covers yq v4+ (mikefarah/yq). Older Python yq has different syntax.
 
 ## Basic Usage
 
@@ -293,6 +293,6 @@ yq -i '.build.script += ["npm run lint"]' .gitlab-ci.yml
 yq -i '.deploy = {"stage": "deploy", "script": ["./deploy.sh"]}' .gitlab-ci.yml
 ```
 
-## Additional Resources
+## Resources
 
 See `references/examples.md` and `references/quick-reference.md`.

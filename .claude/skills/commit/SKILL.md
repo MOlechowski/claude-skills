@@ -29,19 +29,19 @@ type(scope): description
 
 ## Language Detection
 
-Check recent commits for language:
+Check recent commits:
 - Polish: Dodanie, Naprawa, Poprawa, Zmiana, Usunięcie
 - English: Add, Fix, Update, Remove, Change
 
-Match the dominant language in last 10 commits.
+Match dominant language in last 10 commits.
 
 ## Atomic Commits
 
 One commit = one logical change.
 
-**Trigger rule:** If changes need different types (feat + fix) → Split into separate commits.
+**Trigger rule:** If changes need different types (feat + fix), split into separate commits.
 
-Before staging, ask: Can this be described in one subject line without "and"?
+Ask: Can this be described in one subject line without "and"?
 
 Bad:
 ```
@@ -58,12 +58,12 @@ fix(ios): Fix cache tests for lowercase headers
 
 - Imperative mood: "add" not "added"
 - No period at end
-- No em dashes (—) in prose
+- No em dashes in prose
 - Under 50 chars for subject
 - Match repo language and conventions
 
-Em dash (—) vs hyphen (-):
-- Bad: "add auth — with token support"
+Em dash vs hyphen:
+- Bad: "add auth - with token support"
 - Good: "add auth with token support"
 
 ## Writing Style
@@ -108,15 +108,15 @@ Separate token logic for unit testing.
 **Prefer no body.** A good subject makes body unnecessary.
 
 Decision tree:
-1. Is subject self-explanatory? → Skip body
-2. Multiple unrelated changes? → Split into separate commits
-3. Need to explain "why"? → Add prose body (1-2 sentences)
+1. Subject self-explanatory? Skip body
+2. Multiple unrelated changes? Split commits
+3. Need to explain "why"? Add prose body (1-2 sentences)
 
-If body is needed:
-- Prose only, no bullet points
+If body needed:
+- Prose only, no bullets
 - Explain why, not what
 - One sentence per logical change
-- Keep it short
+- Keep short
 
 ## Breaking Changes
 
@@ -142,12 +142,12 @@ Detect from repo history:
 - Ticket IDs (JIRA): include if pattern found
 - Signed-off-by: include if repo uses it
 
-Do not add footers the repo doesn't use.
+Do not add footers the repo does not use.
 
 ## Safety
 
 - Check `git status` first
-- Never commit secrets or credentials
+- Never commit secrets
 - Verify staged files before commit
 
 See `quick-reference.md` for type details.

@@ -5,19 +5,18 @@ description: "Rewrite markdown for conciseness. Use when: optimizing markdown fo
 
 # Token Optimize
 
-Rewrite markdown files to be more concise while preserving meaning.
+Rewrite markdown files for conciseness while preserving meaning.
 
 ## Workflow
 
-1. Read the target markdown file
+1. Read the target file
 2. Identify code blocks (preserve exactly)
-3. Rewrite all prose for conciseness
+3. Rewrite prose for conciseness
 4. Preserve structure (headings, lists, links)
 5. Edit file in-place
 
 ## Preserve Exactly
 
-Do not modify:
 - YAML frontmatter (---...---)
 - Fenced code blocks (```...```)
 - Inline code (`...`)
@@ -26,20 +25,18 @@ Do not modify:
 
 ## Rewrite Rules
 
-Apply these to all prose:
-
 **Remove filler words:**
 - just, very, really, basically, actually, simply
-- in order to → to
-- due to the fact that → because
-- at this point in time → now
+- in order to -> to
+- due to the fact that -> because
+- at this point in time -> now
 
 **Shorten phrases:**
-- is able to → can
-- in the event that → if
-- for the purpose of → for
-- with regard to → about
-- a large number of → many
+- is able to -> can
+- in the event that -> if
+- for the purpose of -> for
+- with regard to -> about
+- a large number of -> many
 
 **Active voice:**
 - Bad: "The file is read by the system"
@@ -66,24 +63,24 @@ Keep:
 - Link references
 
 Simplify:
-- Long paragraphs → shorter ones
-- Nested lists → flatter when possible
-- Verbose headings → concise ones
+- Long paragraphs -> shorter
+- Nested lists -> flatter when possible
+- Verbose headings -> concise
 
 ## Structural Optimization
 
 **Key info placement:**
-- Put critical info at start and end (avoid "lost in the middle")
+- Critical info at start and end (avoid "lost in the middle")
 - Lead sections with the most important point
 - End with actionable takeaways
 
 **Heading compression:**
-- "Installation and Setup Instructions" → "Setup"
-- "How to Configure the System" → "Configuration"
+- "Installation and Setup Instructions" -> "Setup"
+- "How to Configure the System" -> "Configuration"
 
 **Table vs prose:**
 - Convert verbose lists to tables when comparing items
-- Tables often 20-30% more compact than equivalent prose
+- Tables are 20-30% more compact than equivalent prose
 
 ## Semantic Compression
 
@@ -92,7 +89,7 @@ Simplify:
 - Consolidate overlapping explanations
 
 **Reference consolidation:**
-- "As above" or "See X" instead of restating
+- "See X" instead of restating
 - Link to single source of truth
 
 **Abbreviation introduction:**
@@ -107,7 +104,7 @@ Simplify:
 - Tables over verbose comparisons
 
 **Code comments:**
-- Minimal - code should self-document
+- Minimal; code should self-document
 - Only explain "why", not "what"
 
 ## Document Structure
@@ -119,7 +116,7 @@ Simplify:
 
 **Semantic sections:**
 - Split by topic, not arbitrary length
-- Each section should be independently useful
+- Each section independently useful
 - Enable selective loading for RAG
 
 ## Process
@@ -137,7 +134,7 @@ Simplify:
 
 - Edit file in-place
 - Report before/after line count
-- List major changes made
+- List major changes
 
 For aggregation, output JSON:
 ```json

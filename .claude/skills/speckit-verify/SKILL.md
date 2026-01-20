@@ -5,7 +5,7 @@ description: "Verify implementation matches spec, update spec on drift. Use when
 
 # Speckit Verify: Sync Spec to Implementation
 
-Verify specs match implementation. Implementation is source of truth - update spec on drift.
+Verify specs match implementation. Implementation is truth; update spec on drift.
 
 ## Three-Tier Verification
 
@@ -27,7 +27,7 @@ ls submodules/*/.git 2>/dev/null || ls src/
 
 ### 2. PARSE Spec Claims by Tier
 
-Extract claims and categorize:
+Extract and categorize claims:
 
 **Tier 1** (static): Config values, env vars, constants, defaults, error codes
 
@@ -182,7 +182,7 @@ Issues found:
 
 ### 6b. CREATE_ISSUES - File GitHub Issues
 
-Automatically create GitHub issues for each drift finding.
+Create GitHub issues for each drift finding.
 
 **Detect Implementation Repo:**
 ```bash
@@ -231,7 +231,7 @@ done
 | MISSING | `[missing-feature] {feature} not implemented` | `[missing-feature] Rate limiting not implemented` |
 | NOT_HANDLED | `[behavior-gap] {scenario} handling differs` | `[behavior-gap] Empty input handling differs` |
 
-**Issue Body Template:** See `references/quick-reference.md` for template.
+**Issue Body Template:** See `references/quick-reference.md`.
 
 **Error Handling:** No write access = warn and skip; Duplicate = skip; Labels = auto-create
 
@@ -288,6 +288,6 @@ See `references/quick-reference.md` for command patterns.
 
 ## Integration
 
-- **speckit-audit**: Find unspecced work -> verify syncs it
+- **speckit-audit**: Finds unspecced work -> verify syncs it
 - **speckit-retro**: Captures learnings -> verify validates
 - **speckit-flow**: Implements spec -> verify checks after

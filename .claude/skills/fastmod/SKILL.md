@@ -7,11 +7,11 @@ description: "Large-scale codebase refactoring with interactive review. Use for:
 
 ## Core Capabilities
 
-1. **Pattern Matching**: Construct precise Rust regex patterns for transformations
+1. **Pattern Matching**: Precise Rust regex patterns for transformations
 2. **Safe Refactoring**: Interactive review of each change
-3. **Scope Management**: Define file filters and directory boundaries
-4. **Syntax Expertise**: Navigate Rust regex differences from Python/JS
-5. **Best Practices**: Safe, effective large-scale refactoring
+3. **Scope Management**: File filters and directory boundaries
+4. **Syntax Expertise**: Rust regex differences from Python/JS
+5. **Best Practices**: Safe large-scale refactoring
 
 ## Critical Syntax Differences
 
@@ -28,8 +28,8 @@ fastmod 'function (\w+)' 'const ${1} ='
 
 ### Literal Dollar Signs
 ```bash
-# To write a literal $
-fastmod 'price' 'cost is $$10'  # Use $$
+# Literal $ requires $$
+fastmod 'price' 'cost is $$10'
 ```
 
 ### Not Supported
@@ -46,7 +46,7 @@ fastmod 'pattern' 'replacement'  # Good
 fastmod "pattern" "replacement with \$${1}"  # Careful
 ```
 
-## Basic Usage Pattern
+## Basic Usage
 
 ```bash
 fastmod [OPTIONS] <REGEX_PATTERN> <REPLACEMENT> [PATH]
@@ -56,9 +56,9 @@ fastmod [OPTIONS] <REGEX_PATTERN> <REPLACEMENT> [PATH]
 
 ### Scope Control
 ```bash
--d <DIR>              # Directory to search (default: current)
---extensions <EXT>    # Comma-separated extensions (e.g., js,jsx,ts,tsx)
---iglob <PATTERN>     # Include files matching glob
+-d <DIR>              # Directory (default: current)
+--extensions <EXT>    # Extensions (e.g., js,jsx,ts,tsx)
+--iglob <PATTERN>     # Include glob pattern
 --exclude-dir <DIR>   # Exclude directory
 ```
 
@@ -70,7 +70,7 @@ fastmod [OPTIONS] <REGEX_PATTERN> <REPLACEMENT> [PATH]
 
 ### Execution Control
 ```bash
---accept-all          # Non-interactive (DANGEROUS - test first!)
+--accept-all          # Non-interactive (test first!)
 --print-changed-files # Show modified files
 ```
 
@@ -78,7 +78,6 @@ fastmod [OPTIONS] <REGEX_PATTERN> <REPLACEMENT> [PATH]
 
 For each match, fastmod shows colored diff and prompts:
 
-**Options:**
 - `y` - Accept change
 - `n` - Reject change
 - `e` - Open in $EDITOR
@@ -91,7 +90,6 @@ For each match, fastmod shows colored diff and prompts:
 
 ### 1. Simple Rename
 ```bash
-# Rename class across codebase
 fastmod -d src --extensions ts,tsx 'UserManager' 'UserService'
 ```
 
@@ -106,14 +104,12 @@ fastmod '\.save\(\)' '.save({ validateBeforeSave: true })'
 
 ### 3. Import Path Updates
 ```bash
-# After moving files
 fastmod "from '\./utils/old'" "from './utils/new'"
 fastmod "from '@/components/old" "from '@/components/new"
 ```
 
 ### 4. Framework Migrations
 ```bash
-# React prop names
 fastmod 'size="small"' 'size="sm"'
 fastmod 'size="medium"' 'size="md"'
 fastmod 'size="large"' 'size="lg"'
@@ -121,19 +117,13 @@ fastmod 'size="large"' 'size="lg"'
 
 ### 5. API Updates
 ```bash
-# Wrap API calls
 fastmod 'fetch\((.*?)\)' 'apiClient.fetch(${1})'
-
-# Update endpoints
 fastmod '/api/v1/' '/api/v2/'
 ```
 
 ### 6. Scoped Refactoring
 ```bash
-# Specific file types
 fastmod --iglob '**/*Service.ts' 'OldPattern' 'NewPattern'
-
-# Exclude directories
 fastmod --exclude-dir node_modules --exclude-dir dist 'pattern' 'replacement'
 ```
 
@@ -162,10 +152,7 @@ fastmod --exclude-dir node_modules --exclude-dir dist 'pattern' 'replacement'
 
 1. **Start narrow, expand**:
    ```bash
-   # Single directory
    fastmod -d src/utils 'pattern' 'replacement'
-
-   # Expand
    fastmod -d src 'pattern' 'replacement'
    ```
 
@@ -194,20 +181,19 @@ All conditions must be met:
 ## Error Recovery
 
 ### Pattern Matching Too Much
-- Press `n` to reject, `q` to quit
-- Refine pattern:
 ```bash
 # Too broad
-fastmod 'user' 'customer'  # Matches "username", etc.
+fastmod 'user' 'customer'  # Matches "username"
 
 # More specific
 fastmod '\buser\b' 'customer'  # Whole word only
 ```
 
 ### Partial Refactoring
-- `git status` - see changed files
-- `git restore .` - undo all
-- Or continue with remaining files
+```bash
+git status        # See changed files
+git restore .     # Undo all
+```
 
 ### Compilation Errors
 ```bash

@@ -5,11 +5,11 @@ description: "Research topics with web search. Use when: researching a topic or 
 
 # Web Research
 
-Thorough web research on any topic. Multiple searches, cross-referenced sources, structured summary.
+Thorough web research: multiple searches, cross-referenced sources, structured summary.
 
 ## Workflow
 
-1. Parse topic from user request
+1. Parse topic from request
 2. Generate 3-5 search queries (different angles)
 3. Execute searches in parallel
 4. Evaluate and cross-reference sources
@@ -18,14 +18,14 @@ Thorough web research on any topic. Multiple searches, cross-referenced sources,
 
 ## Query Generation
 
-Create queries that cover:
+Cover:
 - Direct topic search
 - "What is [topic]"
 - "[topic] explained"
 - "[topic] best practices" or "[topic] examples"
 - "[topic] vs alternatives" (if applicable)
 
-Run searches in parallel when possible.
+Run searches in parallel.
 
 ## Source Evaluation
 
@@ -43,7 +43,7 @@ Avoid:
 ## Cross-Reference
 
 For each key finding:
-- Verify across 2+ sources when possible
+- Verify across 2+ sources
 - Note conflicting information
 - Identify consensus vs debate
 
@@ -75,18 +75,18 @@ For each key finding:
 
 ## Guidelines
 
-- Be thorough but concise
+- Thorough but concise
 - Distinguish facts from opinions
-- Note when information is uncertain or debated
+- Note uncertain or debated information
 - Include publication dates for time-sensitive topics
-- Use current year context for searches (don't search for outdated info)
+- Use current year in searches
 
 ## Edge Cases
 
-**Niche topics:** If few results, broaden search terms or search for related concepts.
+**Niche topics:** Broaden search terms or search for related concepts.
 
-**Conflicting sources:** Present both perspectives, note the disagreement.
+**Conflicting sources:** Present both perspectives, note disagreement.
 
-**No good sources:** Report that reliable information is scarce, suggest alternative approaches.
+**No good sources:** Report scarce information, suggest alternatives.
 
-**Time-sensitive topics:** Always include recent date in searches, note when info may be outdated.
+**Time-sensitive topics:** Include recent date in searches, note potential staleness.

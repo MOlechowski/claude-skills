@@ -7,9 +7,9 @@ description: "Terminal multiplexer session management. Use for: (1) running comm
 
 ## Core Capabilities
 
-1. **Session Management** - Create, attach, detach, manage sessions
-2. **Command Execution** - Run commands with proper escaping and timing
-3. **Output Capture** - Retrieve output from panes
+1. **Session Management** - Create, attach, detach sessions
+2. **Command Execution** - Run commands with proper escaping/timing
+3. **Output Capture** - Retrieve pane output
 4. **Interactive Automation** - Send keys for interactive CLIs
 5. **Background Processing** - Persistent long-running processes
 
@@ -87,7 +87,7 @@ tmux kill-session -t multi-cmd
 - `tmux list-sessions` - Show all sessions
 
 ### Command Execution
-- `tmux send-keys -t NAME 'text' Enter` - Send text + Enter key
+- `tmux send-keys -t NAME 'text' Enter` - Send text + Enter
 - `tmux send-keys -t NAME 'text'` - Send text without Enter
 - `tmux send-keys -t NAME C-c` - Send Ctrl+C (interrupt)
 - `tmux send-keys -t NAME C-d` - Send Ctrl+D (EOF)
@@ -100,22 +100,22 @@ tmux kill-session -t multi-cmd
 ## Critical Guidelines
 
 ### Timing and Synchronization
-**Add sleep delays** between tmux commands:
+Add sleep delays between tmux commands:
 - After `new-session`: 0.5-1s for shell init
 - After `send-keys`: 0.3-0.5s before next command
 - Before `capture-pane`: Wait for command completion
 - Interactive prompts: 1-2s for prompt to appear
 
 ### Escaping and Quoting
-- Single quotes in `send-keys`: Use `'\''` or switch to double quotes
-- Double quotes in `send-keys`: Use `\"` or switch to single quotes
+- Single quotes in `send-keys`: Use `'\''` or double quotes
+- Double quotes in `send-keys`: Use `\"` or single quotes
 - Special chars: `$`, `!`, backticks need care in double quotes
 - Example: `tmux send-keys -t session "echo 'It'\''s working'" Enter`
 
 ### Session Name Best Practices
 - Descriptive names: `install-deps`, `test-runner`, not `temp`
 - Include context: `user-auth-test`, `build-frontend`
-- Avoid conflicts: Check with `tmux has-session` first
+- Check conflicts: `tmux has-session` first
 - Clean up: Kill sessions when done
 
 ### Error Handling
@@ -235,7 +235,7 @@ tmux new-session -d -s my-session 'command'
 ```
 
 ### Command Not in Output
-- Increase sleep time before capture-pane
+- Increase sleep before capture-pane
 - Check if command completed
 - Verify session exists: `tmux has-session -t NAME`
 
@@ -245,19 +245,19 @@ tmux new-session -d -s my-session 'command'
 - Double quotes: `tmux send-keys -t s "echo \"quoted\""`
 
 ### Blank Output
-- Session may have exited - check with `tmux has-session`
-- Command may need more time - increase sleep
-- Capture earlier in history: `capture-pane -S -50`
+- Session may have exited; check with `tmux has-session`
+- Command may need more time; increase sleep
+- Capture earlier: `capture-pane -S -50`
 
-## Best Practices Summary
+## Best Practices
 
-1. **Clean up**: Kill sessions after use
-2. **Meaningful names**: Describe session purpose
-3. **Timing delays**: Don't rush tmux commands
-4. **Check existence**: Before operations
-5. **Capture before kill**: Get output first
-6. **Handle errors**: Check command success
-7. **Test first**: Verify timing interactively
-8. **Document timing**: Note why delays are specific
+1. Kill sessions after use
+2. Use descriptive session names
+3. Add timing delays between commands
+4. Check session existence before operations
+5. Capture output before killing
+6. Handle errors
+7. Test timing interactively first
+8. Document timing rationale
 
 Tmux automation requires careful timing and error handling.
