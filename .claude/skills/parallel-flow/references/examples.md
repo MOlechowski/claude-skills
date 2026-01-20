@@ -98,7 +98,7 @@ Task(
 
 **Partition:**
 ```
-docs/*.md (15 files) → 3 partitions of 5 files each
+docs/*.md (15 files) -> 3 partitions of 5 files each
 ```
 
 **Execution:**

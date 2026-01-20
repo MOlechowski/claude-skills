@@ -24,9 +24,9 @@ All generated artifacts follow these rules:
 End-to-end spec-driven development pipeline:
 
 ```text
-CREATE → CLARIFY → ANALYZE → TASKS → CHECKLIST → PR → [IMPLEMENT]
-                                                           ↑
-                                               (only if impl repo)
+CREATE -> CLARIFY -> ANALYZE -> TASKS -> CHECKLIST -> PR -> [IMPLEMENT]
+                                                              ^
+                                                  (only if impl repo)
 ```
 
 Fully autonomous - halts only on errors. Creates PR for spec artifacts. Implementation is conditional based on repo type.
@@ -57,12 +57,12 @@ Before starting, check for existing artifacts to determine resume point:
 ```
 
 **Resume Logic:**
-- If `tasks.md` exists AND all tasks marked `[X]` → Skip to Phase 7 (PR)
-- If `tasks.md` exists with incomplete tasks AND is impl repo → Skip to Phase 8 (IMPLEMENT)
-- If `tasks.md` exists → Skip to Phase 7 (PR)
-- If `plan.md` exists → Skip to Phase 3 (CLARIFY)
-- If `spec.md` exists → Skip to Phase 2 (CREATE - plan)
-- Otherwise → Start from Phase 1 (CREATE - specify)
+- If `tasks.md` exists AND all tasks marked `[X]` -> Skip to Phase 7 (PR)
+- If `tasks.md` exists with incomplete tasks AND is impl repo -> Skip to Phase 8 (IMPLEMENT)
+- If `tasks.md` exists -> Skip to Phase 7 (PR)
+- If `plan.md` exists -> Skip to Phase 3 (CLARIFY)
+- If `spec.md` exists -> Skip to Phase 2 (CREATE - plan)
+- Otherwise -> Start from Phase 1 (CREATE - specify)
 
 Report resume status: `Resuming from Phase N: {PHASE_NAME}`
 
@@ -83,8 +83,8 @@ Before Phase 8, detect if current repo supports implementation:
 ```
 
 **Detection Logic:**
-- If source directories or project files exist → Implementation repo
-- If only `.specify/` and `specs/` exist → Spec-only repo
+- If source directories or project files exist -> Implementation repo
+- If only `.specify/` and `specs/` exist -> Spec-only repo
 
 Store result in `IS_IMPL_REPO` (true/false).
 
@@ -154,9 +154,9 @@ The command handles:
 - Severity-rated findings report
 
 **Gate:**
-- CRITICAL issues → Halt, display report, suggest fixes
-- HIGH issues → Warn, ask user to confirm continuation
-- MEDIUM/LOW → Continue automatically
+- CRITICAL issues -> Halt, display report, suggest fixes
+- HIGH issues -> Warn, ask user to confirm continuation
+- MEDIUM/LOW -> Continue automatically
 
 **Display:** `Phase 4 complete: ANALYZE`
 
@@ -182,10 +182,10 @@ The command handles:
 
 Scan spec.md for domain keywords and invoke checklist generation:
 
-- If API/endpoint/REST → `/speckit.checklist api`
-- If UI/UX/interface → `/speckit.checklist ux`
-- If auth/security/permission → `/speckit.checklist security`
-- If performance/latency → `/speckit.checklist performance`
+- If API/endpoint/REST -> `/speckit.checklist api`
+- If UI/UX/interface -> `/speckit.checklist ux`
+- If auth/security/permission -> `/speckit.checklist security`
+- If performance/latency -> `/speckit.checklist performance`
 
 Generate at least one general checklist if no keywords match.
 

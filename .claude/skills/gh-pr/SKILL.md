@@ -10,7 +10,7 @@ Handle PRs autonomously using GitHub CLI (`gh`). Works with GitHub native review
 ## Core Workflow
 
 ```
-Status Check → Fix Issues → Request Review → Merge
+Status Check -> Fix Issues -> Request Review -> Merge
 ```
 
 ## Decision Matrix

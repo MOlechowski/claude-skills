@@ -204,15 +204,15 @@ Wiring:
   Usage:       4/4 called (non-test)
 
 GitHub Issues Created:
-  #142 [spec-drift] Timeout: 10s → 30s
+  #142 [spec-drift] Timeout: 10s -> 30s
   #143 [missing-feature] Rate limiting not implemented
   #144 [behavior-gap] Empty input handling differs
 
 Issues found:
-  [T1] Timeout: 10s → 30s (DRIFT) → #142
-  [T2] Feature "rate limiting" → MISSING → #143
-  [T2] Test coverage "retry" → UNTESTED
-  [T3] Edge case "empty input" → NOT HANDLED → #144
+  [T1] Timeout: 10s -> 30s (DRIFT) -> #142
+  [T2] Feature "rate limiting" -> MISSING -> #143
+  [T2] Test coverage "retry" -> UNTESTED
+  [T3] Edge case "empty input" -> NOT HANDLED -> #144
 ```
 
 ### 6b. CREATE_ISSUES - File GitHub Issues
@@ -267,7 +267,7 @@ done
 **Issue Title Format:**
 | Type | Format | Example |
 |------|--------|---------|
-| DRIFT | `[spec-drift] {claim}: {old} → {new}` | `[spec-drift] Timeout: 10s → 30s` |
+| DRIFT | `[spec-drift] {claim}: {old} -> {new}` | `[spec-drift] Timeout: 10s -> 30s` |
 | MISSING | `[missing-feature] {feature} not implemented` | `[missing-feature] Rate limiting not implemented` |
 | NOT_HANDLED | `[behavior-gap] {scenario} handling differs` | `[behavior-gap] Empty input handling differs` |
 
@@ -312,7 +312,7 @@ Apply corrections and add changelog:
 
 | Tier | Issue | Resolution |
 |------|-------|------------|
-| T1 | Timeout drift | Updated 10s → 30s |
+| T1 | Timeout drift | Updated 10s -> 30s |
 | T2 | Rate limiting missing | Removed from spec |
 | T3 | Empty input behavior | Updated error handling section |
 ```
@@ -320,7 +320,7 @@ Apply corrections and add changelog:
 ## Rules
 
 1. **Implementation is truth** - Update spec to match impl
-2. **Tier order** - Run T1 → T2 → T3 (fast to slow)
+2. **Tier order** - Run T1 -> T2 -> T3 (fast to slow)
 3. **Cite sources** - Reference file:line for each finding
 4. **Preview first** - Show all tiers before updating
 5. **Categorize issues** - DRIFT vs MISSING vs NOT_HANDLED
@@ -331,6 +331,6 @@ See `references/quick-reference.md` for command patterns.
 
 ## Integration
 
-- **speckit-audit**: Find unspecced work → verify syncs it
-- **speckit-retro**: Captures learnings → verify validates
-- **speckit-flow**: Implements spec → verify checks after
+- **speckit-audit**: Find unspecced work -> verify syncs it
+- **speckit-retro**: Captures learnings -> verify validates
+- **speckit-flow**: Implements spec -> verify checks after

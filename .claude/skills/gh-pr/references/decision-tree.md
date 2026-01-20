@@ -4,44 +4,44 @@
 
 ```
 START: PR #N
-    │
-    ├─► Check CI Status
-    │       │
-    │       ├─► FAILING ──────────────► FIX: Address failures, push
-    │       │                                    │
-    │       │                                    └─► RETRY (max 5 cycles)
-    │       │
-    │       └─► PASSING ──────────────► Check Review State
-    │                                          │
-    ├───────────────────────────────────────────┘
-    │
-    ├─► Review State
-    │       │
-    │       ├─► PENDING ──────────────► WAIT: Review not started
-    │       │
-    │       ├─► CHANGES_REQUESTED ────► Check Comments
-    │       │       │
-    │       │       ├─► Unresolved ───► FIX: Address comments, push
-    │       │       │
-    │       │       └─► All resolved ─► REQUEST: Re-review
-    │       │
-    │       ├─► COMMENTED ────────────► MERGE: Safe (minor suggestions)
-    │       │
-    │       └─► APPROVED ─────────────► Check Merge State
-    │                                          │
-    ├──────────────────────────────────────────┘
-    │
-    └─► Merge State
-            │
-            ├─► CLEAN ────────────────► MERGE: gh pr merge --squash
-            │
-            ├─► BEHIND ───────────────► UPDATE: Rebase on main
-            │
-            ├─► BLOCKED ──────────────► WAIT: Protection rules
-            │
-            ├─► DIRTY ────────────────► STOP: Merge conflict
-            │
-            └─► UNKNOWN ──────────────► RETRY: Check again
+    |
+    +-> Check CI Status
+    |       |
+    |       +-> FAILING --------------> FIX: Address failures, push
+    |       |                                    |
+    |       |                                    +-> RETRY (max 5 cycles)
+    |       |
+    |       +-> PASSING --------------> Check Review State
+    |                                          |
+    +------------------------------------------+
+    |
+    +-> Review State
+    |       |
+    |       +-> PENDING --------------> WAIT: Review not started
+    |       |
+    |       +-> CHANGES_REQUESTED ----> Check Comments
+    |       |       |
+    |       |       +-> Unresolved ---> FIX: Address comments, push
+    |       |       |
+    |       |       +-> All resolved -> REQUEST: Re-review
+    |       |
+    |       +-> COMMENTED ------------> MERGE: Safe (minor suggestions)
+    |       |
+    |       +-> APPROVED -------------> Check Merge State
+    |                                          |
+    +------------------------------------------+
+    |
+    +-> Merge State
+            |
+            +-> CLEAN ----------------> MERGE: gh pr merge --squash
+            |
+            +-> BEHIND ---------------> UPDATE: Rebase on main
+            |
+            +-> BLOCKED --------------> WAIT: Protection rules
+            |
+            +-> DIRTY ----------------> STOP: Merge conflict
+            |
+            +-> UNKNOWN --------------> RETRY: Check again
 ```
 
 ## Edge Cases

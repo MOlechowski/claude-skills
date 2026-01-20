@@ -137,19 +137,19 @@ python3 ~/.claude/skills/rlm/rlm.py chunk --pattern "*.py"
 
 ```
 What's your task?
-    │
-    ├─► Question about code
-    │   └─► Investigation mode (3-5 Explore agents)
-    │       - Broad search agent
-    │       - Structure/architecture agent
-    │       - Targeted analysis agent
-    │
-    ├─► Analyze all files
-    │   └─► Bulk mode (5-10 general-purpose agents)
-    │       - Group by directory or file type
-    │       - Max 10-20 files per agent
-    │       - Write outputs to /tmp/rlm_*.json
-    │
-    └─► Simple file read
-        └─► Standard tools (no RLM needed)
+    |
+    +-> Question about code
+    |   -> Investigation mode (3-5 Explore agents)
+    |       - Broad search agent
+    |       - Structure/architecture agent
+    |       - Targeted analysis agent
+    |
+    +-> Analyze all files
+    |   -> Bulk mode (5-10 general-purpose agents)
+    |       - Group by directory or file type
+    |       - Max 10-20 files per agent
+    |       - Write outputs to /tmp/rlm_*.json
+    |
+    +-> Simple file read
+        -> Standard tools (no RLM needed)
 ```

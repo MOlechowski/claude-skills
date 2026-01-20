@@ -333,4 +333,4 @@ yq -i '.deploy = {"stage": "deploy", "script": ["./deploy.sh"]}' .gitlab-ci.yml
 
 ## Additional Resources
 
-For detailed examples and reference, see `examples.md` and `quick-reference.md`.
+For detailed examples and reference, see `references/examples.md` and `references/quick-reference.md`.

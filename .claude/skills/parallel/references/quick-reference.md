@@ -2,7 +2,7 @@
 
 ## Replacement Strings
 
-| String | Description | `/path/to/file.txt` → |
+| String | Description | `/path/to/file.txt` -> |
 |--------|-------------|----------------------|
 | `{}` | Full input | `/path/to/file.txt` |
 | `{.}` | Remove extension | `/path/to/file` |

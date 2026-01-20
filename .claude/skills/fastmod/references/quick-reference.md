@@ -18,7 +18,7 @@ fastmod [OPTIONS] <REGEX_PATTERN> <REPLACEMENT> [PATH]
 | `-m` | Multiline mode | `-m` |
 | `--iglob <PATTERN>` | Include glob | `--iglob '**/*.test.ts'` |
 | `--exclude-dir <DIR>` | Exclude directory | `--exclude-dir node_modules` |
-| `--accept-all` | Non-interactive (⚠️ test first!) | Use carefully |
+| `--accept-all` | Non-interactive (test first!) | Use carefully |
 
 ## Interactive Commands
 
@@ -42,8 +42,8 @@ During review of each match:
 |---------|-----------|----------------|
 | Capture group reference | `\1` | `${1}` |
 | Literal `$` | `$` | `$$` |
-| Lookahead | `(?=...)` | ❌ Not supported |
-| Lookbehind | `(?<=...)` | ❌ Not supported |
+| Lookahead | `(?=...)` | Not supported |
+| Lookbehind | `(?<=...)` | Not supported |
 
 ### Common Patterns
 
@@ -166,13 +166,13 @@ git add -A && git commit -m "refactor: rename OldComponent to NewComponent"
 
 ## When to Use Fastmod
 
-✅ **Good for:**
+**Good for:**
 - 20+ files need similar changes
 - Pattern-based refactoring
 - Human review per file desired
 - Command-line workflow preferred
 
-❌ **Not ideal for:**
+**Not ideal for:**
 - 1-3 file changes (use IDE or Edit)
 - Requires semantic understanding (use AST tools)
 - Fully automated scripts (consider sed)

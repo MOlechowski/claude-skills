@@ -418,23 +418,23 @@ fpip() {
 main_menu() {
   local choice
   choice=$(cat << EOF | fzf --prompt="Action> " --height=50% --reverse --border
-🔨 Development
-🐳 Docker
-☸️  Kubernetes
-📦 Packages
-⚙️  System
-🔄 Git
-❌ Exit
+Development
+Docker
+Kubernetes
+Packages
+System
+Git
+Exit
 EOF
   )
 
   case "$choice" in
-    "🔨 Development") dev_menu ;;
-    "🐳 Docker") docker_menu ;;
-    "☸️  Kubernetes") k8s_menu ;;
-    "📦 Packages") package_menu ;;
-    "⚙️  System") system_menu ;;
-    "🔄 Git") git_menu ;;
+    "Development") dev_menu ;;
+    "Docker") docker_menu ;;
+    "Kubernetes") k8s_menu ;;
+    "Packages") package_menu ;;
+    "System") system_menu ;;
+    "Git") git_menu ;;
     *) return ;;
   esac
 }
@@ -483,7 +483,7 @@ frename() {
     read -p "New name: " newname
     if [ -n "$newname" ]; then
       mv "$file" "$newname"
-      echo "Renamed: $file → $newname"
+      echo "Renamed: $file -> $newname"
     fi
   done
 }
