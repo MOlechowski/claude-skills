@@ -45,6 +45,7 @@ Each phase is implemented as a Python script in `scripts/`:
 | 6. CHECKLIST | `speckit_checklist.py` | `python scripts/speckit_checklist.py` |
 | 7. PR | `speckit_pr.py` | `python scripts/speckit_pr.py` |
 | 8. IMPLEMENT | `speckit_implement.py` | `python scripts/speckit_implement.py` |
+| Validate | `speckit_validate.py` | `python scripts/speckit_validate.py` |
 
 All scripts support:
 - `--json` for machine-readable output
@@ -272,6 +273,57 @@ python scripts/speckit_implement.py --force
 - Parses tasks.md
 - Reports completion progress
 - Lists remaining tasks
+
+---
+
+## Validation
+
+**Script:** `speckit_validate.py`
+
+```bash
+python scripts/speckit_validate.py [FEATURE_DIR] [OPTIONS]
+```
+
+**Options:**
+- `--strict` - Fail on warnings (not just errors)
+- `--json` - JSON output
+
+**Validates:**
+
+| File | Required Sections | Checks |
+|------|-------------------|--------|
+| spec.md | overview, requirements | User stories, acceptance criteria (recommended) |
+| plan.md | tech stack, architecture | Dependencies, risks (recommended), language defined |
+| tasks.md | - | Checkbox format, task count, phase structure |
+
+**Unresolved Markers Detected:**
+- `[TODO]`, `[TBD]`, `NEEDS CLARIFICATION`
+- `[unclear]`, `[PLACEHOLDER]`, `XXX`
+
+**Exit Codes:**
+- 0: All checks pass
+- 1: Validation errors found
+- 2: Warnings found (with --strict)
+
+**Example Output:**
+```
+🔍 Validating feature: 001-my-feature
+
+spec.md
+  ✅ File exists
+  ✅ Has overview section
+  ⚠️ Missing recommended section: user stories
+
+plan.md
+  ✅ File exists
+  ✅ Language defined: Python 3.11
+
+tasks.md
+  ✅ Found 12 tasks (3 completed)
+  ✅ Found 4 phases
+
+Summary: 0 errors, 1 warning
+```
 
 ---
 
