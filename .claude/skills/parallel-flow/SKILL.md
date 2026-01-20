@@ -25,7 +25,7 @@ When given a task, determine:
 
 ### Parallelizable Units
 
-Identify independent units that can run concurrently:
+Independent units that can run concurrently:
 - **Files**: Each file processed independently
 - **Modules**: Code directories/packages
 - **Items**: List elements, URLs, records
@@ -33,13 +33,13 @@ Identify independent units that can run concurrently:
 
 ### Dependencies
 
-Check for dependencies that prevent parallelization:
+Check for blockers:
 - Shared state or resources
 - Sequential ordering requirements
 - Resource contention (same output file, limited API)
 - Circular dependencies
 
-**If dependencies exist:** Fall back to sequential or identify independent subsets.
+**If dependencies exist:** Fall back to sequential or find independent subsets.
 
 ## Phase 2: Partition
 
@@ -81,9 +81,9 @@ Each parallel unit needs a defined output location:
 
 ### Agent Parallelism (Cognitive Tasks)
 
-For tasks requiring reasoning, analysis, or understanding:
+For tasks requiring reasoning, analysis, or understanding.
 
-**Launch multiple agents in a single message:**
+**Launch multiple agents in single message:**
 
 ```
 Task(
@@ -125,7 +125,7 @@ TaskOutput(task_id=<agent_1_id>, block=true)
 
 ### Shell Parallelism (Command Tasks)
 
-For simple command execution per item:
+For simple command execution per item.
 
 **Using GNU parallel:**
 ```bash
@@ -173,14 +173,14 @@ done
 
 ### Summarize Results
 
-After aggregation, provide user with:
+Provide user with:
 - Summary of findings/results
-- List of any failed partitions
+- List of failed partitions
 - Path to detailed output if large
 
 ## Decision Matrix
 
-Use this to decide execution method:
+Decide execution method:
 
 | Question | If Yes | If No |
 |----------|--------|-------|
@@ -202,9 +202,9 @@ Use this to decide execution method:
 
 ### Timeout Handling
 
-- Set reasonable timeouts for agents
+- Set reasonable agent timeouts
 - Use `--timeout` with GNU parallel
-- Have fallback for hung operations
+- Fallback for hung operations
 
 ### Retry Logic
 
@@ -217,24 +217,24 @@ For transient failures:
 
 ### DO
 
-- Analyze task thoroughly before partitioning
-- Launch all parallel agents in single message
-- Use structured JSON output for aggregation
+- Analyze task before partitioning
+- Launch all agents in single message
+- Use structured JSON for aggregation
 - Clean up temp files after completion
-- Report progress to user
+- Report progress
 
 ### DON'T
 
-- Launch more than 5 concurrent agents
-- Put > 20 files in single agent partition
+- Launch >5 concurrent agents
+- Put >20 files in single partition
 - Parallelize tasks with dependencies
-- Forget to aggregate results
+- Skip result aggregation
 - Leave temp files behind
 
 ## Quick Reference
 
-See `quick-reference.md` for execution patterns.
+See `quick-reference.md` for patterns.
 
 ## Examples
 
-See `examples.md` for complete workflow examples.
+See `examples.md` for workflow examples.
