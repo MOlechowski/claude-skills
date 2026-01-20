@@ -176,4 +176,4 @@ Otherwise               -> Review
 /speckit-verify specs/010-*       # Full verify
 ```
 
-Note: speckit-audit auto-fixes T1+T2 drift. Use `/speckit-verify` or `/speckit-retro` for T3.
+speckit-audit auto-fixes T1+T2 drift. Use `/speckit-verify` or `/speckit-retro` for T3.

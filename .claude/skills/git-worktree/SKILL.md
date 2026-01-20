@@ -5,9 +5,9 @@ description: "Work on multiple branches simultaneously. Use when: working on mul
 
 # Git Worktree
 
-Multiple working directories linked to a single repository. Check out multiple branches simultaneously without stashing.
+Multiple working directories linked to one repository. Check out multiple branches simultaneously without stashing.
 
-**Benefits:** Multiple features, PR reviews without disruption, parallel builds/tests, persistent dev servers.
+**Benefits:** Parallel features, PR reviews without disruption, concurrent builds/tests, persistent dev servers.
 
 ## Core Concepts
 
@@ -136,7 +136,7 @@ git worktree unlock ../project-feature
 
 ## Bare Repository Setup (Advanced)
 
-Bare repo treats all worktrees equally - no "main" directory is special.
+Bare repos treat all worktrees equally - no "main" directory is special.
 
 ### Initial Setup
 
@@ -180,14 +180,14 @@ git merge origin/main
 
 ## Best Practices
 
-1. **Naming Convention**: Descriptive names indicating purpose (`project-feature-auth` not `project-1`)
+1. **Naming Convention**: Use descriptive names (`project-feature-auth` not `project-1`)
 
 2. **Clean Up**: Remove worktrees when done
    ```bash
    git worktree remove ../project-feature
    ```
 
-3. **Lock Long-Running Worktrees**: Prevent accidental removal
+3. **Lock Long-Running Worktrees**: Prevent accidental removal:
    ```bash
    git worktree lock --reason "Active development" ../project-feature
    ```
@@ -196,7 +196,7 @@ git merge origin/main
 
 5. **Separate Dependencies**: Each worktree needs own `node_modules`, `.venv`, etc.
 
-6. **Regular Pruning**: Clean stale references periodically
+6. **Regular Pruning**: Clean stale references periodically:
    ```bash
    git worktree prune
    ```

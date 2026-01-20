@@ -2,25 +2,25 @@
 
 ## Trigger Checklist
 
-Ask yourself after completing work:
+After completing work:
 
-- [ ] Did I figure out something not documented?
-- [ ] Did I find a workaround for a blocker?
-- [ ] Did I discover a better approach?
-- [ ] Did I hit a new type of blocked task?
-- [ ] Was anything confusing or ambiguous?
+- [ ] Figured out something not documented?
+- [ ] Found a workaround for a blocker?
+- [ ] Discovered a better approach?
+- [ ] Hit a new type of blocked task?
+- [ ] Found something confusing or ambiguous?
 
-If any are checked, update the relevant document.
+If any checked, update the relevant document.
 
 ## Update Rules Summary
 
 | Rule | Do | Don't |
 |------|-----|-------|
 | **Prove first** | Add patterns that worked | Add theoretical ideas |
-| **Extend** | Add to existing sections | Create duplicate sections |
-| **Be concrete** | Include commands, code, paths | Give vague guidance |
-| **Stay general** | Make it reusable | Include task-specific details |
-| **Preserve history** | Note why rules changed | Delete without explanation |
+| **Extend** | Add to existing sections | Create duplicates |
+| **Be concrete** | Include commands, code, paths | Vague guidance |
+| **Stay general** | Make it reusable | Task-specific details |
+| **Preserve history** | Note why rules changed | Delete silently |
 
 ## Commit Format
 
@@ -39,13 +39,13 @@ git commit -m "docs: improve AGENTS.md - clarify deployment scope"
 
 ```markdown
 **Category**
-- YYYY-MM-DD: Brief description of what was added/changed
+- YYYY-MM-DD: Brief description
 ```
 
 Example:
 ```markdown
 **Patterns**
-- 2024-01-15: Added interface-based mocking approach for external clients
+- 2024-01-15: Added interface-based mocking for external clients
 - 2024-01-14: Documented parallel PR workflow with git worktrees
 
 **Blockers**
@@ -56,14 +56,12 @@ Example:
 
 | Category | When to Use |
 |----------|-------------|
-| **Rules** | New constraints, requirements, must-do items |
-| **Patterns** | Reusable techniques, code approaches |
-| **Blockers** | Limitations, workarounds, known issues |
-| **Workflow** | Process changes, step improvements |
+| **Rules** | Constraints, requirements |
+| **Patterns** | Reusable techniques |
+| **Blockers** | Limitations, workarounds |
+| **Workflow** | Process improvements |
 
 ## Document History Template
-
-Copy this to documents under self-improvement:
 
 ```markdown
 ## Document History
@@ -131,11 +129,8 @@ Did I learn something useful?
     |
     +-> Yes -> Is it documented?
                 |
-                +-> Yes -> Is documentation correct?
-                |           |
-                |           +-> Yes -> Done
-                |           |
-                |           +-> No -> Update it
+                +-> Yes -> Correct? -> Yes -> Done
+                |                  -> No -> Update
                 |
                 +-> No -> Add it
 ```

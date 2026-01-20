@@ -31,10 +31,10 @@
 
 ## Transform
 
-- Passive → Active voice
-- Multiple sentences → Combined when related
-- Nested lists → Flat when possible
-- Long paragraphs → Short ones
+- Passive -> Active voice
+- Multiple sentences -> Combined when related
+- Nested lists -> Flat when possible
+- Long paragraphs -> Short
 
 ## Preserve
 
@@ -48,16 +48,16 @@
 ## Structure
 
 - [ ] Critical info at start/end of sections
-- [ ] Headings are short and scannable
-- [ ] Tables used for comparisons
-- [ ] No repeated concepts across sections
+- [ ] Short, scannable headings
+- [ ] Tables for comparisons
+- [ ] No repeated concepts
 
 ## Format
 
-- [ ] YAML preferred over JSON
-- [ ] Bullets over prose where possible
+- [ ] YAML over JSON
+- [ ] Bullets over prose
 - [ ] Abbreviations defined once, then used
-- [ ] Code comments minimal (why, not what)
+- [ ] Minimal code comments (why, not what)
 
 ## Document Design
 

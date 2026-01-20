@@ -1,7 +1,5 @@
 # Fastmod Examples
 
-Common refactoring scenarios.
-
 ## Class/Type Renames
 
 ### Rename Class
@@ -21,10 +19,7 @@ fastmod -d src --extensions ts,tsx 'import.*UserManager' 'import { UserService }
 
 ### Namespace Rename
 ```bash
-# TypeScript
 fastmod 'MyNamespace\.OldClass' 'MyNamespace.NewClass'
-
-# Go
 fastmod 'oldpkg\.Type' 'newpkg.Type'
 ```
 
@@ -49,11 +44,8 @@ fastmod 'function process\(([^)]+)\)' 'function process(${1}, timeout = 5000)'
 
 ### Update Paths
 ```bash
-# Relative
 fastmod "from '\.\./utils/" "from '../shared/"
 fastmod "from '\./utils/" "from './helpers/"
-
-# Absolute
 fastmod "from '@/components/old" "from '@/components/new"
 ```
 
@@ -91,10 +83,7 @@ fastmod 'axios\.' 'http.'
 
 ### CSS Frameworks
 ```bash
-# Tailwind v2 to v3
 fastmod 'bg-opacity-' 'bg-'
-
-# Bootstrap
 fastmod 'pull-left' 'float-start'
 ```
 
@@ -116,14 +105,12 @@ fastmod '"oldSetting":' '"newSetting":'
 
 ### Function Syntax
 ```bash
-# To arrow function
 fastmod 'function (\w+)\((.*?)\) \{' 'const ${1} = (${2}) => {'
 fastmod '(\w+): function\((.*?)\) \{' '${1}: (${2}) => {'
 ```
 
 ### Modernize
 ```bash
-# var to const
 fastmod '\bvar\b' 'const'
 ```
 
@@ -152,11 +139,8 @@ fastmod 'User\.' 'AppUser.'
 
 ### Framework Updates
 ```bash
-# Jest to Vitest
 fastmod "from 'jest'" "from 'vitest'"
 fastmod 'jest\.' 'vi.'
-
-# Mocha to Jest
 fastmod 'it\(' 'test('
 ```
 
@@ -187,13 +171,8 @@ fastmod '@returns \{void\}' '@returns {Promise<void>}'
 
 ## Git & Repo
 
-### URLs
 ```bash
 fastmod 'github\.com/old-org/' 'github.com/new-org/'
-```
-
-### Copyright
-```bash
 fastmod 'Copyright 2023' 'Copyright 2024'
 ```
 

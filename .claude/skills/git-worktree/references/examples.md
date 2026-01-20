@@ -1,10 +1,10 @@
-# Git Worktree Workflow Examples
+# Git Worktree Examples
 
-Real-world scenarios for effective git worktree usage.
+Real-world scenarios for git worktree usage.
 
 ## Example 1: Feature Development While Reviewing PR
 
-Working on a feature when teammate asks for PR review.
+Working on a feature when asked for PR review.
 
 ```bash
 # Current state: working in main repo on feature-auth
@@ -38,7 +38,7 @@ Changes not staged for commit:
 
 ## Example 2: Hotfix While Feature in Progress
 
-Production bug - fix without losing feature work.
+Production bug - fix without losing work.
 
 ```bash
 # Working on feature branch
@@ -111,7 +111,7 @@ done
 
 ## Example 4: Bare Repository Setup (Team Workflow)
 
-Bare repo setup for clean worktree management.
+Bare repo setup for clean worktree management:
 
 ```bash
 # Initial setup (one time)
@@ -152,7 +152,7 @@ Bare repo setup for clean worktree management.
 
 ## Example 5: Comparing Implementations
 
-Compare two approaches to solving a problem.
+Compare two approaches to a problem:
 
 ```bash
 # Create branch for approach A
@@ -181,7 +181,7 @@ Compare two approaches to solving a problem.
 
 ## Example 6: Monorepo Package Development
 
-Multiple packages simultaneously in a monorepo.
+Work on multiple packages simultaneously:
 
 ```bash
 # Monorepo structure:
@@ -218,7 +218,7 @@ Multiple packages simultaneously in a monorepo.
 
 ## Example 7: Long-Running Dev Server
 
-Dev server running while working on other branches.
+Keep dev server running while working on other branches:
 
 ```bash
 # Start dev server in dedicated worktree
@@ -245,7 +245,7 @@ Dev server running while working on other branches.
 
 ## Example 8: Release Branch Management
 
-Release management while development continues.
+Manage releases while development continues:
 
 ```bash
 # Create release worktree
@@ -281,7 +281,7 @@ Release management while development continues.
 
 ## Example 9: CI/CD Optimization
 
-Parallel branch validation in CI.
+Parallel branch validation in CI:
 
 ```yaml
 # .github/workflows/parallel-branches.yml
@@ -320,7 +320,7 @@ jobs:
 
 ## Example 10: Investigation/Debugging
 
-Reproduce and debug issue on specific commit.
+Reproduce and debug issue on specific commit:
 
 ```bash
 # Bug reported in production (running v1.5.2)
@@ -349,12 +349,12 @@ Reproduce and debug issue on specific commit.
 ~/projects/app$ git worktree remove ../app-fix
 ```
 
-## Tips from Examples
+## Tips
 
-1. **`npm install` in new worktrees** - they don't share `node_modules`
+1. **Run `npm install` in new worktrees** - they don't share `node_modules`
 2. **Use `--lock`** for long-running worktrees
-3. **Descriptive names** - `app-pr-42`, `app-hotfix`, not `app-2`
+3. **Use descriptive names** - `app-pr-42`, `app-hotfix`, not `app-2`
 4. **Clean up promptly** - Remove worktrees when done
 5. **Fetch before creating** - `git fetch origin` for latest refs
-6. **Bare repos for teams** - cleaner mental model
+6. **Use bare repos for teams** - cleaner mental model
 7. **One worktree per task**

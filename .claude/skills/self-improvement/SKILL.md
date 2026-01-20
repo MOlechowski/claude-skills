@@ -5,11 +5,11 @@ description: "Capture learnings into documentation. Use when: completing work th
 
 # Self-Improvement Protocol
 
-This protocol governs how instruction documents improve over time by capturing learnings, patterns, and workarounds.
+Governs how instruction documents improve by capturing learnings, patterns, and workarounds.
 
 ## Core Principle
 
-Documents should get better with every use. When you discover something that would have helped you earlier, add it so future sessions benefit.
+Documents get better with every use. When you discover something that would have helped earlier, add it for future sessions.
 
 ## Scope
 
@@ -18,52 +18,49 @@ Documents subject to self-improvement:
 - `CLAUDE.md` / `AGENTS.md` - Project-level instructions
 - Workflow prompts and task instructions
 - Skill documentation (SKILL.md files)
-- Any instruction file that guides autonomous work
+- Any instruction file guiding autonomous work
 
-**Not in scope:**
-- Source code (use normal development practices)
-- Generated files
-- External documentation you don't control
+**Not in scope:** Source code, generated files, external documentation
 
 ## Update Triggers
 
-Update documents when any of these occur:
+Update documents when:
 
 ### 1. Missing Instructions
-You completed a task but had to figure out something not documented.
+You figured out something not documented.
 
-*Example: "I had to run `go generate ./...` before tests would pass, but this wasn't mentioned."*
+*Example: "Had to run `go generate ./...` before tests would pass."*
 
 ### 2. Workaround Discovery
 You found a way around an undocumented blocker.
 
-*Example: "Pre-commit hooks fail on generated files - solution is to run generation first."*
+*Example: "Pre-commit hooks fail on generated files - run generation first."*
 
 ### 3. Better Pattern Found
-You discovered an approach that works better than what's documented.
+You discovered a better approach than documented.
 
-*Example: "Using interfaces with mocks is cleaner than the inline stub approach shown."*
+*Example: "Interfaces with mocks are cleaner than inline stubs."*
 
 ### 4. New Blocker Category
 You hit a type of blocked task not previously documented.
 
-*Example: "E2E tests need GitHub App credentials that aren't available in CI."*
+*Example: "E2E tests need GitHub App credentials not in CI."*
 
 ### 5. Confusion or Ambiguity
-The documentation led to confusion or wrong assumptions.
+Documentation led to confusion or wrong assumptions.
 
-*Example: "Unclear whether 'deploy' meant local or production - clarify scope."*
+*Example: "Unclear whether 'deploy' meant local or production."*
 
 ## Update Rules
 
 ### 1. Prove Before Adding
-Only add patterns that worked in practice. Don't add theoretical improvements - wait until you've verified they work.
+Add patterns that worked in practice. Don't add theoretical improvements.
 
 ### 2. Extend, Don't Duplicate
-Add to existing sections first. Create new sections only when content doesn't fit anywhere.
+Add to existing sections first. Create new sections only when content doesn't fit.
 
 ### 3. Be Concrete
-Include commands, code snippets, and file paths. Vague guidance isn't useful.
+Include commands, code snippets, and file paths.
 
 ```markdown
 # Bad
@@ -79,18 +76,18 @@ if err := client.Call(); err != nil {
 ```
 
 ### 4. Stay General
-No task-specific details. Keep it reusable across similar situations.
+No task-specific details. Keep it reusable.
 
 ```markdown
 # Bad
-"For PR #42, use the special flag --skip-validation"
+"For PR #42, use --skip-validation"
 
 # Good
-"When validation blocks legitimate changes, use --skip-validation flag"
+"When validation blocks legitimate changes, use --skip-validation"
 ```
 
 ### 5. Preserve History
-Don't remove rules without documenting why. If something seems obsolete, add a note rather than deleting.
+Don't remove rules without documenting why.
 
 ```markdown
 # Deprecated (2024-01-15): No longer needed after v2.0 migration
@@ -100,17 +97,15 @@ Don't remove rules without documenting why. If something seems obsolete, add a n
 ## Update Process
 
 ### Step 1: Identify the Learning
-What did you discover that would have helped earlier?
+What would have helped earlier?
 
 ### Step 2: Determine Location
-Which document and section should contain this?
-
 - Project setup -> CLAUDE.md / AGENTS.md
 - Workflow steps -> Relevant prompt file
 - Tool usage -> Skill documentation
 
 ### Step 3: Write the Addition
-Concise, actionable, with examples where helpful.
+Concise, actionable, with examples.
 
 ### Step 4: Commit the Change
 ```bash
@@ -119,8 +114,6 @@ git commit -m "docs: improve <filename> - <brief description>"
 ```
 
 ### Step 5: Log in History
-Add entry to the Document History section:
-
 ```markdown
 ## Document History
 
@@ -136,18 +129,14 @@ Add entry to the Document History section:
 
 ## History Categories
 
-Track changes by type:
-
 | Category | Description |
 |----------|-------------|
-| **Rules** | New constraints or requirements |
-| **Patterns** | Reusable approaches and techniques |
-| **Blockers** | Known limitations and workarounds |
+| **Rules** | Constraints or requirements |
+| **Patterns** | Reusable approaches |
+| **Blockers** | Limitations and workarounds |
 | **Workflow** | Process improvements |
 
 ## Document History Template
-
-Add this section to documents under self-improvement:
 
 ```markdown
 ## Document History

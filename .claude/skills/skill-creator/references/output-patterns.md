@@ -4,7 +4,7 @@ Patterns for consistent, high-quality skill output.
 
 ## Template Pattern
 
-Provide templates for output format. Match strictness to needs.
+Provide output format templates. Match strictness to needs.
 
 **For strict requirements (like API responses or data formats):**
 
@@ -79,4 +79,4 @@ Use UTC timestamps consistently across report generation
 Follow this style: type(scope): brief description, then detailed explanation.
 ```
 
-Examples help Claude understand desired style and detail level better than descriptions alone.
+Examples convey desired style and detail level better than descriptions alone.

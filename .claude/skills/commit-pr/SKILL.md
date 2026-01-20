@@ -5,7 +5,7 @@ description: "Commit changes and create PR in one flow. Use when: committing and
 
 # Commit & PR
 
-Full commit-to-PR flow: generate commit message, create feature branch, push, and open PR.
+Full commit-to-PR flow: generate commit message, create feature branch, push, open PR.
 
 ## Workflow
 
@@ -23,7 +23,7 @@ git diff --staged
 git diff
 ```
 
-If nothing staged, stage all changes:
+If nothing staged:
 ```bash
 git add -A
 ```
@@ -38,7 +38,7 @@ Match language and format from recent commits.
 
 ### 3. Create Feature Branch
 
-If on main/master, create feature branch:
+If on main/master:
 
 ```bash
 BRANCH="feat/$(echo "$COMMIT_MSG" | sed 's/^[a-z]*(\([^)]*\)).*/\1/' | tr ' ' '-')"
@@ -88,14 +88,14 @@ PR body:
 
 ### 7. Report
 
-Output PR URL when done:
+Output PR URL:
 ```
 PR created: https://github.com/owner/repo/pull/123
 ```
 
 ### 8. Merge
 
-After PR creation, automatically chain to gh-pr skill:
+Chain to gh-pr skill:
 
 ```
 Skill(skill="gh-pr", args="PR_NUMBER")
@@ -106,7 +106,7 @@ gh-pr handles:
 - Review processing
 - Auto-merge when ready
 
-Skip merge only if user explicitly requests "create PR only" or "no merge".
+Skip only if user requests "create PR only" or "no merge".
 
 ## Atomic Commits
 
@@ -117,7 +117,7 @@ If changes need different types (feat + fix), split into separate commits and PR
 ## Safety
 
 - Never commit secrets
-- Create feature branch (don't commit to main)
+- Create feature branch (not main)
 - Verify staged files before commit
 
 ## Quick Reference

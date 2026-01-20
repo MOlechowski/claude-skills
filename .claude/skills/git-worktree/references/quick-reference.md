@@ -1,6 +1,6 @@
 # Git Worktree Quick Reference
 
-## Creating Worktrees
+## Create Worktrees
 
 ```bash
 # Add worktree for existing branch
@@ -23,7 +23,7 @@ git worktree add --detach ../release v2.0.0
 git worktree add --force <path> <branch>
 ```
 
-## Listing Worktrees
+## List Worktrees
 
 ```bash
 # List all worktrees
@@ -37,7 +37,7 @@ git worktree list --porcelain
 # /home/user/project-feat  def5678 [feature]
 ```
 
-## Removing Worktrees
+## Remove Worktrees
 
 ```bash
 # Remove worktree (safe - checks for changes)
@@ -57,7 +57,7 @@ git worktree prune --dry-run
 git worktree prune -v
 ```
 
-## Locking Worktrees
+## Lock Worktrees
 
 ```bash
 # Lock worktree (prevent removal/pruning)
@@ -71,7 +71,7 @@ git worktree lock --reason "On network drive" ../feature
 git worktree unlock <worktree>
 ```
 
-## Moving/Repairing Worktrees
+## Move/Repair Worktrees
 
 ```bash
 # Move worktree to new location
@@ -139,7 +139,7 @@ git worktree add -b feature ../feature main
 
 | Error | Solution |
 |-------|----------|
-| `'<branch>' is already checked out` | Branch is in another worktree. Use different branch or remove other worktree |
+| `'<branch>' is already checked out` | Branch in another worktree. Use different branch or remove other worktree |
 | `<path> already exists` | Path exists. Use `--force` or choose different path |
 | `not a valid object name` | Branch/commit doesn't exist. Fetch first: `git fetch origin` |
 | `fatal: <path> is locked` | Worktree is locked. Use `git worktree unlock <path>` |

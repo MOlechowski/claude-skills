@@ -13,7 +13,7 @@ Input -> Analyze -> Partition -> Execute (parallel) -> Aggregate -> Output
 
 ## Phase 1: Analyze
 
-When given a task, determine:
+Determine:
 
 ### Task Type
 
@@ -25,7 +25,7 @@ When given a task, determine:
 
 ### Parallelizable Units
 
-Independent units that can run concurrently:
+Independent units that run concurrently:
 - **Files**: Each file processed independently
 - **Modules**: Code directories/packages
 - **Items**: List elements, URLs, records
@@ -39,11 +39,11 @@ Check for blockers:
 - Resource contention (same output file, limited API)
 - Circular dependencies
 
-**If dependencies exist:** Fall back to sequential or find independent subsets.
+**If dependencies exist:** Fall back to sequential or find independent subsets
 
 ## Phase 2: Partition
 
-### Partitioning Strategy
+### Strategy
 
 **By count:**
 ```
@@ -60,7 +60,7 @@ Partitions (3 agents): [[A, B], [C, D], [E, F]]
 - Group related items (same directory, same type)
 - Separate unrelated items
 
-### Resource Limits
+### Limits
 
 - **Max concurrent agents:** 5 (avoid overwhelming system)
 - **Max items per agent:** 10-20 files (keep context manageable)
@@ -81,7 +81,7 @@ Each parallel unit needs a defined output location:
 
 ### Agent Parallelism (Cognitive Tasks)
 
-For tasks requiring reasoning, analysis, or understanding.
+For tasks requiring reasoning, analysis, or understanding:
 
 **Launch multiple agents in single message:**
 
@@ -125,7 +125,7 @@ TaskOutput(task_id=<agent_1_id>, block=true)
 
 ### Shell Parallelism (Command Tasks)
 
-For simple command execution per item.
+For simple command execution per item:
 
 **Using GNU parallel:**
 ```bash
@@ -140,18 +140,18 @@ Bash(
 )
 ```
 
-**For complex shell orchestration, reference the `parallel` skill.**
+**For complex shell orchestration, see the `parallel` skill.**
 
 ### Hybrid Execution
 
-When task requires both:
+When tasks require both:
 1. Use agents to generate/plan commands
 2. Execute commands via shell parallelism
 3. Use agents to analyze results
 
 ## Phase 4: Aggregate
 
-### Collect Agent Outputs
+### Collect Outputs
 
 ```bash
 # Merge JSON outputs
@@ -171,42 +171,40 @@ for f in /tmp/parallel_flow_123/agent_*.json; do
 done
 ```
 
-### Summarize Results
+### Summarize
 
-Provide user with:
+Provide:
 - Summary of findings/results
 - List of failed partitions
 - Path to detailed output if large
 
 ## Decision Matrix
 
-Decide execution method:
-
 | Question | If Yes | If No |
 |----------|--------|-------|
 | Requires understanding code? | Agents | Shell |
 | Simple transformation? | Shell | Agents |
-| Need to reason about output? | Agents | Shell |
-| Just run command per file? | Shell | Agents |
+| Reason about output? | Agents | Shell |
+| Run command per file? | Shell | Agents |
 | Complex logic per item? | Agents | Shell |
-| > 50 items, simple task? | Shell (parallel) | Agents |
-| < 10 items, complex task? | Agents | Shell |
+| >50 items, simple task? | Shell (parallel) | Agents |
+| <10 items, complex task? | Agents | Shell |
 
 ## Error Handling
 
-### Partial Failure Strategy
+### Partial Failure
 
 1. **Continue on failure:** Complete other partitions, report failures
 2. **Aggregate successes:** Include only successful results
 3. **Report failures:** List which partitions failed and why
 
-### Timeout Handling
+### Timeouts
 
 - Set reasonable agent timeouts
 - Use `--timeout` with GNU parallel
 - Fallback for hung operations
 
-### Retry Logic
+### Retries
 
 For transient failures:
 1. Identify failed partitions
@@ -226,7 +224,7 @@ For transient failures:
 ### DON'T
 
 - Launch >5 concurrent agents
-- Put >20 files in single partition
+- Put >20 files in one partition
 - Parallelize tasks with dependencies
 - Skip result aggregation
 - Leave temp files behind

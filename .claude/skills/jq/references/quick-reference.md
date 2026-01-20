@@ -5,7 +5,7 @@
 jq [OPTIONS] '<filter>' [FILE...]
 ```
 
-## Essential Flags
+## Flags
 | Flag | Description |
 |------|-------------|
 | `-r` | Raw output (no quotes) |
@@ -13,8 +13,8 @@ jq [OPTIONS] '<filter>' [FILE...]
 | `-s` | Slurp (array of inputs) |
 | `-n` | Null input |
 | `-e` | Exit status based on output |
-| `--arg name value` | Pass string variable |
-| `--argjson name json` | Pass JSON variable |
+| `--arg name value` | String variable |
+| `--argjson name json` | JSON variable |
 
 ## Basic Filters
 | Filter | Description | Example |
@@ -36,23 +36,23 @@ jq [OPTIONS] '<filter>' [FILE...]
 | `and`, `or`, `not` | Boolean |
 | `//` | Alternative (default) |
 
-## Common Functions
+## Functions
 ```bash
 length              # Array/object/string length
 keys                # Object keys
 values              # Object values
 type                # Get type
 has("key")          # Check key exists
-select(condition)   # Filter
-map(expression)     # Transform array
+select(cond)        # Filter
+map(expr)           # Transform array
 sort, sort_by()     # Sort
-unique              # Remove duplicates
+unique              # Deduplicate
 group_by()          # Group elements
 add                 # Sum array
 min, max            # Min/max value
 ```
 
-## Quick Patterns
+## Patterns
 ```bash
 # Extract field from array
 jq '.[].name'

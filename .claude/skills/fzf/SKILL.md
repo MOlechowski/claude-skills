@@ -3,16 +3,16 @@ name: fzf
 description: "Interactive fuzzy finder for files, history, and lists. Use for: (1) interactive file/directory selection, (2) command history search with preview, (3) building selection menus in scripts, (4) filtering large lists or command outputs. Triggers: fuzzy search, interactive selector, pick from list, file finder with preview."
 ---
 
-# fzf Expertise Skill
+# fzf Skill
 
 ## Basic Usage
 
-### Simple Selection
+### Selection
 ```bash
 # Select from list
 echo -e "apple\nbanana\ncherry" | fzf
 
-# Select file in current directory
+# Select file
 find . -type f | fzf
 
 # Use selected value
@@ -20,7 +20,7 @@ file=$(find . -type f | fzf)
 vim "$file"
 ```
 
-### Default Keybindings
+### Keybindings
 ```
 Ctrl-J / Down    Cursor down
 Ctrl-K / Up      Cursor up
@@ -37,64 +37,37 @@ Ctrl-U           Clear query
 
 ### Fuzzy Matching
 ```bash
-# Fuzzy match (default)
-fzf  # "abc" matches "a_b_c", "a123b456c"
-
-# Exact match (prefix ')
-fzf  # "'exact" matches "exact" only
-
-# Prefix match (suffix ^)
-fzf  # "^start" matches lines starting with "start"
-
-# Suffix match (prefix $)
-fzf  # "end$" matches lines ending with "end"
-
-# Negation (prefix !)
-fzf  # "!exclude" excludes lines containing "exclude"
+# Fuzzy match (default): "abc" matches "a_b_c"
+# Exact match: "'exact" matches only "exact"
+# Prefix match: "^start" matches lines starting with "start"
+# Suffix match: "end$" matches lines ending with "end"
+# Negation: "!exclude" excludes lines containing "exclude"
 ```
 
 ### Combining Patterns
 ```bash
-# AND (space-separated): "foo bar" matches lines with both
-# OR (pipe-separated): "foo | bar" matches lines with either
+# AND (space): "foo bar" matches lines with both
+# OR (pipe): "foo | bar" matches lines with either
 ```
 
-## Options and Customization
+## Options
 
-### Display Options
+### Display
 ```bash
-# Multi-select
-fzf --multi
-
-# Reverse layout (prompt at top)
-fzf --reverse
-
-# Partial height
-fzf --height 40%
-
-# Border
-fzf --border
-
-# Prompt text
-fzf --prompt "Select file> "
-
-# Header
-fzf --header "Choose an option"
+fzf --multi               # Multi-select
+fzf --reverse             # Prompt at top
+fzf --height 40%          # Partial height
+fzf --border              # Border
+fzf --prompt "Select> "   # Prompt text
+fzf --header "Options"    # Header
 ```
 
 ### Search Behavior
 ```bash
-# Case-sensitive
-fzf --case-sensitive
-
-# Exact match by default
-fzf --exact
-
-# Disable sort
-fzf --no-sort
-
-# Custom delimiter
-fzf --delimiter=: --with-nth=2  # Only search 2nd field
+fzf --case-sensitive      # Case-sensitive
+fzf --exact               # Exact match by default
+fzf --no-sort             # Disable sort
+fzf --delimiter=: --with-nth=2  # Search 2nd field only
 ```
 
 ### Preview Window
@@ -110,22 +83,14 @@ fzf --preview 'bat --color=always --style=numbers {}'
 
 ### Built-in Actions
 ```bash
-# Execute command on selection
-fzf --bind 'enter:execute(vim {})'
-
-# Reload list
-fzf --bind 'ctrl-r:reload(find . -type f)'
-
-# Toggle preview
-fzf --bind 'ctrl-/:toggle-preview'
-
-# Select all
-fzf --bind 'ctrl-a:select-all'
+fzf --bind 'enter:execute(vim {})'     # Execute on selection
+fzf --bind 'ctrl-r:reload(find . -type f)'  # Reload list
+fzf --bind 'ctrl-/:toggle-preview'     # Toggle preview
+fzf --bind 'ctrl-a:select-all'         # Select all
 ```
 
 ### Custom Actions
 ```bash
-# Multiple bindings
 fzf --bind 'ctrl-e:execute(echo {} >> selected.txt)' \
     --bind 'ctrl-d:execute(rm {})'
 
@@ -137,55 +102,34 @@ fzf --bind 'enter:execute(vim {})+abort'
 
 ### File Navigation
 ```bash
-# Interactive file opener
-vim $(fzf)
-
-# Change directory
-cd $(find . -type d | fzf)
-
-# With preview
-find . -type f | fzf --preview 'bat --color=always {}'
-
-# Open multiple files
-vim $(fzf --multi)
+vim $(fzf)                                    # File opener
+cd $(find . -type d | fzf)                    # Change directory
+find . -type f | fzf --preview 'bat --color=always {}'  # With preview
+vim $(fzf --multi)                            # Multiple files
 ```
 
 ### Git Integration
 ```bash
-# Checkout branch
-git checkout $(git branch | fzf | sed 's/^[* ]*//')
-
-# Show commit
-git log --oneline | fzf --preview 'git show {1}'
-
-# Add files interactively
-git add $(git status -s | fzf --multi | awk '{print $2}')
-
-# Interactive git diff
-git diff --name-only | fzf --preview 'git diff --color=always {}'
+git checkout $(git branch | fzf | sed 's/^[* ]*//')  # Checkout branch
+git log --oneline | fzf --preview 'git show {1}'     # Show commit
+git add $(git status -s | fzf --multi | awk '{print $2}')  # Add files
+git diff --name-only | fzf --preview 'git diff --color=always {}'  # Diff
 ```
 
 ### Process Management
 ```bash
-# Kill process
-ps aux | fzf | awk '{print $2}' | xargs kill
-
-# With preview showing process details
-ps aux | fzf --header-lines=1 --preview 'pstree -p {2}'
+ps aux | fzf | awk '{print $2}' | xargs kill  # Kill process
+ps aux | fzf --header-lines=1 --preview 'pstree -p {2}'  # With preview
 ```
 
 ### Command History
 ```bash
-# Manual history search
-history | fzf --tac | sed 's/^[[:space:]]*[0-9]*[[:space:]]*//'
-
-# Execute selected command
-eval "$(history | fzf --tac | sed 's/^[[:space:]]*[0-9]*[[:space:]]*//')"
+history | fzf --tac | sed 's/^[[:space:]]*[0-9]*[[:space:]]*//'  # Search
+eval "$(history | fzf --tac | sed 's/^[[:space:]]*[0-9]*[[:space:]]*//')"  # Execute
 ```
 
 ## Shell Integration
 
-### Bash/Zsh Keybindings
 After `fzf` installer:
 ```bash
 # Ctrl-T: Paste selected files
@@ -195,36 +139,30 @@ After `fzf` installer:
 
 ### Custom Functions
 
-**Interactive Git Branch Checkout:**
 ```bash
+# Git branch checkout
 fco() {
   local branches branch
   branches=$(git branch -vv) &&
   branch=$(echo "$branches" | fzf +m) &&
   git checkout $(echo "$branch" | awk '{print $1}' | sed "s/.* //")
 }
-```
 
-**Interactive File Editor:**
-```bash
+# File editor
 fe() {
   local file
   file=$(fd --type f | fzf --preview 'bat --color=always {}') &&
   ${EDITOR:-vim} "$file"
 }
-```
 
-**Kill Process:**
-```bash
+# Kill process
 fkill() {
   local pid
   pid=$(ps aux | fzf --header-lines=1 | awk '{print $2}') &&
   kill -9 "$pid"
 }
-```
 
-**Tmux Session Selector:**
-```bash
+# Tmux session selector
 ftm() {
   local session
   session=$(tmux list-sessions -F '#{session_name}' | fzf) &&
@@ -236,7 +174,7 @@ ftm() {
 
 ### Custom Preview
 ```bash
-# File preview with syntax highlighting
+# File with syntax highlighting
 fzf --preview 'bat --style=numbers --color=always {} | head -500'
 
 # Directory preview
@@ -251,7 +189,6 @@ find . -name "*.json" | fzf --preview 'jq -C . {}'
 
 ### Dynamic Reloading
 ```bash
-# Reload based on input
 fzf --bind 'ctrl-r:reload(rg --files)' \
     --bind 'ctrl-g:reload(git ls-files)'
 
@@ -259,7 +196,7 @@ fzf --bind 'ctrl-r:reload(rg --files)' \
 fzf --disabled --bind "change:reload:rg --column --line-number --no-heading --color=always {q}"
 ```
 
-## Scripting with fzf
+## Scripting
 
 ### Menu Builder
 ```bash
@@ -283,15 +220,12 @@ esac
 ### Multi-Step Wizard
 ```bash
 #!/bin/bash
-# Step 1: Select environment
 ENV=$(echo -e "development\nstaging\nproduction" | \
   fzf --prompt="Environment> " --height=40%)
 
-# Step 2: Select service
 SERVICE=$(echo -e "api\nweb\nworker" | \
   fzf --prompt="Service> " --height=40%)
 
-# Step 3: Confirm
 CONFIRM=$(echo -e "Yes\nNo" | \
   fzf --prompt="Deploy $SERVICE to $ENV? " --height=40%)
 
@@ -303,17 +237,10 @@ fi
 ## Environment Variables
 
 ```bash
-# Default command for Ctrl-T
 export FZF_DEFAULT_COMMAND='fd --type f'
-
-# Default options
 export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border'
-
-# Ctrl-T command and options
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_CTRL_T_OPTS="--preview 'bat --color=always --line-range :500 {}'"
-
-# Alt-C command and options
 export FZF_ALT_C_COMMAND='fd --type d'
 export FZF_ALT_C_OPTS="--preview 'tree -C {} | head -100'"
 ```

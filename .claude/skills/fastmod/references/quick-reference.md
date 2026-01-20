@@ -6,7 +6,7 @@
 fastmod [OPTIONS] <REGEX_PATTERN> <REPLACEMENT> [PATH]
 ```
 
-## Most Used Options
+## Options
 
 | Option | Description | Example |
 |--------|-------------|---------|
@@ -28,7 +28,6 @@ fastmod [OPTIONS] <REGEX_PATTERN> <REPLACEMENT> [PATH]
 | `d` | Accept all in file |
 | `q` | Quit |
 | `s` | Skip file |
-| `?` | Help |
 
 ## Regex Syntax
 
@@ -36,7 +35,7 @@ fastmod [OPTIONS] <REGEX_PATTERN> <REPLACEMENT> [PATH]
 
 | Feature | Python/JS | Rust (fastmod) |
 |---------|-----------|----------------|
-| Capture group reference | `\1` | `${1}` |
+| Capture group | `\1` | `${1}` |
 | Literal `$` | `$` | `$$` |
 | Lookahead | `(?=...)` | Not supported |
 | Lookbehind | `(?<=...)` | Not supported |
@@ -58,38 +57,26 @@ fastmod [OPTIONS] <REGEX_PATTERN> <REPLACEMENT> [PATH]
 
 ## Quick Patterns
 
-### Simple Rename
 ```bash
+# Simple rename
 fastmod 'OldName' 'NewName'
-```
 
-### Rename with Scope
-```bash
+# Scoped rename
 fastmod -d src --extensions ts,tsx 'OldName' 'NewName'
-```
 
-### Function Call Update
-```bash
+# Function call update
 fastmod 'oldFunction\((.*?)\)' 'newFunction(${1})'
-```
 
-### Import Path Change
-```bash
+# Import path change
 fastmod "from './old/path'" "from './new/path'"
-```
 
-### Add Parameter
-```bash
+# Add parameter
 fastmod 'doSomething\((.*?)\)' 'doSomething(${1}, newParam)'
-```
 
-### JSX Prop Rename
-```bash
+# JSX prop rename
 fastmod '<Button type=' '<Button variant='
-```
 
-### CSS Class Rename
-```bash
+# CSS class rename
 fastmod 'className="old-class"' 'className="new-class"'
 ```
 
@@ -112,10 +99,10 @@ After:
 
 | Problem | Solution |
 |---------|----------|
-| No matches found | Check pattern syntax, file extensions, directory |
-| Too many matches | Add more context to pattern, use word boundaries |
-| Pattern invalid | Verify Rust regex syntax (no lookahead/lookbehind) |
-| Replacement wrong | Use `${1}` for capture groups, `$$` for literal `$` |
+| No matches | Check pattern, extensions, directory |
+| Too many matches | Add context, use word boundaries |
+| Pattern invalid | No lookahead/lookbehind in Rust regex |
+| Replacement wrong | Use `${1}` not `\1`, `$$` for literal `$` |
 
 ## Workflow
 
@@ -130,15 +117,9 @@ git add -A && git commit -m "refactor: rename OldComponent to NewComponent"
 
 ## When to Use
 
-**Good for:**
-- 20+ files with similar changes
-- Pattern-based refactoring
-- Human review needed
+**Good for:** 20+ files, pattern-based changes, human review needed
 
-**Not ideal for:**
-- 1-3 files (use IDE)
-- Semantic changes (use AST tools)
-- Full automation (use sed)
+**Not ideal for:** 1-3 files (IDE), semantic changes (AST tools), full automation (sed)
 
 ## Rollback
 

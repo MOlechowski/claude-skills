@@ -2,24 +2,24 @@
 
 ## Replacement Strings
 
-| String | Description | `/path/to/file.txt` -> |
-|--------|-------------|----------------------|
-| `{}` | Full input | `/path/to/file.txt` |
-| `{.}` | Remove extension | `/path/to/file` |
-| `{/}` | Basename | `file.txt` |
-| `{//}` | Directory | `/path/to` |
-| `{/.}` | Basename, no ext | `file` |
-| `{#}` | Job number | `1`, `2`, `3`... |
-| `{%}` | Job slot | `1`-`N` (cycles) |
+| String | `/path/to/file.txt` -> |
+|--------|------------------------|
+| `{}` | `/path/to/file.txt` |
+| `{.}` | `/path/to/file` |
+| `{/}` | `file.txt` |
+| `{//}` | `/path/to` |
+| `{/.}` | `file` |
+| `{#}` | `1`, `2`, `3`... |
+| `{%}` | `1`-`N` (cycles) |
 
 ## Input Sources
 
 ```bash
-parallel cmd ::: A B C          # Arguments
-parallel cmd :::: file.txt      # Lines from file
-cat file | parallel cmd         # Stdin
-parallel cmd ::: A B ::: 1 2    # Cartesian product
-parallel --link cmd ::: A B ::: 1 2  # Paired (A-1, B-2)
+parallel cmd ::: A B C              # Arguments
+parallel cmd :::: file.txt          # Lines from file
+cat file | parallel cmd             # Stdin
+parallel cmd ::: A B ::: 1 2        # Cartesian product
+parallel --link cmd ::: A B ::: 1 2 # Paired (A-1, B-2)
 ```
 
 ## Common Flags
@@ -27,16 +27,16 @@ parallel --link cmd ::: A B ::: 1 2  # Paired (A-1, B-2)
 | Flag | Description |
 |------|-------------|
 | `-j N` | N parallel jobs |
-| `-j 100%` | One job per core |
+| `-j 100%` | One per core |
 | `-j 50%` | Half cores |
-| `--dry-run` | Show commands, don't run |
-| `--verbose` | Print commands as run |
+| `--dry-run` | Show commands only |
+| `--verbose` | Print commands |
 | `--progress` | Show progress |
-| `--eta` | Show estimated time |
+| `--eta` | Estimated time |
 | `--bar` | Progress bar |
 | `--keep-order` | Output in input order |
-| `--tag` | Prefix output with input |
-| `--group` | Don't interleave output |
+| `--tag` | Prefix with input |
+| `--group` | No interleaving |
 
 ## Job Control
 
@@ -74,18 +74,9 @@ parallel --colsep ',' cmd {1} {2} :::: data.csv
 ## Common Patterns
 
 ```bash
-# Convert images
 parallel convert {} {.}.png ::: *.jpg
-
-# Compress files
 parallel gzip ::: *.log
-
-# Download URLs
 parallel wget ::: url1 url2 url3
-
-# Process with find
 find . -name "*.txt" | parallel wc -l
-
-# Export function
 export -f myfunc && parallel myfunc ::: items
 ```

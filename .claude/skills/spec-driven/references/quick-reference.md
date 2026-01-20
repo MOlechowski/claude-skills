@@ -179,5 +179,3 @@ Trigger questions:
 
 If yes -> Update docs -> Commit: "docs: improve <file> - <description>"
 ```
-
-See: **self-improvement** skill.
