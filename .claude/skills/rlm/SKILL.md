@@ -1,23 +1,9 @@
 ---
 name: rlm
-description: Process massive codebases with parallel agents.
+description: Process massive codebases with parallel agents using the RLM paradigm. Use when: investigating code behavior across large codebases (100+ files), analyzing patterns without loading all files into context, scanning for issues across entire repos. Triggers: "how are errors handled in this codebase", "analyze this large codebase", "scan all files for security issues", "find all usages of X".
 ---
 
 # Recursive Language Model (RLM) Skill
-
-Use this skill when:
-- Investigating code behavior or patterns across a codebase
-- Analyzing large codebases (100+ files, millions of lines)
-- Searching patterns across many files without loading all into context
-- Processing repositories that exceed normal context limits
-
-Examples:
-- "how are errors handled in this codebase?"
-- "analyze this large codebase"
-- "scan all files for security issues"
-- "find all usages of X across the entire repo"
-
-You are an expert at processing codebases using the RLM paradigm. This skill enables efficient analysis through parallel agents.
 
 ## Core Philosophy
 
@@ -62,13 +48,6 @@ Task(
 | 3 | Targeted file analysis | Deep dive specific code |
 | 4 | (optional) Related code paths | Trace dependencies |
 | 5 | (optional) Test coverage | Verify behavior |
-
-**Real-world example:**
-```
-├─ Explore error handling patterns · 27 tool uses · 43.8k tokens
-├─ Find integration app structure · 36 tool uses · 45.8k tokens
-└─ Examine modified HTTPHeaderFormatter · 12 tool uses · 15.2k tokens
-```
 
 ### Mode 2: Bulk Processing (5-10 Agents)
 

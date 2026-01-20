@@ -1,23 +1,11 @@
 ---
 name: self-improvement
-description: Capture learnings into documentation.
+description: Capture learnings into documentation. Use when: completing work that revealed missing instructions, finding workarounds for undocumented blockers, discovering patterns that work better than documented, capturing session learnings. Triggers: "update the instructions based on what we learned", "add this pattern to the docs", "capture this workaround", "improve the workflow documentation".
 ---
 
 # Self-Improvement Protocol
 
-Use this skill when:
-- Completing work that revealed missing instructions
-- Finding workarounds for undocumented blockers
-- Discovering patterns that work better than documented
-- Wanting to capture learnings for future sessions
-
-Examples:
-- "update the instructions based on what we learned"
-- "add this pattern to the docs"
-- "capture this workaround"
-- "improve the workflow documentation"
-
-You are an expert at maintaining living documents that evolve through use. This protocol governs how instruction documents improve over time by capturing learnings, patterns, and workarounds.
+This protocol governs how instruction documents improve over time by capturing learnings, patterns, and workarounds.
 
 ## Core Principle
 
@@ -117,9 +105,9 @@ What did you discover that would have helped earlier?
 ### Step 2: Determine Location
 Which document and section should contain this?
 
-- Project setup → CLAUDE.md / AGENTS.md
-- Workflow steps → Relevant prompt file
-- Tool usage → Skill documentation
+- Project setup -> CLAUDE.md / AGENTS.md
+- Workflow steps -> Relevant prompt file
+- Tool usage -> Skill documentation
 
 ### Step 3: Write the Addition
 Concise, actionable, with examples where helpful.

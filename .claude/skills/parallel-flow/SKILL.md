@@ -1,35 +1,21 @@
 ---
 name: parallel-flow
-description: Parallelize tasks using Claude agents.
+description: Parallelize tasks using Claude agents. Use when: processing multiple files/items concurrently, running analysis across independent code modules, batch operations with cognitive tasks. Triggers: "parallelize this task", "run on all files in parallel", "analyze modules concurrently", "batch process these items".
 ---
 
 # Parallel Flow Skill
 
-Use this skill when:
-- User wants to parallelize a task automatically
-- Processing multiple files/items that can run concurrently
-- Running analysis across independent code modules
-- Batch operations that benefit from parallel execution
-
-Examples:
-- "parallelize this task"
-- "run this on all files in parallel"
-- "analyze these modules concurrently"
-- "batch process these items"
-
-You are an expert at parallelizing work across Claude agents and shell commands. When this skill is activated, you analyze the given task, identify parallelizable units, and execute them concurrently.
-
 ## Workflow
 
 ```
-Input → Analyze → Partition → Execute (parallel) → Aggregate → Output
+Input -> Analyze -> Partition -> Execute (parallel) -> Aggregate -> Output
 ```
 
 ## Phase 1: Analyze
 
 When given a task, determine:
 
-### 1.1 Task Type
+### Task Type
 
 | Type | Characteristics | Parallel Method |
 |------|-----------------|-----------------|
@@ -37,7 +23,7 @@ When given a task, determine:
 | **Command** | Simple shell command per item | GNU parallel / xargs |
 | **Hybrid** | Mix of both | Agents for logic, shell for execution |
 
-### 1.2 Parallelizable Units
+### Parallelizable Units
 
 Identify independent units that can run concurrently:
 - **Files**: Each file processed independently
@@ -45,7 +31,7 @@ Identify independent units that can run concurrently:
 - **Items**: List elements, URLs, records
 - **Chunks**: Portions of large data
 
-### 1.3 Dependencies
+### Dependencies
 
 Check for dependencies that prevent parallelization:
 - Shared state or resources
@@ -57,7 +43,7 @@ Check for dependencies that prevent parallelization:
 
 ## Phase 2: Partition
 
-### 2.1 Partitioning Strategy
+### Partitioning Strategy
 
 **By count:**
 ```
@@ -74,26 +60,26 @@ Partitions (3 agents): [[A, B], [C, D], [E, F]]
 - Group related items (same directory, same type)
 - Separate unrelated items
 
-### 2.2 Resource Limits
+### Resource Limits
 
 - **Max concurrent agents:** 5 (avoid overwhelming system)
 - **Max items per agent:** 10-20 files (keep context manageable)
 - **Shell parallel jobs:** Match CPU cores or I/O capacity
 
-### 2.3 Output Strategy
+### Output Strategy
 
 Each parallel unit needs a defined output location:
 ```
 /tmp/parallel_flow_{task_id}/
-├── agent_0.json
-├── agent_1.json
-├── agent_2.json
-└── aggregated.json
+  agent_0.json
+  agent_1.json
+  agent_2.json
+  aggregated.json
 ```
 
 ## Phase 3: Execute
 
-### 3.1 Agent Parallelism (Cognitive Tasks)
+### Agent Parallelism (Cognitive Tasks)
 
 For tasks requiring reasoning, analysis, or understanding:
 
@@ -137,7 +123,7 @@ TaskOutput(task_id=<agent_0_id>, block=true)
 TaskOutput(task_id=<agent_1_id>, block=true)
 ```
 
-### 3.2 Shell Parallelism (Command Tasks)
+### Shell Parallelism (Command Tasks)
 
 For simple command execution per item:
 
@@ -156,7 +142,7 @@ Bash(
 
 **For complex shell orchestration, reference the `parallel` skill.**
 
-### 3.3 Hybrid Execution
+### Hybrid Execution
 
 When task requires both:
 1. Use agents to generate/plan commands
@@ -165,14 +151,14 @@ When task requires both:
 
 ## Phase 4: Aggregate
 
-### 4.1 Collect Agent Outputs
+### Collect Agent Outputs
 
 ```bash
 # Merge JSON outputs
 jq -s '[.[].findings] | add' /tmp/parallel_flow_*/agent_*.json > aggregated.json
 ```
 
-### 4.2 Handle Partial Failures
+### Handle Partial Failures
 
 ```bash
 # Check which succeeded
@@ -185,7 +171,7 @@ for f in /tmp/parallel_flow_123/agent_*.json; do
 done
 ```
 
-### 4.3 Summarize Results
+### Summarize Results
 
 After aggregation, provide user with:
 - Summary of findings/results
@@ -196,8 +182,8 @@ After aggregation, provide user with:
 
 Use this to decide execution method:
 
-| Question | If Yes → | If No → |
-|----------|----------|---------|
+| Question | If Yes | If No |
+|----------|--------|-------|
 | Requires understanding code? | Agents | Shell |
 | Simple transformation? | Shell | Agents |
 | Need to reason about output? | Agents | Shell |
