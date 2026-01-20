@@ -11,8 +11,7 @@ description: "JSON processing and transformation. Use for: (1) extracting data f
 
 **Identity (`.`)**
 ```bash
-# Pass through unchanged (pretty-print)
-echo '{"name":"Alice"}' | jq '.'
+echo '{"name":"Alice"}' | jq '.'  # Pass through (pretty-print)
 ```
 
 **Field Access (`.field`)**
@@ -27,9 +26,7 @@ echo '{"user":{"name":"Alice"}}' | jq '.user.name'
 
 **Optional Field Access (`.field?`)**
 ```bash
-# Won't error if field doesn't exist
-echo '{"name":"Alice"}' | jq '.age?'
-# Output: null
+echo '{"name":"Alice"}' | jq '.age?'   # null if missing
 ```
 
 ### Array Operations
@@ -335,4 +332,4 @@ echo '{"name":"Alice"}' | jq '.age // empty'
 
 ## Additional Resources
 
-For detailed examples and reference, see `examples.md` and `quick-reference.md`.
+See `examples.md` and `quick-reference.md`.

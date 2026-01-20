@@ -5,7 +5,7 @@ description: "Verify implementation matches spec, update spec on drift. Use when
 
 # Speckit Verify: Sync Spec to Implementation
 
-Verify that specifications accurately reflect implementation. Implementation is the source of truth - when drift is found, the spec is updated.
+Verify specs match implementation. Implementation is source of truth - update spec on drift.
 
 ## Three-Tier Verification
 
@@ -29,43 +29,20 @@ ls submodules/*/.git 2>/dev/null || ls src/
 
 Extract claims and categorize:
 
-**Tier 1 claims** (static values):
-- Config values: "Timeout is 10s"
-- Env vars: "Uses `API_KEY`"
-- Constants: "Max 100 retries"
-- Defaults: "Default port is 8080"
-- Error codes: "Returns error code 404"
+**Tier 1** (static): Config values, env vars, constants, defaults, error codes
 
-**Tier 2 claims** (patterns):
-- Feature presence: "Supports retry with backoff"
-- Test coverage: "Timeout handling tested"
-- Log messages: "Logs 'Connection established'"
-- CLI flags: "Accepts --verbose flag"
-- DB schema: "Table has column `created_at`"
+**Tier 2** (patterns): Feature presence, test coverage, log messages, CLI flags, DB schema
 
-**Tier 3 claims** (behavior):
-- Behavioral: "Retries on network failure"
-- Error handling: "Gracefully handles timeout"
-- Edge cases: "Handles empty input"
-- Security: "Validates user input"
+**Tier 3** (behavior): Behavioral correctness, error handling, edge cases, security
 
 ### 2b. IDENTIFY New Artifacts
 
-Find new files and exports:
-
 ```bash
-# New files from git
 git diff --name-only origin/main | grep -E '\.(ts|js|go|py)$'
-
-# New exports
 git diff origin/main -- '*.ts' '*.js' | grep "^+.*export"
 ```
 
-Track:
-- New files created
-- New exports added
-- New routes defined
-- New services registered
+Track: new files, exports, routes, services
 
 ### 3. TIER 1 - Static Checks (grep)
 
@@ -98,11 +75,7 @@ grep -rn "router\.\|app\.\|Route" src/
 grep -rn "register\|provide\|bind" src/
 ```
 
-Build results table:
-| Claim | Spec | Impl | Status |
-|-------|------|------|--------|
-| Timeout | 10s | 30s | DRIFT |
-| MaxRetries | 5 | 5 | OK |
+Results: `| Claim | Spec | Impl | Status |`
 
 ### 4. TIER 2 - Pattern Checks (ast-grep/semantic)
 
@@ -147,15 +120,11 @@ for f in $(git diff --name-only origin/main); do
 done
 ```
 
-Build results:
-| Feature | Spec'd | Impl'd | Tested | Status |
-|---------|--------|--------|--------|--------|
-| Retry | Yes | Yes | Yes | OK |
-| Rate limit | Yes | No | No | MISSING |
+Results: `| Feature | Spec'd | Impl'd | Tested | Status |`
 
 ### 5. TIER 3 - Analysis Checks (LLM agents)
 
-Spawn analysis agents for behavioral verification:
+Spawn agents for behavioral verification:
 
 **Agent per check:**
 ```
@@ -171,11 +140,7 @@ Task(
 )
 ```
 
-**Checks to run:**
-- Behavioral correctness
-- Error handling completeness
-- Edge case coverage
-- Security validation
+**Checks:** Behavioral correctness, error handling, edge cases, security
 
 **Collect results:**
 ```bash
@@ -221,13 +186,8 @@ Automatically create GitHub issues for each drift finding.
 
 **Detect Implementation Repo:**
 ```bash
-# Check submodules first
 IMPL_REPO=$(ls -d submodules/*/.git 2>/dev/null | head -1 | xargs dirname)
-
-# Fallback to current directory if it has source code
 [ -z "$IMPL_REPO" ] && [ -d "src" -o -f "package.json" -o -f "go.mod" ] && IMPL_REPO="."
-
-# Get full repo path for gh CLI
 cd "$IMPL_REPO"
 IMPL_REPO_FULL=$(gh repo view --json nameWithOwner --jq '.nameWithOwner')
 ```
@@ -273,10 +233,7 @@ done
 
 **Issue Body Template:** See `references/quick-reference.md` for template.
 
-**Error Handling:**
-- No write access: Warn and skip issue creation
-- Duplicate: Skip if open issue with matching title exists
-- Labels missing: Created automatically with `--force`
+**Error Handling:** No write access = warn and skip; Duplicate = skip; Labels = auto-create
 
 ### 7. PREVIEW Changes
 
@@ -301,7 +258,7 @@ Proceed with updates? [Y/n]
 
 ### 8. UPDATE Spec
 
-Apply corrections and add changelog:
+Apply corrections with changelog:
 
 ```markdown
 ## Changelog
@@ -320,10 +277,10 @@ Apply corrections and add changelog:
 ## Rules
 
 1. **Implementation is truth** - Update spec to match impl
-2. **Tier order** - Run T1 -> T2 -> T3 (fast to slow)
-3. **Cite sources** - Reference file:line for each finding
+2. **Tier order** - T1 -> T2 -> T3 (fast to slow)
+3. **Cite sources** - Reference file:line
 4. **Preview first** - Show all tiers before updating
-5. **Categorize issues** - DRIFT vs MISSING vs NOT_HANDLED
+5. **Categorize** - DRIFT vs MISSING vs NOT_HANDLED
 
 ## Quick Reference
 

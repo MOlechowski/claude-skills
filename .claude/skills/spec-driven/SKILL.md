@@ -5,7 +5,7 @@ description: "Autonomous spec-driven development loop. Use when: (1) working thr
 
 # Spec-Driven Development Skill
 
-Requirements live in a separate specification repository with structured task files.
+Requirements live in a separate spec repository with structured task files.
 
 ## Spec Repository Structure
 
@@ -43,7 +43,7 @@ spec-repo/
 
 ### 1. Close Open PRs First
 
-Before creating new work, prioritize merging existing PRs:
+Before creating new work, merge existing PRs:
 
 ```bash
 # Check for open PRs
@@ -100,14 +100,14 @@ git push origin main  # Spec repos typically allow direct push
 
 ## Multi-Spec Implementation (REQUIRED: Use Worktrees)
 
-**When implementing multiple specs in one session, ALWAYS use git worktrees.** This prevents:
-- Branch conflicts when switching between specs
-- Lost work from uncommitted changes
-- Context confusion between specs
+**When implementing multiple specs, ALWAYS use git worktrees.** This prevents:
+- Branch conflicts when switching specs
+- Lost uncommitted work
+- Context confusion
 
 ### Setup Worktrees Upfront
 
-Before starting any implementation, create worktrees for ALL specs:
+Before starting implementation, create worktrees for ALL specs:
 
 ```bash
 # From implementation repo root
@@ -123,7 +123,7 @@ git worktree list
 
 ### Implement in Separate Directories
 
-Work in each worktree directory independently:
+Work in each worktree independently:
 
 ```bash
 # Spec 014
@@ -148,18 +148,18 @@ git worktree remove ../impl-015-feature
 git branch -d 014-feature-name 015-feature-name
 ```
 
-### Why Worktrees for Multi-Spec?
+### Why Worktrees?
 
 | Without Worktrees | With Worktrees |
 |-------------------|----------------|
-| `git checkout` loses uncommitted work | Each spec has isolated directory |
-| Easy to commit to wrong branch | Each worktree = one branch only |
-| Must remember current branch | Directory name = spec context |
-| Sequential only | Can work on specs in parallel |
+| `git checkout` loses uncommitted work | Isolated directories |
+| Easy to commit to wrong branch | One worktree = one branch |
+| Must track current branch | Directory name = context |
+| Sequential only | Parallel work |
 
 ## Parallel Work
 
-Combine git-worktree (isolated directories) with parallel-flow (agent orchestration):
+Combine git-worktree with parallel-flow:
 
 ### Setup Worktrees
 
@@ -172,7 +172,7 @@ git worktree add ../impl-task-3 -b feat/task-3
 
 ### Launch Parallel Agents
 
-Use parallel-flow to launch agents, each working in its own worktree:
+Use parallel-flow to launch agents per worktree:
 
 ```
 Task(
@@ -223,11 +223,11 @@ After agents complete:
 
 ## Handling Blocked Tasks
 
-Some tasks require infrastructure not available in the current session:
+Some tasks require unavailable infrastructure:
 
 ### E2E Tests Requiring Credentials
 
-Write the test files anyway with appropriate build tags:
+Write test files with appropriate build tags:
 
 ```go
 //go:build e2e
@@ -242,9 +242,9 @@ func TestFeatureE2E(t *testing.T) {
 
 ### Tasks Requiring Deployed Infrastructure
 
-1. Document the blocker clearly
-2. Create the code that will work once infrastructure exists
-3. Mark task with note: `- [ ] Task name (blocked: needs X deployed)`
+1. Document the blocker
+2. Create code that works once infrastructure exists
+3. Mark task: `- [ ] Task name (blocked: needs X deployed)`
 
 ### Unit Tests for External Dependencies
 
@@ -282,7 +282,7 @@ func TestFeature(t *testing.T) {
 
 ## Reflection After Tasks
 
-After completing tasks or a work session, reflect on learnings using the self-improvement skill:
+After completing tasks, reflect on learnings using self-improvement skill:
 
 ### Trigger Questions
 - Did I figure out something not in the docs?

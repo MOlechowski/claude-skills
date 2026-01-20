@@ -1,12 +1,10 @@
-# jq Examples - Real-World Usage Patterns
+# jq Examples
 
 ## API Response Processing
 
 ### Extract User Data from API
 ```bash
-# Get all user names from GitHub API
-curl -s 'https://api.github.com/users/octocat/repos' | \
-  jq '.[].name'
+curl -s 'https://api.github.com/users/octocat/repos' | jq '.[].name'
 
 # Get repo names and star counts
 curl -s 'https://api.github.com/users/octocat/repos' | \
@@ -506,21 +504,15 @@ jq '
 
 ### Stream Processing Large Files
 ```bash
-# Process large JSON array without loading all into memory
-jq -c '.[]' huge-array.json | \
-  while IFS= read -r obj; do
-    echo "$obj" | jq 'select(.important == true)'
-  done
+jq -c '.[]' huge-array.json | while IFS= read -r obj; do
+  echo "$obj" | jq 'select(.important == true)'
+done
 
-# Limit processing to first N items
-jq 'limit(100; .items[])' large-file.json
+jq 'limit(100; .items[])' large-file.json  # First N items
 ```
 
 ### Efficient Filtering
 ```bash
-# Early exit patterns
-jq 'first(.items[] | select(.id == 123))' data.json
-
-# Use compact output for faster downstream processing
-jq -c '.items[]' data.json | process-items.sh
+jq 'first(.items[] | select(.id == 123))' data.json  # Early exit
+jq -c '.items[]' data.json | process-items.sh         # Compact for pipelines
 ```

@@ -21,13 +21,13 @@ yq [OPTIONS] <expression> [FILE...]
 
 | Flag | Format |
 |------|--------|
-| `-o yaml` / `-o y` | YAML (default) |
-| `-o json` / `-o j` | JSON |
-| `-o xml` / `-o x` | XML |
-| `-o props` / `-o p` | Properties |
-| `-o csv` / `-o c` | CSV |
-| `-o toml` / `-o t` | TOML |
-| `-p <format>` | Input format (auto-detected by default) |
+| `-o yaml` | YAML (default) |
+| `-o json` | JSON |
+| `-o xml` | XML |
+| `-o props` | Properties |
+| `-o csv` | CSV |
+| `-o toml` | TOML |
+| `-p <format>` | Input format (auto-detect) |
 
 ## Path Expressions
 
