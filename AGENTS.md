@@ -1,3 +1,8 @@
+---
+last_validated: 2026-01-21T13:25:00Z
+project_type: skills-repository
+---
+
 # Agent Instructions: claude-skills
 
 This file provides guidance to Claude Code when working with code in this repository.
@@ -9,21 +14,61 @@ This is a Claude Skills configuration repository following Anthropic's Agent Ski
 ## Repository Structure
 
 ```
-claude-skills/
-├── .claude/
-│   ├── skills/                # Skill directories
-│   │   └── [skill-name]/      # Each skill in its own directory
-│   │       ├── SKILL.md       # Main skill definition
-│   │       ├── *.md           # Optional reference files
-│   │       ├── *.py           # Optional executable code
-│   │       └── *              # Other resources
-│   └── settings.local.json    # Local permissions
-├── AGENTS.md                  # This file (source of truth)
-├── CLAUDE.md                  # Reference pointer
-├── README.md                  # Public documentation
-├── CHANGELOG.md               # Version history
-├── LICENSE                    # MIT license
-└── install.sh                 # Installation script
+.
+├── .claude
+│   ├── commands
+│   │   ├── speckit.analyze.md
+│   │   ├── speckit.checklist.md
+│   │   ├── speckit.clarify.md
+│   │   ├── speckit.constitution.md
+│   │   ├── speckit.implement.md
+│   │   ├── speckit.plan.md
+│   │   ├── speckit.specify.md
+│   │   ├── speckit.tasks.md
+│   │   └── speckit.taskstoissues.md
+│   ├── settings.local.json
+│   └── skills
+│       ├── ast-grep
+│       ├── claude-md
+│       ├── commit
+│       ├── commit-pr
+│       ├── fastmod
+│       ├── fzf
+│       ├── gh-pr
+│       ├── git-worktree
+│       ├── jq
+│       ├── parallel
+│       ├── parallel-flow
+│       ├── ripgrep
+│       ├── rlm
+│       ├── self-improvement
+│       ├── skill-creator
+│       ├── spec-driven
+│       ├── speckit-audit
+│       ├── speckit-flow
+│       ├── speckit-retro
+│       ├── speckit-verify
+│       ├── tmux
+│       ├── token-optimize
+│       ├── tree
+│       ├── web-research
+│       └── yq
+├── .specify
+│   ├── memory
+│   ├── scripts
+│   └── templates
+├── scripts
+│   ├── common.py
+│   └── speckit_*.py
+├── specs
+│   └── [spec-directories]
+├── *.skill                       # Packaged skill archives
+├── AGENTS.md                     # This file
+├── CLAUDE.md                     # Reference pointer
+├── README.md                     # Public documentation
+├── CHANGELOG.md                  # Version history
+├── LICENSE                       # MIT license
+└── install.sh                    # Installation script
 ```
 
 ## Skills Framework

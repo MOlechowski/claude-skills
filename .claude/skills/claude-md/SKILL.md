@@ -59,7 +59,7 @@ The init script auto-detects project type:
 ```markdown
 # Claude Code Instructions
 
-See [AGENTS.md](./AGENTS.md) for detailed instructions.
+See @AGENTS.md for detailed instructions.
 ```
 
 **AGENTS.md:**
