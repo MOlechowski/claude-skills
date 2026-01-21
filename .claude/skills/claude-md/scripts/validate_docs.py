@@ -265,9 +265,12 @@ def validate_claude_md(project_path: Path) -> ValidationResult:
 
     content = claude_md.read_text()
 
-    # Check it references AGENTS.md
-    if "AGENTS.md" not in content:
-        result.add_warning("CLAUDE.md doesn't reference AGENTS.md")
+    # Check it references @AGENTS.md with proper syntax
+    if "@AGENTS.md" not in content:
+        if "AGENTS.md" in content:
+            result.add_warning("CLAUDE.md references AGENTS.md without @ prefix - use @AGENTS.md")
+        else:
+            result.add_warning("CLAUDE.md doesn't reference @AGENTS.md")
 
     return result
 
