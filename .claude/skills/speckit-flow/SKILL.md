@@ -17,6 +17,42 @@ Generated artifacts rules:
 - Natural tone, lead with action/outcome
 - Match repo language
 
+## Design Philosophy
+
+Follow Linus Torvalds' principles when designing specs:
+
+**Good Taste**
+- Recognize elegant vs. inelegant solutions
+- Prefer approaches that feel natural and obvious
+- If a solution needs extensive explanation, it's probably wrong
+
+**Simplicity First**
+- The best feature is no feature - question if it's needed
+- Remove complexity before adding it
+- Fewer moving parts means fewer failure modes
+
+**Solve the Actual Problem**
+- Spec what's needed now, not hypothetical futures
+- Avoid "what if" features that may never be used
+- YAGNI - You Aren't Gonna Need It
+
+**Data Structures Over Algorithms**
+- Define your data models clearly first
+- The right data structure makes the code obvious
+- Bad data design creates complex code
+
+**Right-Size Your Specs**
+- Max 5 user stories per spec
+- Max 20 tasks in tasks.md
+- If you can't explain the feature in 5 minutes, it's too big
+- One spec = one deployable unit of value
+
+**When to Split**
+- Multiple unrelated user personas
+- Independent data domains
+- Features that could ship separately
+- Split by user flow or data entity, not by technical layer
+
 ## Overview
 
 End-to-end spec-driven development:
