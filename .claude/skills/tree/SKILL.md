@@ -1,6 +1,6 @@
 ---
 name: tree
-description: "Generate directory trees for documentation. Use when: (1) creating project structure docs, (2) visualizing folder layout, (3) updating directory trees in markdown files."
+description: "Generate directory trees for documentation. Use when: (1) creating project structure docs, (2) visualizing folder layout, (3) updating directory trees in markdown files. Triggers: directory tree, folder structure, project structure, tree command."
 ---
 
 # Tree

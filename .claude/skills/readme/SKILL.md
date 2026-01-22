@@ -1,6 +1,6 @@
 ---
 name: readme
-description: "Create and update README.md files. Use when: (1) generating README for a new project, (2) updating stale README content, (3) validating README matches codebase."
+description: "Create and update README.md files. Use when: (1) generating README for a new project, (2) updating stale README content, (3) validating README matches codebase. Triggers: README, readme, project documentation, create readme."
 ---
 
 # README

@@ -1,6 +1,6 @@
 ---
 name: claude-md
-description: "Create and update CLAUDE.md and AGENTS.md files. Use when: (1) setting up Claude documentation for a project, (2) updating agent instructions after codebase changes, (3) validating docs match current structure."
+description: "Create and update CLAUDE.md and AGENTS.md files. Use when: (1) setting up Claude documentation for a project, (2) updating agent instructions after codebase changes, (3) validating docs match current structure. Triggers: CLAUDE.md, AGENTS.md, agent instructions, project documentation."
 ---
 
 # Claude MD
