@@ -168,4 +168,7 @@ Status mode:
 5. **Max 5 fix cycles** - prevent infinite loops
 6. **Log all actions** for audit
 
-See `quick-reference.md` for gh CLI reference.
+## References
+
+- [references/quick-reference.md](references/quick-reference.md) - gh CLI reference
+- [references/decision-tree.md](references/decision-tree.md) - Complex PR scenarios

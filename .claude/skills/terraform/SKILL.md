@@ -244,73 +244,6 @@ module "vpc" {
 }
 ```
 
-## Terraform Cloud/Enterprise
-
-### Login and Setup
-
-```bash
-# Login to Terraform Cloud
-terraform login
-
-# Login to Enterprise
-terraform login app.terraform.example.com
-```
-
-### Cloud Backend Configuration
-
-```hcl
-terraform {
-  cloud {
-    organization = "my-org"
-
-    workspaces {
-      name = "my-workspace"
-    }
-  }
-}
-
-# Or with tags for multiple workspaces
-terraform {
-  cloud {
-    organization = "my-org"
-
-    workspaces {
-      tags = ["app:web", "env:production"]
-    }
-  }
-}
-```
-
-### Remote Execution
-
-```bash
-# Runs execute in Terraform Cloud
-terraform plan   # Plan runs remotely
-terraform apply  # Apply runs remotely
-
-# Local planning with remote state
-terraform plan -target=aws_instance.web
-```
-
-### Sentinel Policy (Enterprise)
-
-```hcl
-# Sentinel policy example - enforce tagging
-import "tfplan/v2" as tfplan
-
-required_tags = ["Environment", "Owner", "Project"]
-
-main = rule {
-  all tfplan.resources as _, r {
-    all r.changes as _, c {
-      all required_tags as tag {
-        c.after.tags contains tag
-      }
-    }
-  }
-}
-```
-
 ## Multi-Environment Patterns
 
 ### Directory-Based (Recommended for Different Infrastructure)
@@ -463,16 +396,6 @@ jobs:
 | state push | Critical | Never without backup |
 | import | Low | Verify resource ID first |
 
-### Terraform Cloud vs Self-Managed
-
-| Factor | Terraform Cloud | Self-Managed |
-|--------|-----------------|--------------|
-| State management | Automatic | Configure backend |
-| Remote execution | Built-in | CI/CD pipeline |
-| Policy enforcement | Sentinel | External tools |
-| Cost estimation | Built-in | Manual |
-| Team collaboration | Built-in | Git + reviews |
-
 ## Safety Rules
 
 1. **Never auto-approve in production** - Always review plans
@@ -514,6 +437,7 @@ terraform apply
 
 ## Resources
 
-See `references/quick-reference.md` for command cheatsheet.
-See `references/examples.md` for real-world workflows.
-See `references/decision-tree.md` for complex decision scenarios.
+- [references/quick-reference.md](references/quick-reference.md) - Command cheatsheet
+- [references/examples.md](references/examples.md) - Real-world workflows
+- [references/decision-tree.md](references/decision-tree.md) - Complex decision scenarios
+- [references/cloud.md](references/cloud.md) - Terraform Cloud/Enterprise
