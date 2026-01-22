@@ -305,36 +305,21 @@ aws pricing describe-services --service-code AmazonEC2 --region us-east-1
 
 ### AWS MCP Servers
 
-AWS provides official MCP servers via [awslabs/mcp](https://github.com/awslabs/mcp) for AI-assisted infrastructure work.
+AWS provides 64+ official MCP servers via [awslabs/mcp](https://github.com/awslabs/mcp) for AI-assisted infrastructure work.
 
-**Installation:** All servers install via `uvx awslabs.<server-name>@latest`
+**Quick Install:** `uvx awslabs.<server-name>@latest`
 
-#### Recommended for Architecture Decisions
+**Top servers by category:**
 
-| Server | Purpose |
-|--------|---------|
-| `aws-pricing-mcp-server` | Cost estimation, multi-region comparison |
-| `aws-well-architected-mcp-server` | Evaluate against 6 pillars |
-| `aws-documentation-mcp-server` | Access latest AWS docs and APIs |
-| `aws-knowledge-mcp-server` | Official AWS content and code samples |
+| Category | Servers |
+|----------|---------|
+| Architecture | `aws-pricing-mcp-server`, `aws-well-architected-mcp-server`, `aws-documentation-mcp-server` |
+| IaC | `aws-cdk-mcp-server`, `aws-terraform-mcp-server`, `aws-cloudformation-mcp-server` |
+| Data | `amazon-dynamodb-mcp-server`, `amazon-aurora-postgresql-mcp-server`, `amazon-redshift-mcp-server` |
+| ML/AI | `amazon-bedrock-kb-retrieval-mcp-server`, `amazon-sagemaker-mcp-server`, `amazon-kendra-index-mcp-server` |
+| Operations | `amazon-cloudwatch-mcp-server`, `aws-cloudtrail-mcp-server`, `aws-cost-explorer-mcp-server` |
 
-#### For IaC & Deployment
-
-| Server | Purpose |
-|--------|---------|
-| `aws-cdk-mcp-server` | CDK development with security compliance |
-| `aws-terraform-mcp-server` | Terraform workflows with security scanning |
-| `aws-cloudformation-mcp-server` | Direct CloudFormation management |
-
-#### For Operations & Cost
-
-| Server | Purpose |
-|--------|---------|
-| `aws-cost-explorer-mcp-server` | Historical cost analysis |
-| `aws-cloudwatch-mcp-server` | Metrics, alarms, logs |
-| `aws-iam-mcp-server` | IAM management with best practices |
-
-**Example config (Claude Code `~/.claude/settings.json`):**
+**Example config:**
 ```json
 {
   "mcpServers": {
@@ -342,18 +327,12 @@ AWS provides official MCP servers via [awslabs/mcp](https://github.com/awslabs/m
       "command": "uvx",
       "args": ["awslabs.aws-pricing-mcp-server@latest"],
       "env": { "AWS_PROFILE": "your-profile" }
-    },
-    "aws-docs": {
-      "command": "uvx",
-      "args": ["awslabs.aws-documentation-mcp-server@latest"]
     }
   }
 }
 ```
 
-**Requires:** AWS credentials with appropriate permissions per server.
-
-See: [AWS MCP Servers Documentation](https://awslabs.github.io/mcp/)
+For full catalog (64+ servers), configuration examples, and IAM permissions, see: [references/mcp-servers.md](references/mcp-servers.md)
 
 ### Web Tools
 
@@ -544,6 +523,7 @@ For Terraform patterns, see: `terraform` or `tofu` skills.
 - [references/service-selection.md](references/service-selection.md) - Comprehensive decision matrices
 - [references/security-patterns.md](references/security-patterns.md) - IAM, encryption, network security
 - [references/cost-optimization.md](references/cost-optimization.md) - Savings strategies
+- [references/mcp-servers.md](references/mcp-servers.md) - Complete AWS MCP servers catalog (64+ servers)
 
 ### MCP Servers
 - [AWS MCP Servers (awslabs/mcp)](https://github.com/awslabs/mcp) - Official AWS MCP servers
