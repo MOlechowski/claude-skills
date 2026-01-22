@@ -10,7 +10,7 @@ Full commit-to-PR flow via skill composition.
 ## Workflow
 
 ```
-1. Branch → 2. Commit → 3. Push → 4. PR → 5. Merge
+1. Branch → 2. Commit → 3. Push → 4. PR → 5. Manage
 ```
 
 ## Steps
@@ -51,15 +51,13 @@ Use `/pr-create` skill for PR creation.
 Skill(skill="pr-create")
 ```
 
-### 5. Merge
+### 5. Manage PR
 
-Use `/pr-manage` skill for merge and lifecycle.
+Use `/pr-manage` skill for PR lifecycle (status check, fixes, merge).
 
 ```
 Skill(skill="pr-manage")
 ```
-
-Skip merge if user requests "create PR only" or "no merge".
 
 ## Safety
 
