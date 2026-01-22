@@ -1,6 +1,6 @@
 ---
 name: tmux
-description: "Terminal multiplexer session management. Use for: (1) running commands in persistent sessions, (2) automating interactive CLI workflows, (3) capturing output from long-running processes, (4) managing background tasks. Triggers: run in tmux, create session, send keys, capture output, interactive script automation."
+description: "Terminal multiplexer for interactive and background commands. Use when: (1) script prompts for input (y/n, confirmation, passwords), (2) bash command fails due to interactive prompt, (3) long-running process needs monitoring, (4) need to send keystrokes to running program. Triggers: /tmux, script needs input, answer prompts, y/n confirmation, command timed out waiting for input."
 ---
 
 # Tmux Skill
