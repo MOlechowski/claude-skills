@@ -53,6 +53,16 @@ Follow Linus Torvalds' principles when designing specs:
 - Features that could ship separately
 - Split by user flow or data entity, not by technical layer
 
+## Required Sections
+
+For detailed format requirements and examples, see [references/spec-format.md](references/spec-format.md).
+
+**Summary:**
+- **spec.md**: Overview, User Scenarios (Gherkin), Requirements (FR/NFR-XXX), Success Criteria (SC-XXX), Edge Cases, Out of Scope
+- **plan.md**: Overview, Tech Stack (table), Phases, Risks (table), Verification Checklist, Rollback Plan
+- **tasks.md**: Max 20 tasks, checkbox format, Component/Integration/Verification categories
+- **checklists/**: Directory with at least one `.md` file using CHK-XXX format
+
 ## Overview
 
 End-to-end spec-driven development:
@@ -67,7 +77,9 @@ Fully autonomous, halts only on errors. Creates PR for spec artifacts. Implement
 
 ## Phase Scripts
 
-Each phase is implemented as a Python script in `scripts/`:
+> **Note**: These scripts are bundled with the speckit-flow skill at `~/.claude/skills/speckit-flow/scripts/`. They are NOT expected to exist in your target repository.
+
+Each phase is implemented as a Python script:
 
 | Phase | Script | Usage |
 |-------|--------|-------|
@@ -318,11 +330,24 @@ python scripts/speckit_validate.py [FEATURE_DIR] [OPTIONS]
 
 **Validates:**
 
-| File | Required Sections | Checks |
-|------|-------------------|--------|
-| spec.md | overview, requirements | User stories, acceptance criteria (recommended) |
-| plan.md | tech stack, architecture | Dependencies, risks (recommended), language defined |
-| tasks.md | - | Checkbox format, task count, phase structure |
+| File | Required Sections | Format Checks |
+|------|-------------------|---------------|
+| spec.md | Overview, User Scenarios, Requirements, Success Criteria, Edge Cases, Out of Scope | Gherkin format, SC-XXX format, FR-XXX format |
+| plan.md | Tech Stack, Risks | Table format |
+| tasks.md | Checkbox format | Max 20 tasks, Component/Integration/Verification categories |
+| checklists/ | Directory exists | At least one .md file |
+
+**Auto-Fix Templates:**
+
+When a required section is **missing**, the validator automatically shows a template to add it. Templates are NOT shown for format issues (e.g., section exists but lacks Gherkin format).
+
+| Error Type | Template Shown? |
+|------------|-----------------|
+| Section missing | Yes |
+| Directory missing | Yes |
+| Format issue (section exists) | No |
+| Unresolved markers | No |
+| Task count exceeded | No |
 
 **Unresolved Markers Detected:**
 - `[TODO]`, `[TBD]`, `NEEDS CLARIFICATION`
@@ -333,25 +358,58 @@ python scripts/speckit_validate.py [FEATURE_DIR] [OPTIONS]
 - 1: Validation errors found
 - 2: Warnings found (with --strict)
 
-**Example Output:**
+**Example Output (with missing sections):**
 ```
 🔍 Validating feature: 001-my-feature
 
 spec.md
   ✅ File exists
   ✅ Has overview section
-  ⚠️ Missing recommended section: user stories
+  ❌ Missing required section: user scenarios
+  ✅ Has requirements section
+  ⚠️ Requirements not using FR-XXX/NFR-XXX format
 
 plan.md
   ✅ File exists
-  ✅ Language defined: Python 3.11
+  ❌ Missing Tech Stack section
+  ⚠️ Risks section should use table format
 
 tasks.md
   ✅ Found 12 tasks (3 completed)
-  ✅ Found 4 phases
+  ✅ Task count within limit (12/20)
 
-Summary: 0 errors, 1 warning
+checklists/
+  ✅ Directory exists
+  ✅ Found 2 checklist(s)
+
+Summary: 2 errors, 2 warnings
+
+──────────────────────────────────────────────────
+
+📋 FIX: Missing required section: user scenarios
+
+## User Scenarios
+
+### US-1: [Scenario Name]
+
+```gherkin
+Given [precondition]
+When [action]
+Then [expected result]
 ```
+
+📋 FIX: Missing Tech Stack section
+
+## Tech Stack
+
+| Category | Technology | Version |
+|----------|------------|---------|
+| Language | Python | >= 3.11 |
+
+──────────────────────────────────────────────────
+```
+
+Note: Format warnings (e.g., "not using FR-XXX format") don't get templates because the section already exists.
 
 ---
 
