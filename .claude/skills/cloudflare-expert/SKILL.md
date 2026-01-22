@@ -1,6 +1,6 @@
 ---
 name: cloudflare-expert
-description: "Cloudflare infrastructure expertise: architecture decisions, Zero Trust, security (WAF, DDoS, bots), rate limiting, caching, Workers AI, IaC. Use for: choosing tunnel types, storage selection, Access policies, security configuration, Workers vs Pages, caching strategy, AI patterns, migration. Triggers: cloudflare architecture, zero trust, rate limiting, cloudflare terraform, WAF, DDoS, bot management, tiered cache, argo, workers ai, vectorize."
+description: "Cloudflare infrastructure expertise: architecture decisions, Zero Trust, security (WAF, DDoS, bots), rate limiting, caching, Workers AI, MCP servers, IaC. Use for: choosing tunnel types, storage selection, Access policies, security configuration, Workers vs Pages, caching strategy, AI patterns, migration. Triggers: cloudflare architecture, zero trust, rate limiting, cloudflare terraform, WAF, DDoS, bot management, tiered cache, argo, workers ai, vectorize, cloudflare mcp."
 ---
 
 # Cloudflare Expert
@@ -355,6 +355,32 @@ const response = await env.AI.run('@cf/meta/llama-2-7b-chat-int8', {
 - Rate limiting and spend controls
 - Safety filters
 
+## MCP Servers
+
+Cloudflare provides 16 official remote MCP servers via [cloudflare/mcp-server-cloudflare](https://github.com/cloudflare/mcp-server-cloudflare).
+
+**Key difference from AWS:** Cloudflare MCP servers are remote (hosted URLs), not local installations.
+
+**Configuration:**
+```json
+{
+  "mcpServers": {
+    "cloudflare-docs": {
+      "url": "https://docs.mcp.cloudflare.com/mcp"
+    }
+  }
+}
+```
+
+**Top servers for Cloudflare development:**
+- `docs.mcp.cloudflare.com` - Documentation search
+- `bindings.mcp.cloudflare.com` - Workers bindings (KV, R2, D1)
+- `observability.mcp.cloudflare.com` - Logs and metrics
+- `ai-gateway.mcp.cloudflare.com` - AI Gateway management
+- `radar.mcp.cloudflare.com` - Internet insights (no auth required)
+
+For full catalog and configuration, see: [references/mcp-servers.md](references/mcp-servers.md)
+
 ## Workers vs Pages
 
 **2025 Status:** Pages is in maintenance mode. Workers is the future.
@@ -445,6 +471,7 @@ If using orange-cloud proxy mode, IP changes are instant (Cloudflare controls ro
 - [references/tofu-provider.md](references/tofu-provider.md) - OpenTofu resources, HCL examples
 - [references/security-patterns.md](references/security-patterns.md) - WAF, bots, DDoS, rate limiting
 - [references/cost-optimization.md](references/cost-optimization.md) - Pricing, free tiers, optimization
+- [references/mcp-servers.md](references/mcp-servers.md) - 16 official MCP servers, configuration
 - [scripts/fetch_prices.py](scripts/fetch_prices.py) - Fetch current pricing from Cloudflare docs
 
 ### Official Documentation
@@ -455,6 +482,7 @@ If using orange-cloud proxy mode, IP changes are instant (Cloudflare controls ro
 - [DDoS Protection](https://developers.cloudflare.com/ddos-protection/get-started/)
 - [Zero Trust Access](https://developers.cloudflare.com/cloudflare-one/policies/access/)
 - [Cloudflare Terraform Provider](https://registry.terraform.io/providers/cloudflare/cloudflare/latest/docs)
+- [Cloudflare MCP Servers](https://github.com/cloudflare/mcp-server-cloudflare)
 
 ### Pricing (use /web-research for current rates)
 - [Plans & Pricing](https://www.cloudflare.com/plans/)
