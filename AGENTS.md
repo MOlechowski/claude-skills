@@ -163,29 +163,20 @@ This repository serves as:
 
 ### Skill Description Best Practices
 
-**Keep descriptions short** - they appear in skill lists and should fit on one line.
+**Description guidelines:**
+- Maximum 1024 characters (enforced by validator)
+- Include "Use when:" or "Use for:" patterns to help Claude recognize when to activate
+- Include "Triggers:" with keywords that should activate the skill
+- Be specific about what problems the skill solves
 
-Put detailed info in the markdown body:
+**Example:**
 
 ```yaml
 ---
-name: react-perf
-description: React performance optimization.
+name: cloudflared
+description: "Cloudflare Tunnel CLI for exposing local services. Use for: quick tunnels (dev), named tunnels (prod), DNS routing, system service setup. Triggers: cloudflared, tunnel, expose localhost."
 ---
-
-# React Performance Skill
-
-Use this skill when:
-- Analyzing React component render performance
-- Implementing memoization strategies
-- Optimizing bundle sizes
-
-Examples:
-- "My React app is slow, help optimize"
-- "Implement memoization for this component"
 ```
-
-**Don't** put "Use this skill when" or "Examples" in the frontmatter description.
 
 ## Installation and Usage
 
