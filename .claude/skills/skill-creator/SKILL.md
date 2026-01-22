@@ -201,12 +201,17 @@ Steps:
 
 1. Understand the skill with concrete examples
 2. Plan reusable contents (scripts, references, assets)
-3. Initialize the skill (run init_skill.py)
+3. Initialize the skill
 4. Edit the skill (implement resources and write SKILL.md)
-5. Package the skill (run package_skill.py)
+5. Validate and package the skill
 6. Iterate based on real usage
 
 Follow in order; skip only with clear reason.
+
+**Bundled scripts** (in this skill's `scripts/` directory):
+- `init_skill.py` - Initialize new skill directory
+- `package_skill.py` - Validate and package skill
+- `quick_validate.py` - Validate skill without packaging
 
 ### Step 1: Understanding with Concrete Examples
 
@@ -249,12 +254,10 @@ Analyze examples to create a list of reusable resources.
 
 Skip if skill exists and needs iteration/packaging.
 
-When creating from scratch, run `init_skill.py`. It generates a template skill directory with everything required.
-
-Usage:
+Run `init_skill.py` from this skill's scripts directory:
 
 ```bash
-scripts/init_skill.py <skill-name> --path <output-directory>
+python3 ~/.claude/skills/skill-creator/scripts/init_skill.py <skill-name> --path <output-directory>
 ```
 
 The script:
@@ -304,29 +307,31 @@ No other fields in YAML frontmatter.
 
 Write instructions for using the skill and bundled resources.
 
-### Step 5: Packaging a Skill
+### Step 5: Validate and Package
 
-Package into distributable .skill file. Validates first.
+**Quick validation** (no packaging):
 
 ```bash
-scripts/package_skill.py <path/to/skill-folder>
+python3 ~/.claude/skills/skill-creator/scripts/quick_validate.py <path/to/skill-folder>
+```
+
+**Package** into distributable .skill file (validates first):
+
+```bash
+python3 ~/.claude/skills/skill-creator/scripts/package_skill.py <path/to/skill-folder>
 ```
 
 Optional output directory:
 
 ```bash
-scripts/package_skill.py <path/to/skill-folder> ./dist
+python3 ~/.claude/skills/skill-creator/scripts/package_skill.py <path/to/skill-folder> ./dist
 ```
 
-The script:
-
-1. **Validates** automatically:
-   - YAML frontmatter format and required fields
-   - Naming conventions and directory structure
-   - Description completeness
-   - File organization and references
-
-2. **Packages** if validation passes, creating a .skill file (zip with .skill extension) maintaining directory structure.
+Validation checks:
+- YAML frontmatter format and required fields
+- Naming conventions and directory structure
+- Description completeness
+- File organization and references
 
 If validation fails, fix errors and run again.
 
