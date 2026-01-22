@@ -8,6 +8,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **aws-cli skill** - AWS CLI v2 expertise for command-line operations
+  - Authentication methods (IAM, SSO, roles, profiles, environment variables)
+  - Output formatting with JMESPath queries and jq integration
+  - 20+ AWS service command references (EC2, S3, Lambda, ECS, RDS, DynamoDB, etc.)
+  - Multi-account patterns and cross-account role assumption
+  - CI/CD integration (GitHub Actions, GitLab CI with OIDC federation)
+  - Local development tools (LocalStack, SAM CLI, CDK CLI)
+  - Debugging and troubleshooting patterns
+  - Quick reference cheatsheet and scripting examples
+- **aws-expert skill** - AWS architecture expertise following Well-Architected Framework
+  - Six pillars deep dive (Operational Excellence, Security, Reliability, Performance, Cost, Sustainability)
+  - Comprehensive service selection matrices (Compute, Database, Storage, Messaging)
+  - Architecture patterns (Serverless, Containers, Event-Driven, Data Lakes, Multi-Region)
+  - Security patterns (IAM best practices, encryption, network security, compliance)
+  - Cost optimization strategies (Savings Plans, Reserved Instances, Spot, right-sizing)
+  - DR/HA patterns (Multi-AZ, multi-region, RTO/RPO planning)
+  - IaC recommendations (CloudFormation vs CDK vs Terraform comparison)
 - Initial repository setup following Anthropic's Skills framework
 - Installation script for copying skills to `~/.claude/skills/`
 - README with skills documentation and guidelines

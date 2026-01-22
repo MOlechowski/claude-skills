@@ -160,6 +160,30 @@ Skills can include additional files in their directory:
 - Regex-based transformations with interactive review
 - Safe multi-file refactoring with human oversight
 
+### Cloud Infrastructure
+
+#### aws-cli
+**Purpose:** AWS CLI v2 expertise for command-line operations, authentication, and automation
+**Files:** SKILL.md, references/quick-reference.md, references/examples.md
+**Use Cases:**
+- AWS authentication (IAM, SSO, roles, profiles)
+- Service commands for 20+ AWS services (EC2, S3, Lambda, ECS, RDS, etc.)
+- Output formatting with JMESPath queries and jq integration
+- Multi-account patterns and cross-account access
+- CI/CD integration (GitHub Actions, GitLab CI with OIDC)
+- Local development with LocalStack, SAM CLI, CDK CLI
+
+#### aws-expert
+**Purpose:** AWS architecture expertise following Well-Architected Framework principles
+**Files:** SKILL.md, references/well-architected.md, references/service-selection.md, references/security-patterns.md, references/cost-optimization.md
+**Use Cases:**
+- Architecture decisions and service selection
+- Well-Architected Framework (6 pillars)
+- Security best practices (IAM, encryption, network security)
+- Cost optimization (Reserved Instances, Savings Plans, Spot)
+- DR/HA patterns (Multi-AZ, multi-region)
+- Observability and monitoring strategies
+
 ## Usage
 
 Once installed, skills automatically become available to Claude Code. Claude will:
