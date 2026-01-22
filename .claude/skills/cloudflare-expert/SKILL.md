@@ -103,6 +103,8 @@ resource "cloudflare_bot_management" "example" {
 - Presents JS challenge to all visitors
 - Whitelist legitimate API sources first
 
+For detailed security patterns, see: [references/security-patterns.md](references/security-patterns.md)
+
 ## Pricing & Costs
 
 **Get current prices:**
@@ -166,6 +168,8 @@ Or use `/web-research Cloudflare pricing [service]` or check [cloudflare.com/pla
 - Start on Free plan, upgrade when limits hit
 - Monitor usage in dashboard
 - ~50% of Pro users started on Free
+
+For detailed cost strategies, see: [references/cost-optimization.md](references/cost-optimization.md)
 
 ## Rate Limiting
 
@@ -439,6 +443,8 @@ If using orange-cloud proxy mode, IP changes are instant (Cloudflare controls ro
 ### Local Reference Files
 - [references/zero-trust.md](references/zero-trust.md) - Access policies, service tokens, IdP setup
 - [references/tofu-provider.md](references/tofu-provider.md) - OpenTofu resources, HCL examples
+- [references/security-patterns.md](references/security-patterns.md) - WAF, bots, DDoS, rate limiting
+- [references/cost-optimization.md](references/cost-optimization.md) - Pricing, free tiers, optimization
 - [scripts/fetch_prices.py](scripts/fetch_prices.py) - Fetch current pricing from Cloudflare docs
 
 ### Official Documentation
