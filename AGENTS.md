@@ -1,5 +1,5 @@
 ---
-last_validated: 2026-01-21T13:25:00Z
+last_validated: 2026-01-23T00:00:00Z
 project_type: skills-repository
 ---
 
@@ -39,6 +39,7 @@ This is a Claude Skills configuration repository following Anthropic's Agent Ski
 │       ├── jq
 │       ├── parallel
 │       ├── parallel-flow
+│       ├── platform-architect
 │       ├── ripgrep
 │       ├── rlm
 │       ├── self-improvement
