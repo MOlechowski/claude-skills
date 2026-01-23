@@ -223,6 +223,7 @@ Checks: hardcoded values, secrets, oversized modules, missing versioning.
 | Import, tool-to-tool, modernization | [migration.md](references/migration.md) |
 | State backup, multi-region, failover | [disaster-recovery.md](references/disaster-recovery.md) |
 | Common errors, drift, performance | [troubleshooting.md](references/troubleshooting.md) |
+| Local setup, IDE, CLI productivity | [developer-experience.md](references/developer-experience.md) |
 
 ## Template Assets
 
