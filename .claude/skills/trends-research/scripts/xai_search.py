@@ -1,50 +1,60 @@
-#!/usr/bin/env python3
+#!/usr/bin/env -S uv run --script
+# /// script
+# requires-python = ">=3.9"
+# dependencies = [
+#     "httpx>=0.25.0",
+# ]
+# ///
 """
 xAI Search Script for trends-research skill
 
-Performs Web Search, X Search, and Reddit Search using xAI API.
+Performs Web Search, X Search, and Reddit Search using xAI Responses API.
 Reads API key securely from macOS Keychain.
 
 Usage:
-    python3 xai_search.py web "search query"
-    python3 xai_search.py x "search query"
-    python3 xai_search.py reddit "search query"
-    python3 xai_search.py all "search query"
-    python3 xai_search.py all "search query" --quick
-    python3 xai_search.py all "search query" --deep
+    uv run xai_search.py web "search query"
+    uv run xai_search.py x "search query"
+    uv run xai_search.py reddit "search query"
+    uv run xai_search.py all "search query"
+    uv run xai_search.py all "search query" --quick
+    uv run xai_search.py all "search query" --deep
 
 Depth Control:
     --quick: Fast overview (8-12 sources per platform)
     (default): Balanced research (20-30 sources)
     --deep: Comprehensive analysis (50-70 sources)
 
-Requirements:
-    pip install openai
+Dependencies are managed automatically via uv (PEP 723).
 """
 
 import subprocess
 import sys
 import os
 import argparse
+import json
+import re
 from datetime import datetime, timedelta
 
+import httpx
 
-# Depth configurations
+
+# xAI Responses API endpoint
+XAI_RESPONSES_URL = "https://api.x.ai/v1/responses"
+XAI_MODEL = "grok-4-1-fast-reasoning"
+
+# Depth configurations: (min, max) items to request
 DEPTH_CONFIG = {
     "quick": {
         "description": "Fast overview",
-        "max_results": "8-12 sources per platform",
-        "instruction": "Provide a quick overview with the top 8-12 most relevant results."
+        "range": (8, 12),
     },
     "default": {
         "description": "Balanced research",
-        "max_results": "20-30 sources per platform",
-        "instruction": "Provide comprehensive results with 20-30 relevant sources."
+        "range": (20, 30),
     },
     "deep": {
         "description": "Comprehensive analysis",
-        "max_results": "50-70 sources per platform",
-        "instruction": "Provide exhaustive results with 50-70 sources. Include niche discussions and lesser-known perspectives."
+        "range": (50, 70),
     }
 }
 
@@ -84,107 +94,167 @@ def get_api_key() -> str:
             sys.exit(1)
 
 
-def get_openai_client(api_key: str):
-    """Get OpenAI client configured for xAI."""
-    try:
-        from openai import OpenAI
-    except ImportError:
-        print("Error: openai package required. Install with: pip install openai")
-        sys.exit(1)
+def call_xai_responses(api_key: str, prompt: str, tools: list, timeout: int = 120) -> dict:
+    """Call xAI Responses API with specified tools."""
+    headers = {
+        "Authorization": f"Bearer {api_key}",
+        "Content-Type": "application/json",
+    }
 
-    return OpenAI(
-        api_key=api_key,
-        base_url="https://api.x.ai/v1"
-    )
+    payload = {
+        "model": XAI_MODEL,
+        "tools": tools,
+        "input": [
+            {
+                "role": "user",
+                "content": prompt,
+            }
+        ],
+    }
+
+    with httpx.Client(timeout=timeout) as client:
+        response = client.post(XAI_RESPONSES_URL, json=payload, headers=headers)
+        return response.json()
+
+
+def extract_output_text(response: dict) -> str:
+    """Extract text content from xAI Responses API response."""
+    output_text = ""
+
+    if "error" in response and response["error"]:
+        error = response["error"]
+        err_msg = error.get("message", str(error)) if isinstance(error, dict) else str(error)
+        print(f"API Error: {err_msg}", file=sys.stderr)
+        return ""
+
+    if "output" in response:
+        output = response["output"]
+        if isinstance(output, str):
+            output_text = output
+        elif isinstance(output, list):
+            for item in output:
+                if isinstance(item, dict):
+                    if item.get("type") == "message":
+                        content = item.get("content", [])
+                        for c in content:
+                            if isinstance(c, dict) and c.get("type") == "output_text":
+                                output_text = c.get("text", "")
+                                break
+                    elif "text" in item:
+                        output_text = item["text"]
+                elif isinstance(item, str):
+                    output_text = item
+                if output_text:
+                    break
+
+    # Fallback: check for choices (older format)
+    if not output_text and "choices" in response:
+        for choice in response["choices"]:
+            if "message" in choice:
+                output_text = choice["message"].get("content", "")
+                break
+
+    return output_text
 
 
 def web_search(query: str, api_key: str, depth: str = "default") -> dict:
-    """Perform web search using xAI API."""
-    client = get_openai_client(api_key)
-    depth_instruction = DEPTH_CONFIG[depth]["instruction"]
+    """Perform web search using xAI Responses API."""
+    min_items, max_items = DEPTH_CONFIG[depth]["range"]
 
-    response = client.chat.completions.create(
-        model="grok-3-latest",
-        messages=[
-            {
-                "role": "system",
-                "content": f"You are a research assistant. Search the web and provide comprehensive, factual results with source citations. Include engagement metrics where available. {depth_instruction}"
-            },
-            {
-                "role": "user",
-                "content": f"Search the web for: {query}"
-            }
-        ],
-        tools=[{"type": "web_search"}]
-    )
+    prompt = f"""Search the web for: {query}
+
+Find {min_items}-{max_items} high-quality, relevant results.
+
+Return comprehensive results with:
+- Source URLs
+- Key findings and quotes
+- Publication dates when available
+- Engagement metrics if visible
+
+Focus on authoritative sources, news articles, and documentation."""
+
+    tools = [{"type": "web_search"}]
+    response = call_xai_responses(api_key, prompt, tools, timeout=90 if depth == "quick" else 120)
 
     return {
         "type": "web",
         "query": query,
         "depth": depth,
-        "content": response.choices[0].message.content,
-        "citations": getattr(response, 'citations', [])
+        "content": extract_output_text(response),
+        "raw_response": response,
     }
 
 
 def reddit_search(query: str, api_key: str, depth: str = "default") -> dict:
-    """Perform Reddit search using xAI Web Search with site filter."""
-    client = get_openai_client(api_key)
-    depth_instruction = DEPTH_CONFIG[depth]["instruction"]
+    """Perform Reddit search using xAI Responses API with web_search."""
+    min_items, max_items = DEPTH_CONFIG[depth]["range"]
 
-    response = client.chat.completions.create(
-        model="grok-3-latest",
-        messages=[
-            {
-                "role": "system",
-                "content": f"You are a research assistant. Search Reddit for discussions, recommendations, and community opinions. Include upvote counts and engagement where visible. Prioritize highly-upvoted threads. {depth_instruction}"
-            },
-            {
-                "role": "user",
-                "content": f"Search Reddit (site:reddit.com) for discussions about: {query}"
-            }
-        ],
-        tools=[{"type": "web_search"}]
-    )
+    prompt = f"""Search Reddit for discussions about: {query}
+
+Use these search strategies:
+1. "site:reddit.com {query}"
+2. "reddit {query}"
+
+Find {min_items}-{max_items} relevant Reddit threads.
+
+For each thread, include:
+- Thread title
+- Subreddit (r/name)
+- URL (must contain reddit.com/r/ and /comments/)
+- Upvote count if visible
+- Key discussion points
+- Top comments/opinions
+
+Prioritize highly-upvoted threads with substantive discussions.
+Exclude: developers.reddit.com, business.reddit.com"""
+
+    tools = [{"type": "web_search"}]
+    response = call_xai_responses(api_key, prompt, tools, timeout=90 if depth == "quick" else 120)
 
     return {
         "type": "reddit",
         "query": query,
         "depth": depth,
-        "content": response.choices[0].message.content,
-        "citations": getattr(response, 'citations', [])
+        "content": extract_output_text(response),
+        "raw_response": response,
     }
 
 
 def x_search(query: str, api_key: str, days_back: int = 30, depth: str = "default") -> dict:
-    """Perform X/Twitter search using xAI API."""
-    client = get_openai_client(api_key)
-    depth_instruction = DEPTH_CONFIG[depth]["instruction"]
-
+    """Perform X/Twitter search using xAI Responses API."""
+    min_items, max_items = DEPTH_CONFIG[depth]["range"]
     from_date = (datetime.now() - timedelta(days=days_back)).strftime("%Y-%m-%d")
+    to_date = datetime.now().strftime("%Y-%m-%d")
 
-    response = client.chat.completions.create(
-        model="grok-3-latest",
-        messages=[
-            {
-                "role": "system",
-                "content": f"You are a research assistant. Search X/Twitter and provide comprehensive results about trending discussions. Include engagement metrics (likes, retweets, replies) where available. {depth_instruction}"
-            },
-            {
-                "role": "user",
-                "content": f"Search X/Twitter for posts and discussions about: {query} (from {from_date} to today)"
-            }
-        ],
-        tools=[{"type": "x_search"}]
-    )
+    prompt = f"""Search X/Twitter for posts about: {query}
+
+Focus on posts from {from_date} to {to_date}.
+Find {min_items}-{max_items} high-quality, relevant posts.
+
+For each post, include:
+- Post text content
+- Author handle (@username)
+- URL (https://x.com/user/status/...)
+- Date (YYYY-MM-DD)
+- Engagement: likes, reposts, replies
+- Why it's relevant
+
+Prioritize:
+- Posts with substantive content (not just links)
+- High engagement posts
+- Diverse voices and perspectives
+- Expert opinions and debates"""
+
+    tools = [{"type": "x_search"}]
+    response = call_xai_responses(api_key, prompt, tools, timeout=90 if depth == "quick" else 150)
 
     return {
         "type": "x",
         "query": query,
         "from_date": from_date,
         "depth": depth,
-        "content": response.choices[0].message.content,
-        "citations": getattr(response, 'citations', [])
+        "content": extract_output_text(response),
+        "raw_response": response,
     }
 
 
@@ -202,16 +272,13 @@ def print_results(results: dict):
     if 'from_date' in results:
         print(f"Date Range: {results['from_date']} to today")
     if 'depth' in results:
-        print(f"Depth: {results['depth']} ({DEPTH_CONFIG[results['depth']]['max_results']})")
+        print(f"Depth: {results['depth']} ({DEPTH_CONFIG[results['depth']]['description']})")
     print(f"{'='*60}\n")
 
-    print(results['content'])
-
-    if results.get('citations'):
-        print(f"\n{'='*60}")
-        print("Sources:")
-        for i, citation in enumerate(results['citations'], 1):
-            print(f"  {i}. {citation}")
+    if results['content']:
+        print(results['content'])
+    else:
+        print("No results found or API error occurred.")
 
 
 def parse_args():
@@ -221,12 +288,12 @@ def parse_args():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-  python3 xai_search.py web 'AI trends 2025'
-  python3 xai_search.py x 'what people are saying about Python'
-  python3 xai_search.py reddit 'best Python frameworks'
-  python3 xai_search.py all 'machine learning trends'
-  python3 xai_search.py all 'machine learning trends' --quick
-  python3 xai_search.py all 'machine learning trends' --deep
+  uv run xai_search.py web 'AI trends 2025'
+  uv run xai_search.py x 'what people are saying about Python'
+  uv run xai_search.py reddit 'best Python frameworks'
+  uv run xai_search.py all 'machine learning trends'
+  uv run xai_search.py all 'machine learning trends' --quick
+  uv run xai_search.py all 'machine learning trends' --deep
         """
     )
 
@@ -245,7 +312,7 @@ Examples:
 
 def main():
     if len(sys.argv) < 3:
-        print("Usage: python3 xai_search.py <type> <query> [--quick|--deep]")
+        print("Usage: uv run xai_search.py <type> <query> [--quick|--deep]")
         print("  type: web, x, reddit, or all")
         print("  query: your search query")
         print("\nDepth Control:")
@@ -253,9 +320,9 @@ def main():
         print("  (default): Balanced research (20-30 sources)")
         print("  --deep: Comprehensive analysis (50-70 sources)")
         print("\nExamples:")
-        print("  python3 xai_search.py web 'AI trends 2025'")
-        print("  python3 xai_search.py all 'machine learning' --quick")
-        print("  python3 xai_search.py all 'machine learning' --deep")
+        print("  uv run xai_search.py web 'AI trends 2025'")
+        print("  uv run xai_search.py all 'machine learning' --quick")
+        print("  uv run xai_search.py all 'machine learning' --deep")
         sys.exit(1)
 
     args = parse_args()
@@ -309,6 +376,9 @@ def main():
             print("RESEARCH COMPLETE - Ready for synthesis")
             print("="*60)
 
+    except httpx.HTTPStatusError as e:
+        print(f"HTTP Error: {e.response.status_code} - {e.response.text}")
+        sys.exit(1)
     except Exception as e:
         print(f"Error during search: {e}")
         sys.exit(1)
