@@ -68,9 +68,9 @@ For detailed format requirements and examples, see [references/spec-format.md](r
 End-to-end spec-driven development:
 
 ```text
-CREATE -> CLARIFY -> ANALYZE -> TASKS -> CHECKLIST -> PR -> [IMPLEMENT]
-                                                              ^
-                                                  (only if impl repo)
+CREATE -> CLARIFY -> ANALYZE -> TASKS -> ACCEPTANCE -> CHECKLIST -> PR -> [IMPLEMENT]
+                                                                            ^
+                                                                (only if impl repo)
 ```
 
 Fully autonomous, halts only on errors. Creates PR for spec artifacts. Implementation conditional on repo type.
@@ -88,6 +88,7 @@ Each phase is implemented as a Python script:
 | 3. CLARIFY | `speckit_clarify.py` | `python scripts/speckit_clarify.py` |
 | 4. ANALYZE | `speckit_analyze.py` | `python scripts/speckit_analyze.py` |
 | 5. TASKS | `speckit_tasks.py` | `python scripts/speckit_tasks.py` |
+| 5.5. ACCEPTANCE | `speckit_acceptance.py` | `python scripts/speckit_acceptance.py` |
 | 6. CHECKLIST | `speckit_checklist.py` | `python scripts/speckit_checklist.py` |
 | 7. PR | `speckit_pr.py` | `python scripts/speckit_pr.py` |
 | 8. IMPLEMENT | `speckit_implement.py` | `python scripts/speckit_implement.py` |
@@ -113,6 +114,9 @@ python scripts/speckit_analyze.py
 # 5. Generate tasks
 python scripts/speckit_tasks.py
 
+# 5.5. Generate acceptance criteria and tests
+python scripts/speckit_acceptance.py
+
 # 6. Generate checklists
 python scripts/speckit_checklist.py
 
@@ -136,7 +140,8 @@ python scripts/common.py --check-paths --json
 **Resume Logic:**
 - If `tasks.md` exists AND all tasks marked `[X]` -> Skip to Phase 7 (PR)
 - If `tasks.md` exists with incomplete tasks AND is impl repo -> Skip to Phase 8 (IMPLEMENT)
-- If `tasks.md` exists -> Skip to Phase 7 (PR)
+- If `acceptance.md` exists -> Skip to Phase 6 (CHECKLIST)
+- If `tasks.md` exists -> Skip to Phase 5.5 (ACCEPTANCE)
 - If `plan.md` exists -> Skip to Phase 3 (CLARIFY)
 - If `spec.md` exists -> Skip to Phase 2 (CREATE - plan)
 - Otherwise -> Start from Phase 1 (CREATE - specify)
@@ -254,6 +259,29 @@ python scripts/speckit_tasks.py
 - Creates `specs/{branch}/tasks.md` from template
 - Parses user stories from spec.md
 - Extracts phases from plan.md
+
+---
+
+## Phase 5.5: ACCEPTANCE
+
+**Script:** `speckit_acceptance.py`
+
+```bash
+python scripts/speckit_acceptance.py
+```
+
+**Options:**
+- `--json` - JSON output
+
+**Generates acceptance.md containing:**
+- Acceptance criteria derived from user stories (AC-XXX format)
+- Acceptance tests in Gherkin format (AT-XXX format)
+- Stakeholder sign-off checklist
+
+**Parses from spec.md:**
+- User stories (As a... I want... so that...)
+- Functional requirements (FR-XXX)
+- Success criteria (SC-XXX)
 
 ---
 
