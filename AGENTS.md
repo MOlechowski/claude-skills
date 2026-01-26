@@ -1,6 +1,7 @@
 ---
-last_validated: 2026-01-26T12:00:00Z
+last_validated: 2026-01-26T18:00:00Z
 project_type: skills-repository
+skill_count: 71
 ---
 
 # Agent Instructions: claude-skills
@@ -27,58 +28,90 @@ This is a Claude Skills configuration repository following Anthropic's Agent Ski
 │   │   ├── speckit.tasks.md
 │   │   └── speckit.taskstoissues.md
 │   ├── settings.local.json
-│   └── skills
-│       ├── ast-grep
-│       ├── aws-cli
-│       ├── aws-expert
-│       ├── bandit
-│       ├── claude-md
-│       ├── cloudflare-expert
-│       ├── cloudflared
-│       ├── commit
-│       ├── commit-pr
-│       ├── crane
-│       ├── dive
-│       ├── fastmod
-│       ├── flarectl
-│       ├── fzf
-│       ├── git-worktree
-│       ├── grype
-│       ├── httpx
-│       ├── jq
-│       ├── mitmproxy
-│       ├── nmap
-│       ├── nuclei
-│       ├── parallel
-│       ├── parallel-flow
-│       ├── pip-audit
-│       ├── platform-architect
-│       ├── pr-create
-│       ├── pr-manage
-│       ├── readme
-│       ├── ripgrep
-│       ├── rlm
-│       ├── self-improvement
-│       ├── semgrep
-│       ├── skill-creator
-│       ├── skopeo
-│       ├── spec-driven
-│       ├── speckit-audit
-│       ├── speckit-flow
-│       ├── speckit-retro
-│       ├── speckit-verify
-│       ├── syft
-│       ├── tcpdump
-│       ├── terraform
-│       ├── tmux
-│       ├── tofu
-│       ├── token-optimize
-│       ├── tree
-│       ├── trivy
-│       ├── web-research
-│       ├── wireshark
-│       ├── wrangler
-│       └── yq
+│   └── skills/                  # 71 skills organized by domain
+│       ├── # Git & Version Control
+│       ├── commit/
+│       ├── commit-pr/
+│       ├── git-worktree/
+│       ├── pr-create/
+│       ├── pr-manage/
+│       ├── # Cloud - AWS
+│       ├── aws-cli/
+│       ├── aws-expert/
+│       ├── awslocal/
+│       ├── localstack/
+│       ├── localstack-expert/
+│       ├── # Cloud - Cloudflare
+│       ├── cloudflare-expert/
+│       ├── cloudflared/
+│       ├── flarectl/
+│       ├── wrangler/
+│       ├── # Security & Scanning
+│       ├── bandit/
+│       ├── grype/
+│       ├── nuclei/
+│       ├── pip-audit/
+│       ├── semgrep/
+│       ├── trivy/
+│       ├── # Container & Image
+│       ├── crane/
+│       ├── dive/
+│       ├── skopeo/
+│       ├── syft/
+│       ├── # Network & HTTP
+│       ├── httpx/
+│       ├── mitmproxy/
+│       ├── nmap/
+│       ├── tcpdump/
+│       ├── wireshark/
+│       ├── # Reverse Engineering
+│       ├── re-binwalk/
+│       ├── re-docker-expert/
+│       ├── re-dtrace/
+│       ├── re-expert/
+│       ├── re-frida/
+│       ├── re-gdb/
+│       ├── re-ghidra/
+│       ├── re-lldb/
+│       ├── re-objcopy/
+│       ├── re-patchelf/
+│       ├── re-pwntools/
+│       ├── re-python-expert/
+│       ├── re-radare2/
+│       ├── re-strace/
+│       ├── re-xxd/
+│       ├── # Code Search & Transform
+│       ├── ast-grep/
+│       ├── fastmod/
+│       ├── ripgrep/
+│       ├── # CLI Tools & Data
+│       ├── fzf/
+│       ├── jq/
+│       ├── parallel/
+│       ├── tmux/
+│       ├── tree/
+│       ├── yq/
+│       ├── # Infrastructure as Code
+│       ├── platform-architect/
+│       ├── terraform/
+│       ├── tofu/
+│       ├── # Development Workflow
+│       ├── claude-md/
+│       ├── parallel-flow/
+│       ├── readme/
+│       ├── rlm/
+│       ├── self-improvement/
+│       ├── skill-creator/
+│       ├── token-optimize/
+│       ├── # Spec-Driven Development
+│       ├── spec-driven/
+│       ├── speckit-audit/
+│       ├── speckit-flow/
+│       ├── speckit-retro/
+│       ├── speckit-verify/
+│       ├── # Research & Analysis
+│       ├── trends-research/
+│       └── web-research/
 ├── .specify
 │   ├── memory
 │   ├── scripts

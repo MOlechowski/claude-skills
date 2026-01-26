@@ -94,95 +94,129 @@ Skills can include additional files in their directory:
 2. **Level 2 (Activation)**: Full `SKILL.md` loads when skill is relevant
 3. **Level 3+ (On-Demand)**: Additional files load as needed
 
-## Available Skills
+## Available Skills (71 total)
 
-### Tier 1: Essential Command-Line Tools
+### Git & Version Control
+| Skill | Description |
+|-------|-------------|
+| **commit** | Generate Conventional Commits messages |
+| **commit-pr** | Commit changes and create PR in one flow |
+| **git-worktree** | Work on multiple branches simultaneously |
+| **pr-create** | Create GitHub PRs with structured title and body |
+| **pr-manage** | Autonomous PR lifecycle management |
 
-#### jq
-**Purpose:** JSON query language for filtering, transforming, and manipulating JSON data
-**Files:** SKILL.md, quick-reference.md, examples.md
-**Use Cases:**
-- Processing JSON output from APIs, logs, or configuration files
-- Filtering, transforming, or extracting data from complex JSON structures
-- Combining or restructuring JSON data
-- Working with JSON in shell scripts or pipelines
-- Debugging API responses or JSON-based workflows
+### Cloud Infrastructure - AWS
+| Skill | Description |
+|-------|-------------|
+| **aws-cli** | AWS CLI v2 expertise: authentication, 20+ service commands, output formatting, multi-account patterns |
+| **aws-expert** | AWS architecture expertise: Well-Architected Framework, service selection, security, cost optimization |
+| **awslocal** | Thin wrapper around AWS CLI for LocalStack |
+| **localstack** | LocalStack CLI for managing local AWS emulation containers |
+| **localstack-expert** | LocalStack architecture expertise: testing strategies, CI/CD integration, service parity |
 
-#### ripgrep (rg)
-**Purpose:** Blazingly fast recursive code search with smart defaults
-**Files:** SKILL.md, quick-reference.md, examples.md
-**Use Cases:**
-- Searching large codebases for patterns across thousands of files
-- Finding code references, function calls, or variable usage
-- Filtering search results by file type, path, or content
-- Debugging or refactoring code that depends on specific patterns
-- Security auditing and vulnerability scanning
+### Cloud Infrastructure - Cloudflare
+| Skill | Description |
+|-------|-------------|
+| **cloudflare-expert** | Cloudflare infrastructure expertise: Zero Trust, security, Workers AI, MCP servers |
+| **cloudflared** | Cloudflare Tunnel CLI for exposing local services |
+| **flarectl** | Cloudflare infrastructure CLI for DNS, firewall, zone management |
+| **wrangler** | Cloudflare Workers CLI for serverless development |
 
-#### ast-grep (sg)
-**Purpose:** Semantic code search and transformation using Abstract Syntax Trees
-**Files:** SKILL.md, quick-reference.md, examples.md
-**Use Cases:**
-- Searching for code patterns that text regex can't express precisely
-- Refactoring code based on semantic meaning, not just text
-- Finding code structure patterns (function calls, class definitions)
-- Performing AST-based code transformations with metavariables
-- Analyzing code for architectural patterns or anti-patterns
+### Security & Vulnerability Scanning
+| Skill | Description |
+|-------|-------------|
+| **bandit** | Python security linter for common security issues |
+| **grype** | Fast vulnerability scanner for container images and filesystems |
+| **nuclei** | Template-based vulnerability scanner for CVEs, misconfigurations |
+| **pip-audit** | Python dependency vulnerability scanner |
+| **semgrep** | Multi-language SAST tool for security patterns |
+| **trivy** | Comprehensive vulnerability scanner for containers, filesystems, Git repos |
 
-#### yq
-**Purpose:** YAML, JSON, XML processor with jq-like syntax
-**Files:** SKILL.md, quick-reference.md, examples.md
-**Use Cases:**
-- Processing YAML configuration files (Kubernetes, Docker Compose, CI/CD)
-- Converting between YAML, JSON, XML, CSV formats
-- Querying and transforming structured data files
-- Automating configuration management workflows
-- Validating and formatting YAML/JSON files
+### Container & Image Analysis
+| Skill | Description |
+|-------|-------------|
+| **crane** | Container image manipulation: push, pull, copy, mutate, inspect |
+| **dive** | Docker image layer explorer for analyzing contents and finding bloat |
+| **skopeo** | Daemon-less container operations and image signing |
+| **syft** | SBOM generation for containers and filesystems |
 
-#### fzf
-**Purpose:** Interactive command-line fuzzy finder
-**Files:** SKILL.md, quick-reference.md, examples.md
-**Use Cases:**
-- Interactively searching through files, directories, or command history
-- Building interactive selection menus for shell scripts
-- Filtering large lists or command outputs
-- Creating powerful keyboard-driven workflows
-- Integrating fuzzy search into custom tools and aliases
+### Network & HTTP Analysis
+| Skill | Description |
+|-------|-------------|
+| **httpx** | Fast HTTP toolkit for probing and technology detection |
+| **mitmproxy** | Interactive HTTPS proxy for traffic interception |
+| **nmap** | Network scanner for port discovery and service detection |
+| **tcpdump** | Command-line packet analyzer |
+| **wireshark** | Network protocol analyzer (tshark CLI) |
 
-### Code Transformation
+### Reverse Engineering
+| Skill | Description |
+|-------|-------------|
+| **re-expert** | Security analysis methodology and tool selection guidance |
+| **re-binwalk** | Firmware analysis: signature scanning, entropy, file extraction |
+| **re-docker-expert** | Container forensics: layer analysis, secret extraction, build reconstruction |
+| **re-dtrace** | DTrace dynamic tracing for macOS/BSD |
+| **re-frida** | Dynamic instrumentation: hooking, tracing, mobile analysis |
+| **re-gdb** | GDB debugger: breakpoints, memory examination, runtime patching |
+| **re-ghidra** | Ghidra reverse engineering: scripting, headless analysis, decompiler |
+| **re-lldb** | LLDB debugger for macOS/iOS reverse engineering |
+| **re-objcopy** | Binary manipulation: sections, symbols, format conversion |
+| **re-patchelf** | ELF binary modification: RPATH, interpreter, dependencies |
+| **re-pwntools** | Exploit development: ROP chains, shellcode, CTF utilities |
+| **re-python-expert** | Python reverse engineering: bytecode, decompilation, obfuscation |
+| **re-radare2** | radare2/rizin framework: disassembly, patching, debugging |
+| **re-strace** | Linux system call tracing with strace/ltrace |
+| **re-xxd** | Hex dump and binary patching |
 
-#### fastmod
-**Purpose:** Expert guidance for large-scale codebase refactoring using fastmod
-**Files:** SKILL.md, quick-reference.md, examples.md
-**Use Cases:**
-- Bulk find-and-replace across 20+ files
-- Rename classes, functions, or variables codebase-wide
-- Update import paths, API calls, or framework patterns
-- Regex-based transformations with interactive review
-- Safe multi-file refactoring with human oversight
+### Code Search & Transformation
+| Skill | Description |
+|-------|-------------|
+| **ast-grep** | Semantic code search using ASTs: structural matching, refactoring |
+| **fastmod** | Large-scale refactoring with interactive review |
+| **ripgrep** | Fast recursive code search with smart defaults |
 
-### Cloud Infrastructure
+### CLI Tools & Data Processing
+| Skill | Description |
+|-------|-------------|
+| **fzf** | Interactive fuzzy finder for files, history, lists |
+| **jq** | JSON processing and transformation |
+| **parallel** | Execute shell jobs in parallel using GNU parallel |
+| **tmux** | Terminal multiplexer for session management |
+| **tree** | Directory tree visualization |
+| **yq** | YAML/JSON/XML processor with jq-like syntax |
 
-#### aws-cli
-**Purpose:** AWS CLI v2 expertise for command-line operations, authentication, and automation
-**Files:** SKILL.md, references/quick-reference.md, references/examples.md
-**Use Cases:**
-- AWS authentication (IAM, SSO, roles, profiles)
-- Service commands for 20+ AWS services (EC2, S3, Lambda, ECS, RDS, etc.)
-- Output formatting with JMESPath queries and jq integration
-- Multi-account patterns and cross-account access
-- CI/CD integration (GitHub Actions, GitLab CI with OIDC)
-- Local development with LocalStack, SAM CLI, CDK CLI
+### Infrastructure as Code
+| Skill | Description |
+|-------|-------------|
+| **platform-architect** | IaC architecture: tool selection, module design, state management |
+| **terraform** | HashiCorp Terraform for infrastructure provisioning |
+| **tofu** | OpenTofu (open-source Terraform fork) |
 
-#### aws-expert
-**Purpose:** AWS architecture expertise following Well-Architected Framework principles
-**Files:** SKILL.md, references/well-architected.md, references/service-selection.md, references/security-patterns.md, references/cost-optimization.md
-**Use Cases:**
-- Architecture decisions and service selection
-- Well-Architected Framework (6 pillars)
-- Security best practices (IAM, encryption, network security)
-- Cost optimization (Reserved Instances, Savings Plans, Spot)
-- DR/HA patterns (Multi-AZ, multi-region)
-- Observability and monitoring strategies
+### Development Workflow
+| Skill | Description |
+|-------|-------------|
+| **claude-md** | Create and maintain CLAUDE.md and AGENTS.md documentation |
+| **parallel-flow** | Parallelize tasks using Claude agents |
+| **readme** | Create, update, and validate README.md files |
+| **rlm** | Repository Language Model context management |
+| **self-improvement** | Meta-skill for improving Claude's own capabilities |
+| **skill-creator** | Create new skills following best practices |
+| **token-optimize** | Optimize token usage in prompts and responses |
+
+### Spec-Driven Development
+| Skill | Description |
+|-------|-------------|
+| **spec-driven** | Specification-driven development workflow |
+| **speckit-audit** | Audit specifications for completeness and quality |
+| **speckit-flow** | Manage spec-driven development flow |
+| **speckit-retro** | Retrospective analysis of spec implementations |
+| **speckit-verify** | Verify implementations against specifications |
+
+### Research & Analysis
+| Skill | Description |
+|-------|-------------|
+| **trends-research** | Multi-source trend analysis with hybrid search |
+| **web-research** | Web research and analysis |
 
 ## Usage
 
