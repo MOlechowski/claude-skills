@@ -1,5 +1,5 @@
 ---
-last_validated: 2026-01-23T00:10:00Z
+last_validated: 2026-01-26T12:00:00Z
 project_type: skills-repository
 ---
 
@@ -31,18 +31,27 @@ This is a Claude Skills configuration repository following Anthropic's Agent Ski
 │       ├── ast-grep
 │       ├── aws-cli
 │       ├── aws-expert
+│       ├── bandit
 │       ├── claude-md
 │       ├── cloudflare-expert
 │       ├── cloudflared
 │       ├── commit
 │       ├── commit-pr
+│       ├── crane
+│       ├── dive
 │       ├── fastmod
 │       ├── flarectl
 │       ├── fzf
 │       ├── git-worktree
+│       ├── grype
+│       ├── httpx
 │       ├── jq
+│       ├── mitmproxy
+│       ├── nmap
+│       ├── nuclei
 │       ├── parallel
 │       ├── parallel-flow
+│       ├── pip-audit
 │       ├── platform-architect
 │       ├── pr-create
 │       ├── pr-manage
@@ -50,18 +59,24 @@ This is a Claude Skills configuration repository following Anthropic's Agent Ski
 │       ├── ripgrep
 │       ├── rlm
 │       ├── self-improvement
+│       ├── semgrep
 │       ├── skill-creator
+│       ├── skopeo
 │       ├── spec-driven
 │       ├── speckit-audit
 │       ├── speckit-flow
 │       ├── speckit-retro
 │       ├── speckit-verify
+│       ├── syft
+│       ├── tcpdump
 │       ├── terraform
 │       ├── tmux
 │       ├── tofu
 │       ├── token-optimize
 │       ├── tree
+│       ├── trivy
 │       ├── web-research
+│       ├── wireshark
 │       ├── wrangler
 │       └── yq
 ├── .specify

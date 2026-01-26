@@ -1,6 +1,6 @@
 ---
 name: re-expert
-description: "Reverse engineering domain expertise: analysis methodology, tool selection (Ghidra/IDA/radare2/Binary Ninja), binary formats (ELF/PE/Mach-O), vulnerability patterns, anti-analysis bypass, CTF strategies. Use for: choosing RE approach, analyzing unknown binaries, identifying obfuscation, planning analysis workflow, understanding binary structures. Triggers: reverse engineer, analyze binary, what tool for RE, malware analysis strategy, CTF reversing, binary analysis approach."
+description: "Security analysis domain expertise: reverse engineering methodology, tool selection (Ghidra/radare2/GDB), binary formats (ELF/PE/Mach-O), vulnerability patterns, container security, network analysis, SAST, web security. Use for: choosing analysis approach, security auditing, container scanning, network forensics, vulnerability assessment, malware analysis. Triggers: reverse engineer, analyze binary, security audit, container security, network analysis, vulnerability scan, SAST, web security, CTF."
 ---
 
 # Reverse Engineering Expert
@@ -289,9 +289,123 @@ For CTF-specific techniques, see: [references/ctf-patterns.md](references/ctf-pa
    - Process behavior
 ```
 
+## Container Security Analysis
+
+### When to Use Container Scanning
+
+| Scenario | Tool | Why |
+|----------|------|-----|
+| Vulnerability scan | trivy, grype | Find CVEs in packages |
+| Image layer inspection | dive | Find secrets, bloat |
+| SBOM generation | syft | Software inventory |
+| Registry operations | skopeo, crane | Copy/inspect without Docker |
+
+### Container Security Workflow
+
+```
+1. Generate SBOM
+   - syft <image> -o cyclonedx-json
+
+2. Vulnerability Scan
+   - trivy image <image> OR grype <image>
+   - Filter by severity (CRITICAL, HIGH)
+
+3. Layer Analysis
+   - dive <image>
+   - Look for secrets, unnecessary files
+
+4. Remediation
+   - Update base image
+   - Multi-stage builds
+   - Remove unnecessary packages
+```
+
+## Network Traffic Analysis
+
+### When to Use Network Tools
+
+| Scenario | Tool | Why |
+|----------|------|-----|
+| Raw packet capture | tcpdump | Lightweight, scriptable |
+| Protocol analysis | wireshark/tshark | Deep inspection |
+| HTTP interception | mitmproxy | Modify requests/responses |
+| Network discovery | nmap | Port scanning, service detection |
+
+### Network Analysis Workflow
+
+```
+1. Capture Traffic
+   - tcpdump -i eth0 -w capture.pcap
+
+2. Analyze Capture
+   - tshark -r capture.pcap -Y 'http'
+   - Extract fields, follow streams
+
+3. HTTP Analysis (if needed)
+   - mitmproxy for interception
+   - Inspect/modify requests
+
+4. Service Discovery
+   - nmap -sV for version detection
+   - nmap --script vuln for vulnerability checks
+```
+
+## Static Application Security Testing (SAST)
+
+### Tool Selection
+
+| Language | Tool | Best For |
+|----------|------|----------|
+| Python | bandit | Security-specific issues |
+| Python (deps) | pip-audit | Vulnerable dependencies |
+| Multi-language | semgrep | Custom rules, patterns |
+
+### SAST Workflow
+
+```
+1. Dependency Audit
+   - pip-audit -r requirements.txt
+
+2. Code Security Scan
+   - bandit -r ./src -ll (medium+ severity)
+   - semgrep --config auto .
+
+3. Prioritize Findings
+   - Critical/High severity first
+   - Focus on user input handling
+```
+
+## Web Security Reconnaissance
+
+### Tool Selection
+
+| Task | Tool | Best For |
+|------|------|----------|
+| HTTP probing | httpx | Fast alive detection |
+| Port scanning | nmap | Service enumeration |
+| Vulnerability scan | nuclei | Template-based detection |
+
+### Web Recon Workflow
+
+```
+1. Asset Discovery
+   - httpx -l hosts.txt -sc -title -tech-detect
+
+2. Port Scanning
+   - nmap -sV --top-ports 1000 <target>
+
+3. Vulnerability Scanning
+   - nuclei -l alive-hosts.txt -s critical,high
+
+4. Manual Testing
+   - mitmproxy for traffic interception
+```
+
 ## Skill Delegation
 
 This skill provides methodology. Delegate to tool-specific skills:
+
+### Reverse Engineering Tools
 
 | Task | Delegate To |
 |------|-------------|
@@ -302,3 +416,42 @@ This skill provides methodology. Delegate to tool-specific skills:
 | Hex editing | `/re-xxd` |
 | ELF modification | `/re-patchelf` |
 | Section manipulation | `/re-objcopy` |
+| Syscall tracing | `/re-strace` |
+| Dynamic instrumentation | `/re-frida` |
+| Firmware analysis | `/re-binwalk` |
+| Exploit development | `/re-pwntools` |
+
+### Container Security Tools
+
+| Task | Delegate To |
+|------|-------------|
+| Image layer inspection | `/dive` |
+| Vulnerability scanning | `/trivy` |
+| Vulnerability scanning (alt) | `/grype` |
+| SBOM generation | `/syft` |
+| Image operations | `/skopeo` |
+| Image manipulation | `/crane` |
+
+### Network Analysis Tools
+
+| Task | Delegate To |
+|------|-------------|
+| Packet capture | `/tcpdump` |
+| Protocol analysis | `/wireshark` |
+| HTTP interception | `/mitmproxy` |
+
+### SAST/SCA Tools
+
+| Task | Delegate To |
+|------|-------------|
+| Python security linting | `/bandit` |
+| Multi-language SAST | `/semgrep` |
+| Python dependency audit | `/pip-audit` |
+
+### Web Security Tools
+
+| Task | Delegate To |
+|------|-------------|
+| Port scanning | `/nmap` |
+| Vulnerability templates | `/nuclei` |
+| HTTP probing | `/httpx` |
