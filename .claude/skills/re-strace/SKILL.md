@@ -1,11 +1,13 @@
 ---
 name: re-strace
-description: "System call tracing with strace/ltrace/dtrace: trace syscalls, library calls, filter by type, follow processes. Use for: dynamic analysis, understanding binary behavior, debugging, identifying file/network access. Triggers: strace, ltrace, dtrace, trace syscalls, trace library calls, what syscalls, what files accessed."
+description: "Linux system call tracing with strace/ltrace: trace syscalls, library calls, filter by type, follow processes. Use for: dynamic analysis on Linux, understanding binary behavior, debugging, identifying file/network access. For macOS/BSD, use /re-dtrace instead. Triggers: strace, ltrace, trace syscalls linux, trace library calls, what syscalls, what files accessed."
 ---
 
-# strace / ltrace
+# strace / ltrace (Linux)
 
-System call and library call tracing for dynamic analysis.
+**Platform: Linux only.** For macOS/BSD tracing, use `/re-dtrace`.
+
+System call and library call tracing for dynamic analysis on Linux.
 
 ## Quick Start
 
@@ -110,37 +112,27 @@ ltrace -e 'str*' ./binary
 ltrace -e '*@libssl*' ./binary
 ```
 
-## dtrace (macOS/BSD)
+## macOS/BSD Quick Reference
 
-### Quick Start
-
-```bash
-# Requires SIP disabled or entitled binary
-sudo dtrace -n 'syscall:::entry { @[execname,probefunc] = count(); }'
-
-# Trace process syscalls
-sudo dtrace -n 'syscall:::entry /pid == $target/ { trace(probefunc); }' -p PID
-
-# One-liner: files opened
-sudo dtrace -n 'syscall::open*:entry { printf("%s", copyinstr(arg0)); }'
-```
-
-### dtruss (macOS strace equivalent)
+For comprehensive DTrace coverage, see `/re-dtrace`.
 
 ```bash
-sudo dtruss ./binary               # Like strace
+# dtruss - strace equivalent for macOS
+sudo dtruss ./binary               # Trace all syscalls
 sudo dtruss -p PID                 # Attach to process
 sudo dtruss -f ./binary            # Follow forks
 ```
 
+Note: Requires SIP adjustments. See `/re-dtrace` for details.
+
 ## Quick Reference
 
-| Tool | Purpose | Common Options |
-|------|---------|----------------|
-| `strace` | Syscall tracing | `-e`, `-f`, `-o`, `-c` |
-| `ltrace` | Library call tracing | `-e`, `-f`, `-C` |
-| `dtrace` | Dynamic tracing (macOS) | `-n`, `-p` |
-| `dtruss` | macOS strace equivalent | `-f`, `-p` |
+| Tool | Platform | Purpose | Common Options |
+|------|----------|---------|----------------|
+| `strace` | Linux | Syscall tracing | `-e`, `-f`, `-o`, `-c` |
+| `ltrace` | Linux | Library call tracing | `-e`, `-f`, `-C` |
+
+For macOS tools (dtrace, dtruss), see `/re-dtrace`.
 
 ## Common Analysis Tasks
 
@@ -166,6 +158,7 @@ strace -c ./binary
 
 ## Integration
 
+For macOS/BSD tracing, use `/re-dtrace`.
 For static analysis before tracing, use `/re-expert`.
-For debugging with breakpoints, use `/re-gdb` or `/re-lldb`.
+For debugging with breakpoints, use `/re-gdb` (Linux) or `/re-lldb` (macOS).
 For hooking specific functions, use `/re-frida`.
