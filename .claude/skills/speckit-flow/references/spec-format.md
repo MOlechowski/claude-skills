@@ -96,6 +96,48 @@ Response time < 100ms.
 |------|----------|----------------|
 | T001 | [what must be true] | [how to measure] |
 
+## acceptance.md
+
+| Section | Format | Notes |
+|---------|--------|-------|
+| Acceptance Criteria | AC-XXX format with source, condition, verification | Derived from user stories |
+| Acceptance Tests | Gherkin (Given/When/Then) with AT-XXX format | One per criterion |
+| Automated Coverage | Checkbox list | Unit/integration/E2E coverage status |
+| Sign-off Checklist | Table: Role / Name / Date / Signature | Developer, QA, Product Owner |
+
+### Acceptance Criteria Example
+
+```markdown
+### AC-001: User can log in with valid credentials
+
+- **Source**: US-1 / FR-001
+- **Condition**: User with valid credentials can access the system
+- **Verified**: [ ] Pass / [ ] Fail
+```
+
+### Acceptance Test Example
+
+```gherkin
+Feature: User Authentication
+
+  Scenario: Valid login
+    Given a user is authenticated
+    When the user submits valid credentials
+    Then the user can access the system
+```
+
+**Status**: [ ] Pass / [ ] Fail
+**Tested By**: [Name]
+**Date**: [Date]
+
+### Sign-off Example
+
+| Role | Name | Date | Signature |
+|------|------|------|-----------|
+| Developer | | | [ ] Approved |
+| QA | | | [ ] Approved |
+| Product Owner | | | [ ] Approved |
+
 ## checklists/
 
 - Directory must exist with at least one `.md` file
