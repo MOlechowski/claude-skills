@@ -218,7 +218,7 @@ def main():
             print(f"\n{Status.SUCCESS} Phase 5 complete: TASKS")
             print(f"  Tasks file: {result['tasks_file']}")
             print(f"  User stories: {result['user_stories_count']}")
-            print(f"\n{Status.INFO} Next: Edit tasks.md, then run speckit_checklist.py")
+            print(f"\n{Status.INFO} Next: Edit tasks.md, then run speckit_acceptance.py")
         else:
             print(f"\n{Status.ERROR} Phase 5 failed: {result.get('error', 'Unknown error')}")
 

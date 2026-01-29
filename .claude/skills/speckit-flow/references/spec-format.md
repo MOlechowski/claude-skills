@@ -103,6 +103,7 @@ Response time < 100ms.
 | Acceptance Criteria | AC-XXX format with source, condition, verification | Derived from user stories |
 | Acceptance Tests | Gherkin (Given/When/Then) with AT-XXX format | One per criterion |
 | Automated Coverage | Checkbox list | Unit/integration/E2E coverage status |
+| Quality Checklists | CHK-XXX format, domain subsections | Auto-detected from spec keywords |
 | Sign-off Checklist | Table: Role / Name / Date / Signature | Developer, QA, Product Owner |
 
 ### Acceptance Criteria Example
@@ -138,18 +139,22 @@ Feature: User Authentication
 | QA | | | [ ] Approved |
 | Product Owner | | | [ ] Approved |
 
-## checklists/
+### Quality Checklists Example
 
-- Directory must exist with at least one `.md` file
-- Use CHK-XXX format for items
-- Common types: security, infrastructure, api, ux
-
-### Checklist Example
+Quality checklists are included as a section within acceptance.md. CHK IDs are globally sequential across all domain subsections.
 
 ```markdown
-# Security Checklist
+## Quality Checklists
 
-- [ ] CHK001 Input validation implemented
-- [ ] CHK002 Authentication required
-- [ ] CHK003 No sensitive data in logs
+### API Quality
+
+- [ ] CHK-001 All endpoints documented
+- [ ] CHK-002 Request/response schemas defined
+- [ ] CHK-003 Error responses specified
+
+### Security Quality
+
+- [ ] CHK-004 Auth method specified
+- [ ] CHK-005 Role definitions clear
+- [ ] CHK-006 Sensitive data identified
 ```

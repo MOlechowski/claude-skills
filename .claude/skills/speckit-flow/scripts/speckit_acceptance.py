@@ -1,18 +1,20 @@
 #!/usr/bin/env python3
 """
-speckit_acceptance.py - Phase 5.5: ACCEPTANCE
+speckit_acceptance.py - Phase 6: ACCEPTANCE
 
-Generates acceptance criteria and tests from spec.md user stories.
+Generates acceptance criteria, tests, and quality checklists from spec.md.
 
 Usage:
     speckit_acceptance.py [OPTIONS]
 
 Options:
+    --type <type>    Force specific checklist type (api, ux, security, performance, general)
     --json           Output in JSON format
     --help, -h       Show this help message
 
 Examples:
     speckit_acceptance.py
+    speckit_acceptance.py --type api
     speckit_acceptance.py --json
 """
 
@@ -39,16 +41,130 @@ from common import (
 )
 
 
+# Domain keyword mappings
+CHECKLIST_KEYWORDS = {
+    "api": ["api", "endpoint", "rest", "graphql", "http", "request", "response", "route"],
+    "ux": ["ui", "ux", "interface", "frontend", "user experience", "component", "page", "form", "button"],
+    "security": ["auth", "security", "permission", "token", "password", "login", "role", "access"],
+    "performance": ["performance", "latency", "throughput", "cache", "optimize", "speed", "load"]
+}
+
+# Checklist templates for each domain (with CHK-XXX numbering)
+CHECKLIST_TEMPLATES = {
+    "api": {
+        "title": "API Quality",
+        "items": [
+            "All endpoints documented",
+            "Request/response schemas defined",
+            "Error responses specified",
+            "Authentication requirements clear",
+            "Input validation rules defined",
+            "Required vs optional fields specified",
+            "Data types documented",
+            "Error codes defined",
+            "Error message format consistent",
+            "Edge cases covered",
+            "Happy path tests planned",
+            "Error case tests planned",
+            "Integration tests planned",
+        ]
+    },
+    "ux": {
+        "title": "UX Quality",
+        "items": [
+            "All screens/pages identified",
+            "Navigation flow documented",
+            "Responsive design considered",
+            "User journey mapped",
+            "Error states designed",
+            "Loading states designed",
+            "Empty states designed",
+            "Keyboard navigation",
+            "Screen reader support",
+            "Color contrast",
+            "Focus indicators",
+            "Usability testing planned",
+            "Cross-browser testing",
+            "Mobile testing",
+        ]
+    },
+    "security": {
+        "title": "Security Quality",
+        "items": [
+            "Auth method specified (JWT, OAuth, etc.)",
+            "Session management defined",
+            "Password requirements documented",
+            "Role definitions clear",
+            "Permission model documented",
+            "Access control rules defined",
+            "Sensitive data identified",
+            "Encryption requirements specified",
+            "Data retention policy defined",
+            "Security testing planned",
+            "Penetration testing scope",
+            "Vulnerability scanning",
+        ]
+    },
+    "performance": {
+        "title": "Performance Quality",
+        "items": [
+            "Response time targets defined",
+            "Throughput requirements specified",
+            "Concurrent user estimates",
+            "Caching strategy defined",
+            "Database query optimization",
+            "Asset optimization (images, JS, CSS)",
+            "Performance metrics identified",
+            "Alerting thresholds defined",
+            "Profiling approach planned",
+            "Load testing planned",
+            "Stress testing scope",
+            "Performance benchmarks defined",
+        ]
+    },
+    "general": {
+        "title": "General Quality",
+        "items": [
+            "All requirements documented",
+            "Acceptance criteria defined",
+            "Edge cases identified",
+            "Architecture documented",
+            "Dependencies identified",
+            "Integration points clear",
+            "Code structure planned",
+            "Coding standards defined",
+            "Documentation requirements",
+            "Unit tests planned",
+            "Integration tests planned",
+            "Acceptance tests planned",
+        ]
+    }
+}
+
+
 def parse_args():
     """Parse command line arguments."""
     parser = argparse.ArgumentParser(
-        description="Phase 5.5: ACCEPTANCE - Generate acceptance criteria and tests",
+        description="Phase 6: ACCEPTANCE - Generate acceptance criteria, tests, and quality checklists",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
+Checklist Types:
+    api         - API/endpoint specific checks
+    ux          - User interface/experience checks
+    security    - Security/auth checks
+    performance - Performance/optimization checks
+    general     - General quality checks
+
 Examples:
     %(prog)s
+    %(prog)s --type api
     %(prog)s --json
 """
+    )
+    parser.add_argument(
+        "--type",
+        choices=["api", "ux", "security", "performance", "general"],
+        help="Force specific checklist type"
     )
     parser.add_argument(
         "--json",
@@ -153,8 +269,71 @@ def generate_test_cases(criteria: list) -> list:
     return test_cases
 
 
-def format_acceptance_content(criteria: list, test_cases: list, branch: str) -> str:
-    """Format acceptance criteria and tests into markdown content."""
+def detect_checklist_types(content: str) -> list:
+    """
+    Scan content for domain keywords to determine checklist types.
+
+    Returns list of detected checklist types.
+    """
+    detected = []
+    content_lower = content.lower()
+
+    for checklist_type, keywords in CHECKLIST_KEYWORDS.items():
+        # Count keyword matches
+        match_count = sum(1 for kw in keywords if kw in content_lower)
+        if match_count >= 2:  # Require at least 2 keyword matches
+            detected.append({
+                "type": checklist_type,
+                "confidence": min(match_count / len(keywords), 1.0)
+            })
+
+    # Sort by confidence
+    detected.sort(key=lambda x: x["confidence"], reverse=True)
+
+    # Always include general if no specific matches
+    if not detected:
+        detected.append({"type": "general", "confidence": 1.0})
+
+    return detected
+
+
+def generate_quality_checklists(spec_content: str, forced_type: str = None) -> dict:
+    """
+    Generate quality checklists from spec content.
+
+    Returns dict with checklist_types list and formatted checklist sections.
+    """
+    if forced_type:
+        checklist_types = [{"type": forced_type, "confidence": 1.0}]
+    else:
+        checklist_types = detect_checklist_types(spec_content)
+
+    sections = []
+    chk_counter = 1
+
+    for ct in checklist_types:
+        ctype = ct["type"]
+        template = CHECKLIST_TEMPLATES.get(ctype, CHECKLIST_TEMPLATES["general"])
+        title = template["title"]
+        items = template["items"]
+
+        lines = [f"### {title}", ""]
+        for item in items:
+            lines.append(f"- [ ] CHK-{chk_counter:03d} {item}")
+            chk_counter += 1
+        lines.append("")
+
+        sections.append("\n".join(lines))
+
+    return {
+        "checklist_types": [ct["type"] for ct in checklist_types],
+        "checklists_count": chk_counter - 1,
+        "sections_text": "\n".join(sections)
+    }
+
+
+def format_acceptance_content(criteria: list, test_cases: list, branch: str, checklist_data: dict = None) -> str:
+    """Format acceptance criteria, tests, and quality checklists into markdown content."""
     today = date.today().isoformat()
     feature_name = branch.split("-", 1)[1] if "-" in branch else branch
 
@@ -217,6 +396,19 @@ def format_acceptance_content(criteria: list, test_cases: list, branch: str) -> 
         "- [ ] Integration tests passing",
         "- [ ] E2E scenarios implemented in test framework",
         "",
+    ])
+
+    # Add Quality Checklists section if checklist data provided
+    if checklist_data and checklist_data.get("sections_text"):
+        lines.extend([
+            "---",
+            "",
+            "## Quality Checklists",
+            "",
+            checklist_data["sections_text"],
+        ])
+
+    lines.extend([
         "---",
         "",
         "## Sign-off Checklist",
@@ -239,11 +431,12 @@ def format_acceptance_content(criteria: list, test_cases: list, branch: str) -> 
 
 def execute_phase(args, paths: dict) -> dict:
     """
-    Execute Phase 5.5: ACCEPTANCE.
+    Execute Phase 6: ACCEPTANCE.
 
-    Generates acceptance.md from spec.md user stories and requirements.
+    Generates acceptance.md from spec.md user stories and requirements,
+    including quality checklists.
     """
-    log_phase(5, "ACCEPTANCE", "start")  # Using 5 since we can't use 5.5
+    log_phase(6, "ACCEPTANCE", "start")
 
     feature_dir = Path(paths.get("FEATURE_DIR", ""))
     spec_file = feature_dir / "spec.md"
@@ -252,10 +445,10 @@ def execute_phase(args, paths: dict) -> dict:
 
     # Read spec.md
     if not spec_file.exists():
-        log_phase(5, "ACCEPTANCE", "error")
+        log_phase(6, "ACCEPTANCE", "error")
         return {
             "status": "error",
-            "phase": "5.5",
+            "phase": 6,
             "error": f"spec.md not found: {spec_file}"
         }
 
@@ -276,6 +469,25 @@ def execute_phase(args, paths: dict) -> dict:
     test_cases = generate_test_cases(criteria)
     print(f"  {Status.INFO} Generated {len(test_cases)} test cases")
 
+    # Generate quality checklists (non-blocking)
+    checklist_data = None
+    checklist_types = []
+    checklists_count = 0
+    try:
+        forced_type = getattr(args, 'type', None)
+        if forced_type:
+            print(f"  {Status.INFO} Using specified checklist type: {forced_type}")
+        else:
+            print(f"  {Status.RUNNING} Detecting checklist types from spec...")
+
+        checklist_data = generate_quality_checklists(spec_content, forced_type)
+        checklist_types = checklist_data.get("checklist_types", [])
+        checklists_count = checklist_data.get("checklists_count", 0)
+        print(f"  {Status.INFO} Detected checklist types: {', '.join(checklist_types)}")
+        print(f"  {Status.INFO} Generated {checklists_count} checklist items")
+    except Exception as e:
+        print(f"  {Status.WARNING} Checklist generation failed (non-blocking): {e}")
+
     # Get branch name for template
     branch = get_current_branch()
 
@@ -287,32 +499,34 @@ def execute_phase(args, paths: dict) -> dict:
         print(f"  {Status.INFO} Using acceptance template (no criteria parsed)")
     elif criteria:
         # Generate content from parsed criteria
-        content = format_acceptance_content(criteria, test_cases, branch)
+        content = format_acceptance_content(criteria, test_cases, branch, checklist_data)
     else:
         # Use template as fallback
-        content = template if template else format_acceptance_content([], [], branch)
+        content = template if template else format_acceptance_content([], [], branch, checklist_data)
 
     # Write acceptance file
     try:
         acceptance_file.write_text(content)
         print(f"  {Status.SUCCESS} Created acceptance.md: {acceptance_file}")
     except Exception as e:
-        log_phase(5, "ACCEPTANCE", "error")
+        log_phase(6, "ACCEPTANCE", "error")
         return {
             "status": "error",
-            "phase": "5.5",
+            "phase": 6,
             "error": f"Failed to write acceptance.md: {e}"
         }
 
-    log_phase(5, "ACCEPTANCE", "complete")
+    log_phase(6, "ACCEPTANCE", "complete")
 
     return {
         "status": "complete",
-        "phase": "5.5",
+        "phase": 6,
         "acceptance_file": str(acceptance_file),
         "criteria_count": len(criteria),
         "test_cases_count": len(test_cases),
-        "template_used": template is not None and not criteria
+        "template_used": template is not None and not criteria,
+        "checklist_types": checklist_types,
+        "checklists_count": checklists_count
     }
 
 
@@ -326,7 +540,7 @@ def main():
         sys.exit(EXIT_MISSING_PREREQ)
 
     paths = validation["paths"]
-    print(f"{Status.RUNNING} Generating acceptance criteria and tests...")
+    print(f"{Status.RUNNING} Generating acceptance criteria, tests, and quality checklists...")
 
     result = execute_phase(args, paths)
 
@@ -334,13 +548,15 @@ def main():
         print(json.dumps(result, indent=2))
     else:
         if result["status"] == "complete":
-            print(f"\n{Status.SUCCESS} Phase 5.5 complete: ACCEPTANCE")
+            print(f"\n{Status.SUCCESS} Phase 6 complete: ACCEPTANCE")
             print(f"  Acceptance file: {result['acceptance_file']}")
             print(f"  Criteria: {result['criteria_count']}")
             print(f"  Test cases: {result['test_cases_count']}")
-            print(f"\n{Status.INFO} Next: Edit acceptance.md, then run speckit_checklist.py")
+            print(f"  Checklist types: {', '.join(result.get('checklist_types', []))}")
+            print(f"  Checklist items: {result.get('checklists_count', 0)}")
+            print(f"\n{Status.INFO} Next: Review acceptance.md, then run speckit_pr.py")
         else:
-            print(f"\n{Status.ERROR} Phase 5.5 failed: {result.get('error', 'Unknown error')}")
+            print(f"\n{Status.ERROR} Phase 6 failed: {result.get('error', 'Unknown error')}")
 
     sys.exit(EXIT_SUCCESS if result["status"] == "complete" else EXIT_BASH_ERROR)
 

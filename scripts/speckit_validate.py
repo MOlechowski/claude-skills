@@ -2,7 +2,7 @@
 """
 speckit_validate.py - Validate spec artifacts
 
-Validates spec.md, plan.md, and tasks.md before PR creation.
+Validates spec.md, plan.md, tasks.md, and acceptance.md quality checklists before PR creation.
 
 Usage:
     speckit_validate.py [FEATURE_DIR] [OPTIONS]
@@ -62,7 +62,7 @@ PLAN_RECOMMENDED_SECTIONS = ["dependencies", "risks"]
 def parse_args():
     """Parse command line arguments."""
     parser = argparse.ArgumentParser(
-        description="Validate spec artifacts (spec.md, plan.md, tasks.md)",
+        description="Validate spec artifacts (spec.md, plan.md, tasks.md, acceptance.md)",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
@@ -182,6 +182,29 @@ def check_tech_stack(content: str) -> list:
     return results
 
 
+def check_acceptance_checklists(feature_dir: Path) -> dict:
+    """Validate quality checklists section in acceptance.md."""
+    results = []
+    acceptance_file = feature_dir / "acceptance.md"
+
+    if not acceptance_file.exists():
+        results.append((RESULT_FAIL, "Missing acceptance.md with Quality Checklists section"))
+        return {"file": "quality checklists", "results": results}
+
+    content = acceptance_file.read_text()
+    if "## Quality Checklists" not in content:
+        results.append((RESULT_FAIL, "acceptance.md missing ## Quality Checklists section"))
+        return {"file": "quality checklists", "results": results}
+
+    chk_items = re.findall(r"CHK-\d+", content)
+    if chk_items:
+        results.append((RESULT_PASS, f"Quality checklists in acceptance.md ({len(chk_items)} items)"))
+    else:
+        results.append((RESULT_FAIL, "Quality Checklists section exists but has no CHK items"))
+
+    return {"file": "quality checklists", "results": results}
+
+
 def validate_spec(feature_dir: Path) -> dict:
     """Validate spec.md."""
     spec_file = feature_dir / "spec.md"
@@ -280,6 +303,9 @@ def validate_feature(feature_dir: Path) -> dict:
     validations.append(validate_spec(feature_dir))
     validations.append(validate_plan(feature_dir))
     validations.append(validate_tasks(feature_dir))
+
+    # Validate quality checklists in acceptance.md
+    validations.append(check_acceptance_checklists(feature_dir))
 
     # Count results
     errors = 0

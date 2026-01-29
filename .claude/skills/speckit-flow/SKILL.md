@@ -61,16 +61,16 @@ For detailed format requirements and examples, see [references/spec-format.md](r
 - **spec.md**: Overview, User Scenarios (Gherkin), Requirements (FR/NFR-XXX), Success Criteria (SC-XXX), Edge Cases, Out of Scope
 - **plan.md**: Overview, Tech Stack (table), Phases, Risks (table), Verification Checklist, Rollback Plan
 - **tasks.md**: Max 20 tasks, checkbox format, Component/Integration/Verification categories
-- **checklists/**: Directory with at least one `.md` file using CHK-XXX format
+- **acceptance.md**: Includes Quality Checklists section with CHK-XXX format items
 
 ## Overview
 
 End-to-end spec-driven development:
 
 ```text
-CREATE -> CLARIFY -> ANALYZE -> TASKS -> ACCEPTANCE -> CHECKLIST -> PR -> [IMPLEMENT]
-                                                                            ^
-                                                                (only if impl repo)
+CREATE -> CLARIFY -> ANALYZE -> TASKS -> ACCEPTANCE -> PR -> [IMPLEMENT]
+                                                                ^
+                                                    (only if impl repo)
 ```
 
 Fully autonomous, halts only on errors. Creates PR for spec artifacts. Implementation conditional on repo type.
@@ -88,8 +88,7 @@ Each phase is implemented as a Python script:
 | 3. CLARIFY | `speckit_clarify.py` | `python scripts/speckit_clarify.py` |
 | 4. ANALYZE | `speckit_analyze.py` | `python scripts/speckit_analyze.py` |
 | 5. TASKS | `speckit_tasks.py` | `python scripts/speckit_tasks.py` |
-| 5.5. ACCEPTANCE | `speckit_acceptance.py` | `python scripts/speckit_acceptance.py` |
-| 6. CHECKLIST | `speckit_checklist.py` | `python scripts/speckit_checklist.py` |
+| 6. ACCEPTANCE | `speckit_acceptance.py` | `python scripts/speckit_acceptance.py` |
 | 7. PR | `speckit_pr.py` | `python scripts/speckit_pr.py` |
 | 8. IMPLEMENT | `speckit_implement.py` | `python scripts/speckit_implement.py` |
 | Validate | `speckit_validate.py` | `python scripts/speckit_validate.py` |
@@ -114,11 +113,8 @@ python scripts/speckit_analyze.py
 # 5. Generate tasks
 python scripts/speckit_tasks.py
 
-# 5.5. Generate acceptance criteria and tests
+# 6. Generate acceptance criteria, tests, and quality checklists
 python scripts/speckit_acceptance.py
-
-# 6. Generate checklists
-python scripts/speckit_checklist.py
 
 # 7. Create PR
 python scripts/speckit_pr.py
@@ -140,8 +136,8 @@ python scripts/common.py --check-paths --json
 **Resume Logic:**
 - If `tasks.md` exists AND all tasks marked `[X]` -> Skip to Phase 7 (PR)
 - If `tasks.md` exists with incomplete tasks AND is impl repo -> Skip to Phase 8 (IMPLEMENT)
-- If `acceptance.md` exists -> Skip to Phase 6 (CHECKLIST)
-- If `tasks.md` exists -> Skip to Phase 5.5 (ACCEPTANCE)
+- If `acceptance.md` exists -> Skip to Phase 7 (PR)
+- If `tasks.md` exists -> Skip to Phase 6 (ACCEPTANCE)
 - If `plan.md` exists -> Skip to Phase 3 (CLARIFY)
 - If `spec.md` exists -> Skip to Phase 2 (CREATE - plan)
 - Otherwise -> Start from Phase 1 (CREATE - specify)
@@ -262,20 +258,24 @@ python scripts/speckit_tasks.py
 
 ---
 
-## Phase 5.5: ACCEPTANCE
+## Phase 6: ACCEPTANCE
 
 **Script:** `speckit_acceptance.py`
 
 ```bash
 python scripts/speckit_acceptance.py
+python scripts/speckit_acceptance.py --type api
 ```
 
 **Options:**
+- `--type <type>` - Force specific checklist type (api, ux, security, performance, general)
 - `--json` - JSON output
 
 **Generates acceptance.md containing:**
 - Acceptance criteria derived from user stories (AC-XXX format)
 - Acceptance tests in Gherkin format (AT-XXX format)
+- Quality checklists with CHK-XXX items (auto-detected or forced type)
+- Automated test coverage checklist
 - Stakeholder sign-off checklist
 
 **Parses from spec.md:**
@@ -283,25 +283,14 @@ python scripts/speckit_acceptance.py
 - Functional requirements (FR-XXX)
 - Success criteria (SC-XXX)
 
----
+**Auto-detects checklist domains from spec.md:**
+- API keywords -> API Quality checklist
+- UI/UX keywords -> UX Quality checklist
+- Auth/security keywords -> Security Quality checklist
+- Performance keywords -> Performance Quality checklist
+- No matches -> General Quality checklist
 
-## Phase 6: CHECKLIST
-
-**Script:** `speckit_checklist.py`
-
-```bash
-python scripts/speckit_checklist.py --type api
-```
-
-**Options:**
-- `--type <type>` - Force specific type (api, ux, security, performance, general)
-- `--json` - JSON output
-
-**Auto-detects domains from spec.md:**
-- API keywords -> api checklist
-- UI/UX keywords -> ux checklist
-- Auth/security keywords -> security checklist
-- Performance keywords -> performance checklist
+Checklist generation is non-blocking. If it fails, acceptance.md still contains criteria, tests, and sign-off sections.
 
 ---
 
@@ -363,7 +352,7 @@ python scripts/speckit_validate.py [FEATURE_DIR] [OPTIONS]
 | spec.md | Overview, User Scenarios, Requirements, Success Criteria, Edge Cases, Out of Scope | Gherkin format, SC-XXX format, FR-XXX format |
 | plan.md | Tech Stack, Risks | Table format |
 | tasks.md | Checkbox format | Max 20 tasks, Component/Integration/Verification categories |
-| checklists/ | Directory exists | At least one .md file |
+| acceptance.md | Quality Checklists section | At least one CHK-XXX item |
 
 **Auto-Fix Templates:**
 
@@ -406,9 +395,8 @@ tasks.md
   ✅ Found 12 tasks (3 completed)
   ✅ Task count within limit (12/20)
 
-checklists/
-  ✅ Directory exists
-  ✅ Found 2 checklist(s)
+quality checklists
+  ✅ Quality checklists in acceptance.md (12 items)
 
 Summary: 2 errors, 2 warnings
 
@@ -450,7 +438,7 @@ Note: Format warnings (e.g., "not using FR-XXX format") don't get templates beca
 | CLARIFY | Script fails | Halt, show context |
 | ANALYZE | CRITICAL issues | Halt, show report |
 | TASKS | Script fails | Halt, suggest speckit_plan.py |
-| CHECKLIST | Generation fails | **Continue** (non-blocking) |
+| ACCEPTANCE | Checklist generation fails | **Continue** (non-blocking, other sections still written) |
 | PR | Git/GH error | Halt, show command that failed |
 | IMPLEMENT | Task fails | Halt, show task ID and error |
 
