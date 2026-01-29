@@ -87,13 +87,14 @@ You **MUST** consider the user input before proceeding (if not empty).
    - If source docs are large, generate interim summary items instead of embedding raw text
 
 5. **Generate checklist** - Create "Unit Tests for Requirements":
-   - Create `FEATURE_DIR/checklists/` directory if it doesn't exist
-   - Generate unique checklist filename:
-     - Use short, descriptive name based on domain (e.g., `ux.md`, `api.md`, `security.md`)
-     - Format: `[domain].md`
-     - If file exists, append to existing file
-   - Number items sequentially starting from CHK001
-   - Each `/speckit.checklist` run creates a NEW file (never overwrites existing checklists)
+   - Read `FEATURE_DIR/acceptance.md` if it exists
+   - If `## Quality Checklists` section exists in acceptance.md:
+     - Find the highest existing CHK ID (e.g., CHK-012) and continue numbering from there
+     - Append new domain subsection under `## Quality Checklists`
+   - If `## Quality Checklists` section does not exist:
+     - Insert `## Quality Checklists` before `## Sign-off Checklist` (or append at end if Sign-off not found)
+     - Number items sequentially starting from CHK-001
+   - If acceptance.md does not exist, create it with just the Quality Checklists section
 
    **CORE PRINCIPLE - Test the Requirements, Not the Implementation**:
    Every checklist item MUST evaluate the REQUIREMENTS THEMSELVES for:
@@ -203,25 +204,23 @@ You **MUST** consider the user input before proceeding (if not empty).
    - ✅ "Are [edge cases/scenarios] addressed in requirements?"
    - ✅ "Does the spec define [missing aspect]?"
 
-6. **Structure Reference**: Generate the checklist following the canonical template in `.specify/templates/checklist-template.md` for title, meta section, category headings, and ID formatting. If template is unavailable, use: H1 title, purpose/created meta lines, `##` category sections containing `- [ ] CHK### <requirement item>` lines with globally incrementing IDs starting at CHK001.
+6. **Structure Reference**: Generate the checklist following the acceptance.md structure with `### [Domain] Quality` subsection headings under `## Quality Checklists`. Use `- [ ] CHK-### <requirement item>` format with globally incrementing IDs continuing from the highest existing CHK ID in acceptance.md.
 
-7. **Report**: Output full path to created checklist, item count, and remind user that each run creates a new file. Summarize:
+7. **Report**: Output that acceptance.md was updated with quality checklists, item count, and domain. Summarize:
    - Focus areas selected
    - Depth level
    - Actor/timing
    - Any explicit user-specified must-have items incorporated
 
-**Important**: Each `/speckit.checklist` command invocation creates a checklist file using short, descriptive names unless file already exists. This allows:
+**Important**: Each `/speckit.checklist` command invocation adds a domain subsection to the `## Quality Checklists` section in `acceptance.md`. This allows:
 
-- Multiple checklists of different types (e.g., `ux.md`, `test.md`, `security.md`)
-- Simple, memorable filenames that indicate checklist purpose
-- Easy identification and navigation in the `checklists/` folder
-
-To avoid clutter, use descriptive types and clean up obsolete checklists when done.
+- Multiple checklist domains in a single file (e.g., API Quality, UX Quality, Security Quality)
+- Globally sequential CHK-XXX numbering across all domains
+- All quality artifacts co-located with acceptance criteria and tests
 
 ## Example Checklist Types & Sample Items
 
-**UX Requirements Quality:** `ux.md`
+**UX Requirements Quality:** `### UX Quality` subsection
 
 Sample items (testing the requirements, NOT the implementation):
 
@@ -232,7 +231,7 @@ Sample items (testing the requirements, NOT the implementation):
 - "Is fallback behavior defined when images fail to load? [Edge Case, Gap]"
 - "Can 'prominent display' be objectively measured? [Measurability, Spec §FR-4]"
 
-**API Requirements Quality:** `api.md`
+**API Requirements Quality:** `### API Quality` subsection
 
 Sample items:
 
@@ -242,7 +241,7 @@ Sample items:
 - "Are retry/timeout requirements defined for external dependencies? [Coverage, Gap]"
 - "Is versioning strategy documented in requirements? [Gap]"
 
-**Performance Requirements Quality:** `performance.md`
+**Performance Requirements Quality:** `### Performance Quality` subsection
 
 Sample items:
 
@@ -252,7 +251,7 @@ Sample items:
 - "Can performance requirements be objectively measured? [Measurability]"
 - "Are degradation requirements defined for high-load scenarios? [Edge Case, Gap]"
 
-**Security Requirements Quality:** `security.md`
+**Security Requirements Quality:** `### Security Quality` subsection
 
 Sample items:
 

@@ -2,7 +2,7 @@
 """
 speckit_validate.py - Comprehensive spec artifact validation
 
-Validates spec.md, plan.md, tasks.md, and checklists/ against speckit-flow requirements.
+Validates spec.md, plan.md, tasks.md, and acceptance.md quality checklists against speckit-flow requirements.
 
 Usage:
     speckit_validate.py [FEATURE_DIR] [OPTIONS]
@@ -126,14 +126,18 @@ Then [expected result]
 |------|------------|--------|------------|
 | [what could go wrong] | Low/Medium/High | Low/Medium/High | [how to prevent/handle] |
 """,
-    "missing_checklists": """
-mkdir -p specs/[feature]/checklists/
+    "missing_quality_checklists": """
+Add a Quality Checklists section to acceptance.md:
 
-Example checklist (security.md):
-# Security Checklist
-- [ ] CHK001 Input validation implemented
-- [ ] CHK002 Authentication required
-- [ ] CHK003 No sensitive data in logs
+## Quality Checklists
+
+### General Quality
+
+- [ ] CHK-001 All requirements documented
+- [ ] CHK-002 Acceptance criteria defined
+- [ ] CHK-003 Edge cases identified
+
+Run speckit_acceptance.py to auto-generate this section.
 """
 }
 
@@ -141,7 +145,7 @@ Example checklist (security.md):
 def parse_args():
     """Parse command line arguments."""
     parser = argparse.ArgumentParser(
-        description="Validate spec artifacts (spec.md, plan.md, tasks.md, checklists/)",
+        description="Validate spec artifacts (spec.md, plan.md, tasks.md, acceptance.md)",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
@@ -412,37 +416,42 @@ def check_task_categories(content: str) -> list:
     return results
 
 
-def check_checklists_dir(feature_dir: Path) -> dict:
-    """Validate checklists/ directory."""
+def check_acceptance_checklists(feature_dir: Path) -> dict:
+    """Validate quality checklists section in acceptance.md."""
     results = []
-    checklist_dir = feature_dir / "checklists"
+    acceptance_file = feature_dir / "acceptance.md"
 
-    if not checklist_dir.exists():
-        # Missing directory - show template
+    if not acceptance_file.exists():
         results.append(make_result(
             RESULT_FAIL,
-            "Missing checklists/ directory",
+            "Missing acceptance.md with Quality Checklists section",
             FIX_TEMPLATE,
-            FIX_TEMPLATES.get("missing_checklists")
+            FIX_TEMPLATES.get("missing_quality_checklists")
         ))
-        return {"file": "checklists/", "results": results}
+        return {"file": "quality checklists", "results": results}
 
-    results.append(make_result(RESULT_PASS, "Directory exists"))
+    content = acceptance_file.read_text()
+    if "## Quality Checklists" not in content:
+        results.append(make_result(
+            RESULT_FAIL,
+            "acceptance.md missing ## Quality Checklists section",
+            FIX_TEMPLATE,
+            FIX_TEMPLATES.get("missing_quality_checklists")
+        ))
+        return {"file": "quality checklists", "results": results}
 
-    # Check for .md files
-    md_files = list(checklist_dir.glob("*.md"))
-    if md_files:
-        results.append(make_result(RESULT_PASS, f"Found {len(md_files)} checklist(s)"))
+    chk_items = re.findall(r"CHK-\d+", content)
+    if chk_items:
+        results.append(make_result(RESULT_PASS, f"Quality checklists in acceptance.md ({len(chk_items)} items)"))
     else:
-        # Directory exists but empty - show template
         results.append(make_result(
             RESULT_FAIL,
-            "No checklist files in checklists/",
+            "Quality Checklists section exists but has no CHK items",
             FIX_TEMPLATE,
-            FIX_TEMPLATES.get("missing_checklists")
+            FIX_TEMPLATES.get("missing_quality_checklists")
         ))
 
-    return {"file": "checklists/", "results": results}
+    return {"file": "quality checklists", "results": results}
 
 
 def validate_spec(feature_dir: Path) -> dict:
@@ -562,8 +571,8 @@ def validate_feature(feature_dir: Path) -> dict:
     validations.append(validate_plan(feature_dir))
     validations.append(validate_tasks(feature_dir))
 
-    # Validate checklists directory
-    validations.append(check_checklists_dir(feature_dir))
+    # Validate quality checklists in acceptance.md
+    validations.append(check_acceptance_checklists(feature_dir))
 
     # Count results
     errors = 0
