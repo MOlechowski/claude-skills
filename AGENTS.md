@@ -1,7 +1,7 @@
 ---
-last_validated: 2026-01-26T18:00:00Z
+last_validated: 2026-01-29T12:00:00Z
 project_type: skills-repository
-skill_count: 71
+skill_count: 79
 ---
 
 # Agent Instructions: claude-skills
@@ -95,6 +95,15 @@ This is a Claude Skills configuration repository following Anthropic's Agent Ski
 │       ├── platform-architect/
 │       ├── terraform/
 │       ├── tofu/
+│       ├── # Go
+│       ├── go-lang-expert/
+│       ├── go-golangci-lint/
+│       ├── go-delve/
+│       ├── go-pprof/
+│       ├── go-goreleaser/
+│       ├── go-mockery/
+│       ├── go-task/
+│       ├── go-lefthook/
 │       ├── # Development Workflow
 │       ├── claude-md/
 │       ├── parallel-flow/
