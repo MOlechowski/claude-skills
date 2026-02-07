@@ -8,6 +8,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **hcloud skill** - Hetzner Cloud CLI for infrastructure management
+  - Server lifecycle (create, resize, rebuild, snapshots, backups)
+  - Networking (VPCs, firewalls, floating IPs, load balancers)
+  - Storage (volumes), images, SSH keys
+  - Multi-project context management
+  - Quick reference for all resource commands
+- **opa skill** - Open Policy Agent CLI and Rego policy language
+  - CLI reference (eval, test, check, fmt, build, run, inspect)
+  - Rego language syntax (rules, comprehensions, functions, iteration, mocking)
+  - Policy patterns (Kubernetes admission, Terraform validation, API authz, CI/CD gates)
+  - Bundle management, output formats, configuration
+  - CI integration with GitHub Actions and conftest
 - **aws-cli skill** - AWS CLI v2 expertise for command-line operations
   - Authentication methods (IAM, SSO, roles, profiles, environment variables)
   - Output formatting with JMESPath queries and jq integration

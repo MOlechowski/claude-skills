@@ -94,7 +94,7 @@ Skills can include additional files in their directory:
 2. **Level 2 (Activation)**: Full `SKILL.md` loads when skill is relevant
 3. **Level 3+ (On-Demand)**: Additional files load as needed
 
-## Available Skills (71 total)
+## Available Skills (73 total)
 
 ### Git & Version Control
 | Skill | Description |
@@ -121,6 +121,11 @@ Skills can include additional files in their directory:
 | **cloudflared** | Cloudflare Tunnel CLI for exposing local services |
 | **flarectl** | Cloudflare infrastructure CLI for DNS, firewall, zone management |
 | **wrangler** | Cloudflare Workers CLI for serverless development |
+
+### Cloud Infrastructure - Hetzner
+| Skill | Description |
+|-------|-------------|
+| **hcloud** | Hetzner Cloud CLI for server lifecycle, networking, storage, and multi-project management |
 
 ### Security & Vulnerability Scanning
 | Skill | Description |
@@ -188,6 +193,7 @@ Skills can include additional files in their directory:
 ### Infrastructure as Code
 | Skill | Description |
 |-------|-------------|
+| **opa** | Open Policy Agent for policy-as-code evaluation |
 | **platform-architect** | IaC architecture: tool selection, module design, state management |
 | **terraform** | HashiCorp Terraform for infrastructure provisioning |
 | **tofu** | OpenTofu (open-source Terraform fork) |
