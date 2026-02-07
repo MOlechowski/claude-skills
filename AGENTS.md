@@ -1,7 +1,7 @@
 ---
 last_validated: 2026-01-29T12:00:00Z
 project_type: skills-repository
-skill_count: 79
+skill_count: 80
 ---
 
 # Agent Instructions: claude-skills
@@ -28,7 +28,7 @@ This is a Claude Skills configuration repository following Anthropic's Agent Ski
 │   │   ├── speckit.tasks.md
 │   │   └── speckit.taskstoissues.md
 │   ├── settings.local.json
-│   └── skills/                  # 71 skills organized by domain
+│   └── skills/                  # 72 skills organized by domain
 │       ├── # Git & Version Control
 │       ├── commit/
 │       ├── commit-pr/
@@ -46,6 +46,8 @@ This is a Claude Skills configuration repository following Anthropic's Agent Ski
 │       ├── cloudflared/
 │       ├── flarectl/
 │       ├── wrangler/
+│       ├── # Cloud - Hetzner
+│       ├── hcloud/
 │       ├── # Security & Scanning
 │       ├── bandit/
 │       ├── grype/
@@ -92,6 +94,7 @@ This is a Claude Skills configuration repository following Anthropic's Agent Ski
 │       ├── tree/
 │       ├── yq/
 │       ├── # Infrastructure as Code
+│       ├── opa/
 │       ├── platform-architect/
 │       ├── terraform/
 │       ├── tofu/
