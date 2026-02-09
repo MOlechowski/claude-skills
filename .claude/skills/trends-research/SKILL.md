@@ -31,7 +31,7 @@ Results from multiple sources are **merged and deduplicated** for comprehensive 
 
 | Service | Purpose | Required | Get Key |
 |---------|---------|----------|---------|
-| xAI | X/Twitter search + supplemental web search | Optional | https://console.x.ai |
+| xAI | X/Twitter search + supplemental web search | Recommended | https://console.x.ai |
 
 **Note:** The skill works without xAI key (web-only mode via Claude Code), but X/Twitter data requires xAI.
 
@@ -62,6 +62,19 @@ security unlock-keychain ~/Library/Keychains/claude-keys.keychain-db
 ```
 
 ## Research Workflow
+
+### Step 0: Detect xAI Key (MANDATORY — run before every research session)
+
+Before parsing the query, check if the xAI API key is available:
+
+```bash
+security find-generic-password -s "xai-api" -w ~/Library/Keychains/claude-keys.keychain-db 2>/dev/null && echo "XAI_AVAILABLE=true" || echo "XAI_AVAILABLE=false"
+```
+
+- If **XAI_AVAILABLE=true**: Use **Full mode** — run Claude WebSearch AND xAI scripts in parallel for every search.
+- If **XAI_AVAILABLE=false**: Use **Web-Only mode** — Claude WebSearch only. Append note to output suggesting xAI setup.
+
+This step is NOT optional. Always check before starting research.
 
 ### Step 1: Parse User Query
 
@@ -118,8 +131,10 @@ Weight sources by engagement:
 
 | Mode | Sources | When |
 |------|---------|------|
-| **Full** | Claude WebSearch + xAI (web + X) | xAI key configured |
-| **Web-Only** | Claude WebSearch only | No xAI key |
+| **Full** | Claude WebSearch + xAI (web + X) | Step 0 returns XAI_AVAILABLE=true |
+| **Web-Only** | Claude WebSearch only | Step 0 returns XAI_AVAILABLE=false |
+
+Mode is determined by Step 0 — never skip it or assume Web-Only without checking.
 
 ## Intent Parsing
 
@@ -171,15 +186,17 @@ uv run scripts/xai_search.py reddit "AI agents"
 
 For a query like "What's trending in AI agents?":
 
-1. **Parallel batch 1** (can run simultaneously):
+1. **Step 0**: Check xAI key availability (mandatory, always first)
+
+2. **Parallel batch** (run simultaneously — Full mode):
    - Claude Code `WebSearch`: "AI agents trends 2026"
    - Claude Code `WebSearch`: "site:reddit.com AI agents"
    - xAI script: `x "AI agents"` (background)
    - xAI script: `web "AI agents"` (background)
 
-2. **Merge phase**: Combine results, dedupe by URL
+3. **Merge phase**: Combine results, dedupe by URL
 
-3. **Synthesis phase**: Weight by engagement, generate summary
+4. **Synthesis phase**: Weight by engagement, generate summary
 
 ## Depth Control
 
@@ -273,8 +290,9 @@ After research, enter Expert Mode:
 ## Critical Constraints
 
 **DO:**
-- Use Claude Code WebSearch first (free)
-- Run xAI searches in parallel when available
+- Run Step 0 (xAI key detection) before every research session — this is mandatory
+- If xAI key exists: run Claude WebSearch AND xAI scripts in parallel (Full mode)
+- If xAI key missing: use Claude WebSearch only (Web-Only mode)
 - Merge and deduplicate results by URL
 - Ground synthesis in actual research, not pre-existing knowledge
 - Cite specific sources with URLs
