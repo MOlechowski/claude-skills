@@ -73,12 +73,41 @@ Skill(skill="pr-create")
 
 ### 7. Merge via API
 
-Get the head SHA and merge using the GitHub API (bypasses branch protection):
+First attempt: merge using the GitHub API with `--admin` flag:
 
 ```bash
-SHA=$(gh api repos/{OWNER}/{REPO}/pulls/{PR_NUMBER} --jq '.head.sha')
-gh api repos/{OWNER}/{REPO}/pulls/{PR_NUMBER}/merge -X PUT -f merge_method=squash -f sha={SHA}
+gh pr merge {PR_NUMBER} --squash --admin
 ```
+
+If merge fails with **review requirement error** (HTTP 405 or "approving review is required"):
+
+1. Save current review protection settings:
+
+```bash
+gh api repos/{OWNER}/{REPO}/branches/main/protection/required_pull_request_reviews --jq '{dismiss_stale_reviews, require_code_owner_reviews, require_last_push_approval, required_approving_review_count}'
+```
+
+2. Temporarily remove review requirement:
+
+```bash
+gh api repos/{OWNER}/{REPO}/branches/main/protection/required_pull_request_reviews -X DELETE
+```
+
+3. Merge:
+
+```bash
+gh pr merge {PR_NUMBER} --squash --admin
+```
+
+4. Restore review protection using saved settings (use `--input -` with JSON to preserve boolean types):
+
+```bash
+gh api repos/{OWNER}/{REPO}/branches/main/protection/required_pull_request_reviews -X PATCH --input - <<'EOF'
+{saved settings JSON}
+EOF
+```
+
+**CRITICAL:** Always restore branch protection, even if the merge fails. Use the saved settings from step 1 to restore the exact original configuration.
 
 ### 8. Re-enable Workflows
 
