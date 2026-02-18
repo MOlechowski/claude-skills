@@ -11,6 +11,14 @@ RED='\033[0;31m'
 YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
+# Parse flags
+ALL=false
+for arg in "$@"; do
+    case "$arg" in
+        --all) ALL=true ;;
+    esac
+done
+
 # Source and destination directories
 SOURCE_DIR="$(dirname "$0")/.claude/skills"
 DEST_DIR="$HOME/.claude/skills"
@@ -50,13 +58,15 @@ for skill_dir in "${skill_dirs[@]}"; do
 
     # Check if skill directory already exists
     if [ -d "$dest_path" ]; then
-        echo -e "${YELLOW}⚠ Skill '$skill_name' already exists${NC}"
-        read -p "  Overwrite? (y/N) " -n 1 -r
-        echo
-        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-            echo "  Skipped $skill_name"
-            ((skipped++))
-            continue
+        if [ "$ALL" = false ]; then
+            echo -e "${YELLOW}⚠ Skill '$skill_name' already exists${NC}"
+            read -p "  Overwrite? (y/N) " -n 1 -r
+            echo
+            if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+                echo "  Skipped $skill_name"
+                ((skipped++))
+                continue
+            fi
         fi
         # Remove existing directory
         rm -rf "$dest_path"
