@@ -1,6 +1,6 @@
 ---
 name: rlm
-description: "Process massive codebases with parallel agents using the RLM paradigm. Use when: investigating code behavior across large codebases (100+ files), analyzing patterns without loading all files into context, scanning for issues across entire repos. Triggers: how are errors handled in this codebase, analyze this large codebase, scan all files for security issues, find all usages of X."
+description: "Recursive codebase analysis using the RLM paradigm. Use when: analyzing large codebases (100+ files), investigating cross-cutting patterns, recursive decomposition of complex code questions, scanning for issues across entire repos. Triggers: analyze this codebase, how does X work across the codebase, scan all files for Y, recursive analysis, RLM."
 ---
 
 # Recursive Language Model (RLM) Skill
@@ -9,193 +9,256 @@ description: "Process massive codebases with parallel agents using the RLM parad
 
 > **"Context is an external resource, not a local variable."**
 
-Treat filesystem as queryable database. Orchestrate sub-agents for parallel code analysis.
+Three principles:
 
-## Two Operation Modes
+1. **Never load what you can query** — Filesystem is a database. Use `rlm.py` to query it.
+2. **The model decides the strategy** — No fixed modes. Assess the task, pick the approach.
+3. **Recurse when complexity demands it** — If a sub-task is too complex for one agent, that agent spawns its own sub-agents.
 
-### Mode 1: Investigation (3-5 Explore Agents)
+## Context Engine (rlm.py)
 
-For answering codebase questions. Deploy agents with **different perspectives**:
-
-```
-Task(
-  description="Explore error handling patterns",
-  prompt="Search the codebase for error handling patterns...",
-  subagent_type="Explore",
-  run_in_background=true
-)
-
-Task(
-  description="Find application structure",
-  prompt="Map the architecture and key components...",
-  subagent_type="Explore",
-  run_in_background=true
-)
-
-Task(
-  description="Examine specific file",
-  prompt="Deep dive into src/api/handler.go...",
-  subagent_type="Explore",
-  run_in_background=true
-)
-```
-
-**Agent Strategy - Broad + Narrow:**
-| Agent | Focus | Purpose |
-|-------|-------|---------|
-| 1 | Broad pattern search | Find all instances |
-| 2 | Architecture/structure | Understand context |
-| 3 | Targeted file analysis | Deep dive |
-| 4 | (optional) Related code paths | Trace dependencies |
-| 5 | (optional) Test coverage | Verify behavior |
-
-### Mode 2: Bulk Processing (5-10 Agents)
-
-For systematic analysis. Split by **file groups or categories**:
-
-```
-Scaling:
-- Max 10 concurrent agents
-- 10-20 files per agent
-- Group by: directory, file type, or domain
-```
-
-**Example - Security Audit:**
-```
-Task(
-  description="Analyze auth module",
-  prompt="Analyze src/auth/ for security issues.
-  Write findings to /tmp/rlm_auth.json",
-  subagent_type="general-purpose",
-  run_in_background=true
-)
-
-Task(
-  description="Analyze API endpoints",
-  prompt="Analyze src/api/ for security issues.
-  Write findings to /tmp/rlm_api.json",
-  subagent_type="general-purpose",
-  run_in_background=true
-)
-```
-
-## Four-Stage Pipeline
-
-### 1. Index
-Scan structure without loading content.
+The streaming query engine for filesystem interaction. Never loads all files into RAM.
 
 ```bash
-find . -type f -name "*.py" | wc -l
-ls -laR src/ | head -50
+# Codebase overview (no file reads)
+python3 ~/.claude/skills/rlm/scripts/rlm.py stats
+python3 ~/.claude/skills/rlm/scripts/rlm.py stats --type py
+
+# Regex search across files (streaming)
+python3 ~/.claude/skills/rlm/scripts/rlm.py grep "pattern" --type py
+
+# Substring search with context window
+python3 ~/.claude/skills/rlm/scripts/rlm.py peek "error_handler" --context 300
+
+# Read single file or line range
+python3 ~/.claude/skills/rlm/scripts/rlm.py read src/auth/login.py --lines 50-100
+
+# Partition files for agent distribution
+python3 ~/.claude/skills/rlm/scripts/rlm.py chunk --type py --size 15 --output /tmp/rlm_chunks.json
+```
+
+All commands support `--output /path/to/file.json` to write results to file.
+
+**Fallback**: If rlm.py unavailable, use native tools: Grep, Glob, Read, `rg`, `find`.
+
+## Pipeline: Index → Filter → Map → Reduce
+
+### 1. Index
+
+Discover structure without reading file content.
+
+```bash
+python3 ~/.claude/skills/rlm/scripts/rlm.py stats
+python3 ~/.claude/skills/rlm/scripts/rlm.py stats --type py
 ```
 
 ### 2. Filter
-Narrow candidates with pattern matching.
+
+Narrow candidates programmatically.
 
 ```bash
+python3 ~/.claude/skills/rlm/scripts/rlm.py grep "TODO|FIXME|HACK" --type py
 rg -l "error" --type py
-rg -c "TODO" --type py | grep -v ":0$"
 ```
 
-### 3. Map (Parallel Processing)
+### 3. Map (Parallel Agents)
 
-| Task Type | Mode | Agents | Subagent Type |
-|-----------|------|--------|---------------|
-| Answer question | Investigation | 3-5 | Explore |
-| Analyze all files | Bulk | 5-10 | general-purpose |
-| Find pattern | Investigation | 2-3 | Explore |
-| Security audit | Bulk | 5-10 | general-purpose |
+Distribute filtered work across agents. See Strategy Selection below.
 
 ### 4. Reduce
-Synthesize findings:
+
+Aggregate results from /tmp/.
 
 ```bash
-jq -s '.' /tmp/rlm_*.json
-jq -s '[.[].findings] | add' /tmp/rlm_*.json
+jq -s '.' /tmp/rlm_*.json > /tmp/rlm_report.json
+jq -s '[.[].findings] | add | group_by(.severity)' /tmp/rlm_*.json
 ```
 
-## Agent Output Pattern
+## Strategy Selection
 
-Write to files to avoid context overflow.
+Assess the task. Pick the strategy that fits. Combine strategies within a single analysis.
+
+### Strategies
+
+| Strategy | When | Agent Type | Agents |
+|----------|------|------------|--------|
+| **Peek** | Quick answer, few files relevant | None (main context) | 0 |
+| **Grep + Read** | Pattern in known locations | None (main context) | 0 |
+| **Fan-out Explore** | Question about code behavior/patterns | Explore | 2-5 |
+| **Partition + Map** | Systematic analysis of many files | general-purpose | 3-8 |
+| **Recursive Decompose** | Partitions still complex | general-purpose | 2-4 per level |
+| **Summarize + Drill** | Large result set needs synthesis first | Mixed | 2-6 |
+
+### Selection Logic
+
+1. Run Index (`stats`). How many candidate files?
+2. **< 5 files**: Peek or Grep+Read. Handle in main context. No agents needed.
+3. **5-50 files**: Fan-out Explore (questions) or Partition+Map (analysis).
+4. **50-200 files**: Partition+Map with coarse grouping. Consider Recursive Decompose if partitions remain complex.
+5. **200+ files**: Recursive Decompose. Split into domains at depth 0, let workers decide depth-1 strategy.
+
+Do NOT pick a strategy before running Index. Let the data decide.
+
+## Agent Patterns
+
+### Fan-out Explore
+
+Deploy Explore agents with complementary perspectives.
 
 ```
 Task(
-  description="Analyze auth files",
-  prompt="Analyze these files for security issues:
-- src/auth/login.py
-- src/auth/session.py
+  description="Trace error propagation paths",
+  prompt="Search for error handling patterns in this codebase.
+  Focus on: try/catch, error types, propagation chains.
+  Write summary to /tmp/rlm_errors.md",
+  subagent_type="Explore",
+  run_in_background=true
+)
+```
 
-Write findings to /tmp/rlm_auth.json as JSON:
-{\"category\": \"auth\", \"findings\": [{\"file\": \"\", \"line\": 0, \"issue\": \"\"}]}",
+Assign each agent a distinct angle: architecture, patterns, specific modules, tests, dependencies.
+
+### Partition + Map
+
+Split files into groups. Each general-purpose agent processes a partition.
+
+```
+Task(
+  description="Analyze auth module (partition 1/4)",
+  prompt="Analyze these files for security issues:
+  [file list from rlm.py chunk output]
+
+  Write findings to /tmp/rlm_p1.json as JSON:
+  {\"partition\": 1, \"findings\": [{\"file\": \"\", \"line\": 0, \"issue\": \"\", \"severity\": \"\"}]}",
   subagent_type="general-purpose",
   run_in_background=true
 )
 ```
 
-**Collect results:**
+**Partition sources**: `rlm.py chunk` output, directory boundaries, file type grouping.
+
+### Collect Results
+
 ```
-TaskOutput(task_id=<agent_id>, block=true, timeout=60000)
+TaskOutput(task_id=<agent_id>, block=true, timeout=120000)
 ```
 
-**Merge and filter:**
-```bash
-jq -s '.' /tmp/rlm_*.json > /tmp/report.json
-jq '[.[].findings[] | select(.severity == "high")]' /tmp/report.json
-jq '[.[].findings[] | select(.file | contains("auth"))]' /tmp/report.json
+## Recursive Decomposition
+
+When a sub-task is too complex for a single agent, that agent spawns its own sub-agents. Only `general-purpose` agents can recurse (Explore agents cannot spawn agents).
+
+### When to Recurse
+
+An agent should recurse when:
+- Its assigned partition has 50+ files and the analysis requires understanding, not just scanning
+- It discovers distinct sub-problems (e.g., "this module has 3 independent subsystems")
+- The prompt explicitly allows recursion
+
+### Depth Control
+
+| Level | Role | Max Agents | Spawns? |
+|-------|------|-----------|---------|
+| 0 (Main) | Orchestrator | 5 | Yes |
+| 1 (Worker) | Domain analyzer | 3 per worker | Yes |
+| 2 (Leaf) | Module specialist | 0 | **Never** |
+
+**Hard limits:**
+- Max recursion depth: **2** (main → worker → leaf)
+- Max total agents: **15** across all levels
+- Leaf agents MUST NOT spawn sub-agents
+
+### Recursive Agent Prompt Template
+
+Include these instructions when spawning agents that may recurse:
+
+```
+"You are analyzing [SCOPE]. You may spawn up to [N] sub-agents if needed.
+
+RECURSION RULES:
+- Current depth: [D]. Max depth: 2.
+- If depth=2, you are a leaf. Do NOT spawn agents.
+- Only recurse if your scope has 50+ files or distinct sub-problems.
+- Each sub-agent writes to /tmp/rlm_d[D+1]_[ID].json
+- After sub-agents complete, merge their results into your output file."
 ```
 
-## Key Constraints
+### Output Routing
+
+| Depth | Output Path | Merged By |
+|-------|-------------|-----------|
+| 2 (leaf) | `/tmp/rlm_d2_*.json` | Depth-1 parent |
+| 1 (worker) | `/tmp/rlm_d1_*.json` | Main orchestrator |
+| 0 (main) | `/tmp/rlm_report.json` | Main context |
+
+## Guardrails
+
+### Limits
+
+| Metric | Limit |
+|--------|-------|
+| Max concurrent agents (any level) | 5 |
+| Max total agents (all levels) | 15 |
+| Max recursion depth | 2 |
+| Max files per leaf agent | 20 |
+| Timeout per agent | 120s |
+| Max spawn rounds (main orchestrator) | 3 |
+
+### Iteration Control
+
+- Each round of agent spawning should have a clear purpose
+- If 2 rounds produce no new information, stop
+- Never "try again" — refine the query or change strategy
+
+### Token Protection
+
+- Agents write to `/tmp/rlm_*`, not to main context
+- Main context reads only summaries and aggregated JSON
+- Never `cat` agent output files raw into main context
+
+## Constraints
 
 ### Never
-- `cat *` or `cat *.py` - loads too much
-- Load many files into main context
-- Spawn more than 10 concurrent agents
+
+- `cat *` or load entire codebases into context
+- Spawn agents without running Index (`stats`) first
+- Skip Filter stage for 50+ file codebases
+- Exceed depth or agent limits
+- Load rlm.py output raw into main context for large results
 
 ### Always
-- Filter with `rg`/`grep` before spawning agents
-- Use Explore agents for investigation
-- Write agent outputs to /tmp/
-- Use descriptive agent names
 
-## Python Engine (Optional)
+- Use `rlm.py stats` before choosing strategy
+- Filter with `rlm.py grep` or `rg` before spawning agents
+- Write agent outputs to `/tmp/rlm_*`
+- Include recursion depth and limits in recursive agent prompts
+- Clean up `/tmp/rlm_*` after delivering results
 
-```bash
-python3 ~/.claude/skills/rlm/rlm.py scan
-python3 ~/.claude/skills/rlm/rlm.py peek "searchterm"
-python3 ~/.claude/skills/rlm/rlm.py chunk --pattern "*.py"
-```
+## Fallback (Without rlm.py)
 
-## Recovery Method
+If rlm.py is unavailable, use native Claude Code tools:
 
-Fallback if background agents fail:
+| rlm.py command | Native equivalent |
+|----------------|-------------------|
+| `stats` | `find . -type f \| wc -l` + `tree -L 2 -I 'node_modules\|.git'` |
+| `grep` | Grep tool or `rg -l "pattern" --type py` |
+| `peek` | Grep tool with `-C` context |
+| `read` | Read tool with offset/limit |
+| `chunk` | Glob + manual partitioning |
 
-```python
-import os, json
-
-results = []
-for root, dirs, files in os.walk('.'):
-    for f in files:
-        if f.endswith('.py'):
-            path = os.path.join(root, f)
-            with open(path) as file:
-                content = file.read()
-                results.append(analyze(content))
-
-print(json.dumps(results))
-```
+The pipeline and strategy selection remain the same. Only the tooling changes.
 
 ## Integration
 
-Works with:
-- **Explore agents** for codebase investigation
-- **rg/grep** for filtering before spawn
-- **jq** for merging/filtering results
-- **Python scripts** for state management
+- **rlm.py** for Index/Filter stages
+- **Explore agents** for fan-out investigation
+- **general-purpose agents** for partition+map and recursive decomposition
+- **rg/grep** as rlm.py fallback for Filter
+- **jq** for Reduce stage (merge and filter results)
 
 ## Quick Reference
 
-See `quick-reference.md` for command patterns.
+See `quick-reference.md` for decision tree and command patterns.
 
 ## Credits
 
-Based on RLM paradigm. Original skill by [BowTiedSwan](https://github.com/BowTiedSwan/rlm-skill).
+Based on the RLM paradigm ([arXiv:2512.24601](https://arxiv.org/abs/2512.24601)). Original skill by [BowTiedSwan](https://github.com/BowTiedSwan/rlm-skill).
