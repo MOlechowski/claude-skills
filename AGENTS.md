@@ -1,7 +1,7 @@
 ---
-last_validated: 2026-01-29T12:00:00Z
+last_validated: 2026-02-20T12:00:00Z
 project_type: skills-repository
-skill_count: 80
+skill_count: 93
 ---
 
 # Agent Instructions: claude-skills
@@ -28,45 +28,82 @@ This is a Claude Skills configuration repository following Anthropic's Agent Ski
 │   │   ├── speckit.tasks.md
 │   │   └── speckit.taskstoissues.md
 │   ├── settings.local.json
-│   └── skills/                  # 72 skills organized by domain
-│       ├── # Git & Version Control
-│       ├── commit/
-│       ├── commit-pr/
-│       ├── git-worktree/
-│       ├── pr-create/
-│       ├── pr-manage/
-│       ├── # Cloud - AWS
+│   └── skills/                  # 93 skills with domain prefixes
+│       ├── # aws-  AWS + LocalStack
 │       ├── aws-cli/
 │       ├── aws-expert/
-│       ├── awslocal/
-│       ├── localstack/
-│       ├── localstack-expert/
-│       ├── # Cloud - Cloudflare
-│       ├── cloudflare-expert/
-│       ├── cloudflared/
-│       ├── flarectl/
-│       ├── wrangler/
-│       ├── # Cloud - Hetzner
-│       ├── hcloud/
-│       ├── # Security & Scanning
-│       ├── bandit/
-│       ├── grype/
-│       ├── nuclei/
-│       ├── pip-audit/
-│       ├── semgrep/
-│       ├── trivy/
-│       ├── # Container & Image
-│       ├── crane/
-│       ├── dive/
-│       ├── skopeo/
-│       ├── syft/
-│       ├── # Network & HTTP
-│       ├── httpx/
-│       ├── mitmproxy/
-│       ├── nmap/
-│       ├── tcpdump/
-│       ├── wireshark/
-│       ├── # Reverse Engineering
+│       ├── aws-local/
+│       ├── aws-localstack/
+│       ├── aws-localstack-expert/
+│       ├── # cf-  Cloudflare
+│       ├── cf-ctl/
+│       ├── cf-expert/
+│       ├── cf-tunnel/
+│       ├── cf-wrangler/
+│       ├── # cli-  CLI Tool Wrappers
+│       ├── cli-ast-grep/
+│       ├── cli-fastmod/
+│       ├── cli-fzf/
+│       ├── cli-jq/
+│       ├── cli-parallel/
+│       ├── cli-ripgrep/
+│       ├── cli-tmux/
+│       ├── cli-tree/
+│       ├── cli-yq/
+│       ├── # dev-  Dev Workflow & Review
+│       ├── dev-backlog/
+│       ├── dev-compress/
+│       ├── dev-learn/
+│       ├── dev-review/
+│       ├── dev-review-file/
+│       ├── dev-review-pr/
+│       ├── dev-rlm/
+│       ├── dev-skill-create/
+│       ├── dev-swarm/
+│       ├── # doc-  Documentation & Notes
+│       ├── doc-claude-md/
+│       ├── doc-confluence/
+│       ├── doc-mermaid/
+│       ├── doc-mermaid-render/
+│       ├── doc-notesmd/
+│       ├── doc-obsidian/
+│       ├── doc-qmd/
+│       ├── doc-readme/
+│       ├── # git-  Git & Version Control
+│       ├── git-commit/
+│       ├── git-land/
+│       ├── git-pr-create/
+│       ├── git-pr-manage/
+│       ├── git-repo/
+│       ├── git-ship/
+│       ├── git-worktree/
+│       ├── # go-  Go Ecosystem
+│       ├── go-delve/
+│       ├── go-expert/
+│       ├── go-lefthook/
+│       ├── go-lint/
+│       ├── go-mockery/
+│       ├── go-pprof/
+│       ├── go-release/
+│       ├── go-task/
+│       ├── # iac-  Infrastructure as Code
+│       ├── iac-expert/
+│       ├── iac-hcloud/
+│       ├── iac-opa/
+│       ├── iac-terraform/
+│       ├── iac-tofu/
+│       ├── # net-  Network & HTTP
+│       ├── net-httpx/
+│       ├── net-mitmproxy/
+│       ├── net-nmap/
+│       ├── net-tcpdump/
+│       ├── net-wireshark/
+│       ├── # oci-  Container & OCI Images
+│       ├── oci-crane/
+│       ├── oci-dive/
+│       ├── oci-skopeo/
+│       ├── oci-syft/
+│       ├── # re-  Reverse Engineering
 │       ├── re-binwalk/
 │       ├── re-docker-expert/
 │       ├── re-dtrace/
@@ -82,48 +119,23 @@ This is a Claude Skills configuration repository following Anthropic's Agent Ski
 │       ├── re-radare2/
 │       ├── re-strace/
 │       ├── re-xxd/
-│       ├── # Code Search & Transform
-│       ├── ast-grep/
-│       ├── fastmod/
-│       ├── ripgrep/
-│       ├── # CLI Tools & Data
-│       ├── fzf/
-│       ├── jq/
-│       ├── parallel/
-│       ├── tmux/
-│       ├── tree/
-│       ├── yq/
-│       ├── # Infrastructure as Code
-│       ├── opa/
-│       ├── platform-architect/
-│       ├── terraform/
-│       ├── tofu/
-│       ├── # Go
-│       ├── go-lang-expert/
-│       ├── go-golangci-lint/
-│       ├── go-delve/
-│       ├── go-pprof/
-│       ├── go-goreleaser/
-│       ├── go-mockery/
-│       ├── go-task/
-│       ├── go-lefthook/
-│       ├── # Development Workflow
-│       ├── claude-md/
-│       ├── parallel-flow/
-│       ├── readme/
-│       ├── rlm/
-│       ├── self-improvement/
-│       ├── skill-creator/
-│       ├── token-optimize/
-│       ├── # Spec-Driven Development
-│       ├── spec-driven/
+│       ├── # res-  Research
+│       ├── res-deep/
+│       ├── res-trends/
+│       ├── res-web/
+│       ├── # sec-  Security Scanning
+│       ├── sec-bandit/
+│       ├── sec-grype/
+│       ├── sec-nuclei/
+│       ├── sec-pip-audit/
+│       ├── sec-semgrep/
+│       ├── sec-trivy/
+│       ├── # speckit-  Spec-Driven Development
 │       ├── speckit-audit/
 │       ├── speckit-flow/
+│       ├── speckit-loop/
 │       ├── speckit-retro/
-│       ├── speckit-verify/
-│       ├── # Research & Analysis
-│       ├── trends-research/
-│       └── web-research/
+│       └── speckit-verify/
 ├── .specify
 │   ├── memory
 │   ├── scripts
@@ -244,10 +256,36 @@ This repository serves as:
 
 ```yaml
 ---
-name: cloudflared
+name: cf-tunnel
 description: "Cloudflare Tunnel CLI for exposing local services. Use for: quick tunnels (dev), named tunnels (prod), DNS routing, system service setup. Triggers: cloudflared, tunnel, expose localhost."
 ---
 ```
+
+### Naming Convention
+
+All skills use a **domain prefix** for namespace grouping:
+
+| Prefix | Domain | Example |
+|--------|--------|---------|
+| `aws-` | AWS + LocalStack | `aws-cli`, `aws-localstack` |
+| `cf-` | Cloudflare | `cf-tunnel`, `cf-wrangler` |
+| `cli-` | CLI tool wrappers | `cli-jq`, `cli-ripgrep` |
+| `dev-` | Dev workflow & review | `dev-swarm`, `dev-review`, `dev-backlog` |
+| `doc-` | Documentation & notes | `doc-readme`, `doc-obsidian` |
+| `git-` | Git/GitHub/VCS | `git-commit`, `git-ship` |
+| `go-` | Go ecosystem | `go-lint`, `go-expert` |
+| `iac-` | Infrastructure as Code | `iac-terraform`, `iac-tofu` |
+| `net-` | Network & HTTP | `net-nmap`, `net-wireshark` |
+| `oci-` | Container/OCI images | `oci-dive`, `oci-crane` |
+| `re-` | Reverse engineering | `re-ghidra`, `re-frida` |
+| `res-` | Research | `res-deep`, `res-web` |
+| `sec-` | Security scanning | `sec-trivy`, `sec-semgrep` |
+| `speckit-` | Spec-driven dev | `speckit-flow`, `speckit-loop` |
+
+**Rules:**
+- Prefixes are 2-4 chars (except `speckit-` which is a product name)
+- Knowledge/expertise skills use `-expert` suffix: `aws-expert`, `cf-expert`, `go-expert`
+- All names are kebab-case
 
 ## Installation and Usage
 

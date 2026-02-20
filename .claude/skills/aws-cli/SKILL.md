@@ -8,7 +8,7 @@ description: "AWS CLI v2 expertise: authentication (IAM, SSO, roles, profiles), 
 AWS CLI v2 expertise for command-line operations, authentication, scripting, and automation.
 
 For architecture guidance, see: `aws-expert` skill.
-For IaC implementation, see: `terraform` or `tofu` skills.
+For IaC implementation, see: `iac-terraform` or `iac-tofu` skills.
 
 ## Authentication Methods
 
@@ -393,7 +393,7 @@ For complete CI/CD examples, see: [references/examples.md](references/examples.m
 
 ```bash
 # Start LocalStack
-docker run -d -p 4566:4566 localstack/localstack
+docker run -d -p 4566:4566 localstack/aws-localstack
 
 # Configure endpoint
 aws --endpoint-url=http://localhost:4566 s3 ls

@@ -75,37 +75,37 @@ Detailed investigation:
 
 ### Tool Capabilities
 
-**dive** - Interactive layer explorer
+**oci-dive** - Interactive layer explorer
 - Visual layer-by-layer filesystem diff
 - Wasted space identification
 - File filtering and search
 - Efficiency scoring
 
-**crane** - Registry manipulation
+**oci-crane** - Registry manipulation
 - Manifest/config inspection
 - Individual layer extraction
 - Image mutation (labels, env, entrypoint)
 - Multi-platform handling
 
-**skopeo** - Daemon-less operations
+**oci-skopeo** - Daemon-less operations
 - Format conversion (OCI, Docker archive, dir)
 - Registry mirroring and sync
 - Air-gapped transfers
 - No Docker daemon required
 
-**syft** - SBOM generator
+**oci-syft** - SBOM generator
 - Multi-format output (SPDX, CycloneDX)
 - All major package managers
 - License extraction
 - Attestation support
 
-**trivy** - Comprehensive scanner
+**sec-trivy** - Comprehensive scanner
 - Vulnerabilities, secrets, misconfigs
 - Multiple targets (images, fs, repos, k8s)
 - SARIF output for CI
 - Offline scanning support
 
-**grype** - Fast vulnerability scanner
+**sec-grype** - Fast vulnerability scanner
 - SBOM-based scanning
 - Minimal false positives
 - Quick CI/CD integration

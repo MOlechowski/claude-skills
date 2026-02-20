@@ -94,67 +94,115 @@ Skills can include additional files in their directory:
 2. **Level 2 (Activation)**: Full `SKILL.md` loads when skill is relevant
 3. **Level 3+ (On-Demand)**: Additional files load as needed
 
-## Available Skills (73 total)
+## Available Skills (93 total)
 
-### Git & Version Control
-| Skill | Description |
-|-------|-------------|
-| **commit** | Generate Conventional Commits messages |
-| **commit-pr** | Commit changes and create PR in one flow |
-| **git-worktree** | Work on multiple branches simultaneously |
-| **pr-create** | Create GitHub PRs with structured title and body |
-| **pr-manage** | Autonomous PR lifecycle management |
+All skills use domain prefixes for discoverability. See [AGENTS.md](AGENTS.md) for the full naming convention.
 
-### Cloud Infrastructure - AWS
+### aws- (AWS + LocalStack)
 | Skill | Description |
 |-------|-------------|
 | **aws-cli** | AWS CLI v2 expertise: authentication, 20+ service commands, output formatting, multi-account patterns |
 | **aws-expert** | AWS architecture expertise: Well-Architected Framework, service selection, security, cost optimization |
-| **awslocal** | Thin wrapper around AWS CLI for LocalStack |
-| **localstack** | LocalStack CLI for managing local AWS emulation containers |
-| **localstack-expert** | LocalStack architecture expertise: testing strategies, CI/CD integration, service parity |
+| **aws-local** | Thin wrapper around AWS CLI for LocalStack |
+| **aws-localstack** | LocalStack CLI for managing local AWS emulation containers |
+| **aws-localstack-expert** | LocalStack architecture expertise: testing strategies, CI/CD integration, service parity |
 
-### Cloud Infrastructure - Cloudflare
+### cf- (Cloudflare)
 | Skill | Description |
 |-------|-------------|
-| **cloudflare-expert** | Cloudflare infrastructure expertise: Zero Trust, security, Workers AI, MCP servers |
-| **cloudflared** | Cloudflare Tunnel CLI for exposing local services |
-| **flarectl** | Cloudflare infrastructure CLI for DNS, firewall, zone management |
-| **wrangler** | Cloudflare Workers CLI for serverless development |
+| **cf-ctl** | Cloudflare infrastructure CLI for DNS, firewall, zone management |
+| **cf-expert** | Cloudflare infrastructure expertise: Zero Trust, security, Workers AI, MCP servers |
+| **cf-tunnel** | Cloudflare Tunnel CLI for exposing local services |
+| **cf-wrangler** | Cloudflare Workers CLI for serverless development |
 
-### Cloud Infrastructure - Hetzner
+### cli- (CLI Tool Wrappers)
 | Skill | Description |
 |-------|-------------|
-| **hcloud** | Hetzner Cloud CLI for server lifecycle, networking, storage, and multi-project management |
+| **cli-ast-grep** | Semantic code search using ASTs: structural matching, refactoring |
+| **cli-fastmod** | Large-scale refactoring with interactive review |
+| **cli-fzf** | Interactive fuzzy finder for files, history, lists |
+| **cli-jq** | JSON processing and transformation |
+| **cli-parallel** | Execute shell jobs in parallel using GNU parallel |
+| **cli-ripgrep** | Fast recursive code search with smart defaults |
+| **cli-tmux** | Terminal multiplexer for session management |
+| **cli-tree** | Directory tree visualization |
+| **cli-yq** | YAML/JSON/XML processor with jq-like syntax |
 
-### Security & Vulnerability Scanning
+### dev- (Dev Workflow & Review)
 | Skill | Description |
 |-------|-------------|
-| **bandit** | Python security linter for common security issues |
-| **grype** | Fast vulnerability scanner for container images and filesystems |
-| **nuclei** | Template-based vulnerability scanner for CVEs, misconfigurations |
-| **pip-audit** | Python dependency vulnerability scanner |
-| **semgrep** | Multi-language SAST tool for security patterns |
-| **trivy** | Comprehensive vulnerability scanner for containers, filesystems, Git repos |
+| **dev-backlog** | Markdown-native task manager and Kanban board |
+| **dev-compress** | Optimize token usage in markdown content |
+| **dev-learn** | Capture learnings into documentation |
+| **dev-review** | Code review orchestrator: auto-detects context and routes |
+| **dev-review-file** | Deep code review of files and directories |
+| **dev-review-pr** | Review git diffs, staged changes, and GitHub PRs |
+| **dev-rlm** | Repository Language Model context management |
+| **dev-skill-create** | Create new skills following best practices |
+| **dev-swarm** | Parallelize tasks using Claude agents |
 
-### Container & Image Analysis
+### doc- (Documentation & Notes)
 | Skill | Description |
 |-------|-------------|
-| **crane** | Container image manipulation: push, pull, copy, mutate, inspect |
-| **dive** | Docker image layer explorer for analyzing contents and finding bloat |
-| **skopeo** | Daemon-less container operations and image signing |
-| **syft** | SBOM generation for containers and filesystems |
+| **doc-claude-md** | Create and maintain CLAUDE.md and AGENTS.md documentation |
+| **doc-confluence** | Create and update Confluence Data Center pages from Markdown |
+| **doc-mermaid** | Mermaid diagramming for code visualization and documentation |
+| **doc-mermaid-render** | Render Mermaid diagrams to themed SVG or ASCII/Unicode art |
+| **doc-notesmd** | NotesMD CLI for Obsidian vault operations from the terminal |
+| **doc-obsidian** | Obsidian vault management combining search and CRUD |
+| **doc-qmd** | Local on-device search engine for markdown knowledge bases |
+| **doc-readme** | Create, update, and validate README.md files |
 
-### Network & HTTP Analysis
+### git- (Git & Version Control)
 | Skill | Description |
 |-------|-------------|
-| **httpx** | Fast HTTP toolkit for probing and technology detection |
-| **mitmproxy** | Interactive HTTPS proxy for traffic interception |
-| **nmap** | Network scanner for port discovery and service detection |
-| **tcpdump** | Command-line packet analyzer |
-| **wireshark** | Network protocol analyzer (tshark CLI) |
+| **git-commit** | Generate Conventional Commits messages |
+| **git-land** | Commit changes and create PR in one flow |
+| **git-pr-create** | Create GitHub PRs with structured title and body |
+| **git-pr-manage** | Autonomous PR lifecycle management |
+| **git-repo** | Create GitHub repositories via OpenTofu |
+| **git-ship** | Commit, create PR, and merge with CI skipped |
+| **git-worktree** | Work on multiple branches simultaneously |
 
-### Reverse Engineering
+### go- (Go Ecosystem)
+| Skill | Description |
+|-------|-------------|
+| **go-delve** | Debugger: breakpoints, stepping, variable inspection, goroutines |
+| **go-expert** | Language expertise: idiomatic patterns, project structure, best practices |
+| **go-lefthook** | Git hooks manager for Go projects |
+| **go-lint** | Linter aggregator: 100+ linters (staticcheck, gosec, errcheck) |
+| **go-mockery** | Mock generation for interfaces using testify |
+| **go-pprof** | Profiler: CPU profiling, memory allocation, goroutine analysis |
+| **go-release** | Release automation: cross-compilation, archives, checksums |
+| **go-task** | Task runner (taskfile.dev) for Go projects |
+
+### iac- (Infrastructure as Code)
+| Skill | Description |
+|-------|-------------|
+| **iac-expert** | IaC architecture: tool selection, module design, state management |
+| **iac-hcloud** | Hetzner Cloud CLI for server lifecycle, networking, storage |
+| **iac-opa** | Open Policy Agent for policy-as-code evaluation |
+| **iac-terraform** | HashiCorp Terraform for infrastructure provisioning |
+| **iac-tofu** | OpenTofu (open-source Terraform fork) |
+
+### net- (Network & HTTP)
+| Skill | Description |
+|-------|-------------|
+| **net-httpx** | Fast HTTP toolkit for probing and technology detection |
+| **net-mitmproxy** | Interactive HTTPS proxy for traffic interception |
+| **net-nmap** | Network scanner for port discovery and service detection |
+| **net-tcpdump** | Command-line packet analyzer |
+| **net-wireshark** | Network protocol analyzer (tshark CLI) |
+
+### oci- (Container & OCI Images)
+| Skill | Description |
+|-------|-------------|
+| **oci-crane** | Container image manipulation: push, pull, copy, mutate, inspect |
+| **oci-dive** | Docker image layer explorer for analyzing contents and finding bloat |
+| **oci-skopeo** | Daemon-less container operations and image signing |
+| **oci-syft** | SBOM generation for containers and filesystems |
+
+### re- (Reverse Engineering)
 | Skill | Description |
 |-------|-------------|
 | **re-expert** | Security analysis methodology and tool selection guidance |
@@ -173,56 +221,31 @@ Skills can include additional files in their directory:
 | **re-strace** | Linux system call tracing with strace/ltrace |
 | **re-xxd** | Hex dump and binary patching |
 
-### Code Search & Transformation
+### res- (Research)
 | Skill | Description |
 |-------|-------------|
-| **ast-grep** | Semantic code search using ASTs: structural matching, refactoring |
-| **fastmod** | Large-scale refactoring with interactive review |
-| **ripgrep** | Fast recursive code search with smart defaults |
+| **res-deep** | Iterative multi-round deep research with structured analysis |
+| **res-trends** | Multi-source trend analysis with hybrid search |
+| **res-web** | Web research and analysis |
 
-### CLI Tools & Data Processing
+### sec- (Security Scanning)
 | Skill | Description |
 |-------|-------------|
-| **fzf** | Interactive fuzzy finder for files, history, lists |
-| **jq** | JSON processing and transformation |
-| **parallel** | Execute shell jobs in parallel using GNU parallel |
-| **tmux** | Terminal multiplexer for session management |
-| **tree** | Directory tree visualization |
-| **yq** | YAML/JSON/XML processor with jq-like syntax |
+| **sec-bandit** | Python security linter for common security issues |
+| **sec-grype** | Fast vulnerability scanner for container images and filesystems |
+| **sec-nuclei** | Template-based vulnerability scanner for CVEs, misconfigurations |
+| **sec-pip-audit** | Python dependency vulnerability scanner |
+| **sec-semgrep** | Multi-language SAST tool for security patterns |
+| **sec-trivy** | Comprehensive vulnerability scanner for containers, filesystems, Git repos |
 
-### Infrastructure as Code
+### speckit- (Spec-Driven Development)
 | Skill | Description |
 |-------|-------------|
-| **opa** | Open Policy Agent for policy-as-code evaluation |
-| **platform-architect** | IaC architecture: tool selection, module design, state management |
-| **terraform** | HashiCorp Terraform for infrastructure provisioning |
-| **tofu** | OpenTofu (open-source Terraform fork) |
-
-### Development Workflow
-| Skill | Description |
-|-------|-------------|
-| **claude-md** | Create and maintain CLAUDE.md and AGENTS.md documentation |
-| **parallel-flow** | Parallelize tasks using Claude agents |
-| **readme** | Create, update, and validate README.md files |
-| **rlm** | Repository Language Model context management |
-| **self-improvement** | Meta-skill for improving Claude's own capabilities |
-| **skill-creator** | Create new skills following best practices |
-| **token-optimize** | Optimize token usage in prompts and responses |
-
-### Spec-Driven Development
-| Skill | Description |
-|-------|-------------|
-| **spec-driven** | Specification-driven development workflow |
 | **speckit-audit** | Audit specifications for completeness and quality |
 | **speckit-flow** | Manage spec-driven development flow |
+| **speckit-loop** | Autonomous spec-driven development loop |
 | **speckit-retro** | Retrospective analysis of spec implementations |
 | **speckit-verify** | Verify implementations against specifications |
-
-### Research & Analysis
-| Skill | Description |
-|-------|-------------|
-| **trends-research** | Multi-source trend analysis with hybrid search |
-| **web-research** | Web research and analysis |
 
 ## Usage
 

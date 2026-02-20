@@ -38,7 +38,7 @@ gh pr list --state merged --limit 50 --json number,title,body,mergedAt,headRefNa
 git log --oneline --no-merges -50
 ```
 
-**Extract from each PR/commit:**
+**Extract from each PR/git-commit:**
 - Title/description
 - Branch name
 - Files changed (scope assessment)
@@ -72,7 +72,7 @@ For each implementation item, check if spec exists:
 
 **Matching criteria (by strength):**
 
-1. **Explicit reference** - PR/commit mentions spec number ("Spec 010", "(#010)")
+1. **Explicit reference** - PR/git-commit mentions spec number ("Spec 010", "(#010)")
 2. **Branch name match** - `010-ephemeral-pool` matches spec `010-*`
 3. **Keyword overlap** - PR about "pool replenishment" matches related spec
 

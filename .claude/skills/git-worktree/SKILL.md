@@ -25,7 +25,7 @@ All worktrees share:
 Each worktree has separate:
 - Working directory files
 - Index (staging area)
-- HEAD (current branch/commit)
+- HEAD (current branch/git-commit)
 
 ## Common Patterns
 
