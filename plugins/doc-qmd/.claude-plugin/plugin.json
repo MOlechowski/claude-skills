@@ -1,0 +1,10 @@
+{
+  "name": "doc-qmd",
+  "version": "1.0.0",
+  "description": "Local on-device search engine for markdown knowledge bases. Hybrid search with BM25, vector, and LLM reranking. Use for: (1) indexing markdown collections, (2) searching notes and docs with keyword/semantic/hybrid search, (3) retrieving documents for LLM context, (4) managing collections and embeddings, (5) running MCP server for Claude integration. Triggers: qmd, search notes, index markdown, knowledge base, semantic search, find in notes.",
+  "author": "MOlechowski",
+  "category": "documentation",
+  "tags": [
+    "documentation"
+  ]
+}

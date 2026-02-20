@@ -1,0 +1,10 @@
+{
+  "name": "aws-local",
+  "version": "1.0.0",
+  "description": "Thin wrapper around AWS CLI for LocalStack. Automatically sets endpoint URL to localhost:4566. Use for: running AWS commands against LocalStack without --endpoint-url, local development, testing AWS workflows locally. Triggers: awslocal, aws local, localstack aws cli, awscli-local.",
+  "author": "MOlechowski",
+  "category": "aws",
+  "tags": [
+    "aws"
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "name": "git-pr-create",
+  "version": "1.0.0",
+  "description": "Create GitHub PRs with structured title and body. Use when: opening PRs, creating pull requests after pushing. Triggers: /git-pr-create, create PR, open pull request.",
+  "author": "MOlechowski",
+  "category": "git",
+  "tags": [
+    "git"
+  ]
+}

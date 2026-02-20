@@ -1,0 +1,10 @@
+{
+  "name": "aws-localstack",
+  "version": "1.0.0",
+  "description": "LocalStack CLI for managing local AWS emulation containers. Use for: starting/stopping LocalStack, status checks, log viewing, container updates, configuration profiles. Triggers: localstack, localstack start, localstack stop, localstack status, local aws emulator, start localstack.",
+  "author": "MOlechowski",
+  "category": "aws",
+  "tags": [
+    "aws"
+  ]
+}

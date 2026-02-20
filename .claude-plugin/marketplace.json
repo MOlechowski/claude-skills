@@ -1,0 +1,957 @@
+{
+  "name": "claude-skills",
+  "description": "Curated collection of 90+ Claude Code skills for DevOps, security, reverse engineering, and development workflows",
+  "author": "MOlechowski",
+  "repository": "https://github.com/MOlechowski/claude-skills",
+  "pluginRoot": "./plugins",
+  "plugins": [
+    {
+      "name": "aws-cli",
+      "description": "AWS CLI v2 expertise: authentication (IAM, SSO, roles, profiles), 20+ service commands, output formatting (--query, jq), multi-account patterns, CI/CD integration. Use for: aws commands, credential management, scripting AWS operations, debugging API calls. Triggers: aws cli, aws configure, aws s3, aws ec2, assume-role, aws sso.",
+      "version": "1.0.0",
+      "category": "aws",
+      "tags": [
+        "aws"
+      ],
+      "path": "./plugins/aws-cli"
+    },
+    {
+      "name": "aws-expert",
+      "description": "AWS architecture expertise: Well-Architected Framework (6 pillars), service selection, security (IAM, encryption, VPC), cost optimization (Reserved/Savings Plans/Spot), DR/HA patterns, observability. Use for: architecture decisions, choosing AWS services, security best practices, cost optimization, multi-region design. Triggers: aws architecture, well-architected, which aws service, aws security, aws cost, multi-region, disaster recovery.",
+      "version": "1.0.0",
+      "category": "aws",
+      "tags": [
+        "aws",
+        "expert"
+      ],
+      "path": "./plugins/aws-expert"
+    },
+    {
+      "name": "aws-local",
+      "description": "Thin wrapper around AWS CLI for LocalStack. Automatically sets endpoint URL to localhost:4566. Use for: running AWS commands against LocalStack without --endpoint-url, local development, testing AWS workflows locally. Triggers: awslocal, aws local, localstack aws cli, awscli-local.",
+      "version": "1.0.0",
+      "category": "aws",
+      "tags": [
+        "aws"
+      ],
+      "path": "./plugins/aws-local"
+    },
+    {
+      "name": "aws-localstack",
+      "description": "LocalStack CLI for managing local AWS emulation containers. Use for: starting/stopping LocalStack, status checks, log viewing, container updates, configuration profiles. Triggers: localstack, localstack start, localstack stop, localstack status, local aws emulator, start localstack.",
+      "version": "1.0.0",
+      "category": "aws",
+      "tags": [
+        "aws"
+      ],
+      "path": "./plugins/aws-localstack"
+    },
+    {
+      "name": "aws-localstack-expert",
+      "description": "LocalStack architecture expertise: testing strategies, CI/CD integration, service parity, state management, Pro features. Use for: designing local AWS testing, choosing LocalStack vs real AWS, CI pipeline setup, debugging service differences, Cloud Pods strategy. Triggers: localstack architecture, local aws testing, localstack ci, localstack pro, aws emulation strategy, cloud pods.",
+      "version": "1.0.0",
+      "category": "aws",
+      "tags": [
+        "aws",
+        "expert"
+      ],
+      "path": "./plugins/aws-localstack-expert"
+    },
+    {
+      "name": "cf-ctl",
+      "description": "Cloudflare infrastructure CLI. Use for: DNS records, firewall rules, zone management, cache purging. Triggers: flarectl, cloudflare dns, cloudflare firewall.",
+      "version": "1.0.0",
+      "category": "cloudflare",
+      "tags": [
+        "cloudflare"
+      ],
+      "path": "./plugins/cf-ctl"
+    },
+    {
+      "name": "cf-expert",
+      "description": "Cloudflare infrastructure expertise: architecture decisions, Zero Trust, security (WAF, DDoS, bots), rate limiting, caching, Workers AI, MCP servers, IaC. Use for: choosing tunnel types, storage selection, Access policies, security configuration, Workers vs Pages, caching strategy, AI patterns, migration. Triggers: cloudflare architecture, zero trust, rate limiting, cloudflare terraform, WAF, DDoS, bot management, tiered cache, argo, workers ai, vectorize, cloudflare mcp.",
+      "version": "1.0.0",
+      "category": "cloudflare",
+      "tags": [
+        "cloudflare",
+        "expert"
+      ],
+      "path": "./plugins/cf-expert"
+    },
+    {
+      "name": "cf-tunnel",
+      "description": "Cloudflare Tunnel CLI for exposing local services. Use for: quick tunnels (dev), named tunnels (prod), DNS routing, system service setup. Triggers: cloudflared, tunnel, expose localhost.",
+      "version": "1.0.0",
+      "category": "cloudflare",
+      "tags": [
+        "cloudflare"
+      ],
+      "path": "./plugins/cf-tunnel"
+    },
+    {
+      "name": "cf-wrangler",
+      "description": "Cloudflare Workers/Pages CLI. Use for: deploying Workers, local dev, KV/D1/R2 storage, secrets management. Triggers: wrangler, workers, cloudflare pages, D1, KV.",
+      "version": "1.0.0",
+      "category": "cloudflare",
+      "tags": [
+        "cloudflare"
+      ],
+      "path": "./plugins/cf-wrangler"
+    },
+    {
+      "name": "cli-ast-grep",
+      "description": "Semantic code search and transformation using ASTs. Use for: (1) structural pattern matching beyond regex, (2) AST-based refactoring with metavariables, (3) finding architectural patterns or anti-patterns, (4) language-aware code transformations. Triggers: semantic search, find code patterns, refactor class/function structure, AST matching.",
+      "version": "1.0.0",
+      "category": "cli",
+      "tags": [
+        "cli"
+      ],
+      "path": "./plugins/cli-ast-grep"
+    },
+    {
+      "name": "cli-fastmod",
+      "description": "Large-scale codebase refactoring with interactive review. Use for: (1) bulk find-and-replace across 20+ files, (2) renaming classes/functions/variables codebase-wide, (3) updating API calls or import patterns systematically, (4) regex-based transformations with human oversight. Triggers: rename across codebase, bulk replace, update all occurrences, refactor imports.",
+      "version": "1.0.0",
+      "category": "cli",
+      "tags": [
+        "cli"
+      ],
+      "path": "./plugins/cli-fastmod"
+    },
+    {
+      "name": "cli-fzf",
+      "description": "Interactive fuzzy finder for files, history, and lists. Use for: (1) interactive file/directory selection, (2) command history search with preview, (3) building selection menus in scripts, (4) filtering large lists or command outputs. Triggers: fuzzy search, interactive selector, pick from list, file finder with preview.",
+      "version": "1.0.0",
+      "category": "cli",
+      "tags": [
+        "cli"
+      ],
+      "path": "./plugins/cli-fzf"
+    },
+    {
+      "name": "cli-jq",
+      "description": "JSON processing and transformation. Use for: (1) extracting data from API responses, (2) filtering and transforming JSON structures, (3) combining or restructuring JSON data, (4) JSON processing in shell pipelines. Triggers: parse JSON, extract from JSON, filter JSON array, transform JSON, pretty-print JSON.",
+      "version": "1.0.0",
+      "category": "cli",
+      "tags": [
+        "cli"
+      ],
+      "path": "./plugins/cli-jq"
+    },
+    {
+      "name": "cli-parallel",
+      "description": "Execute shell jobs in parallel using GNU parallel. Use when: batch processing files, running same command on multiple inputs, CPU-intensive transforms, replacing slow loops. Triggers: run in parallel, batch process, parallelize, convert all images, process files concurrently.",
+      "version": "1.0.0",
+      "category": "cli",
+      "tags": [
+        "cli"
+      ],
+      "path": "./plugins/cli-parallel"
+    },
+    {
+      "name": "cli-ripgrep",
+      "description": "Fast recursive code search. Use for: (1) searching large codebases for patterns, (2) finding code references and function calls, (3) filtering by file type or path, (4) security audits and pattern detection. Triggers: search codebase, find occurrences, grep files, search for pattern, find all usages.",
+      "version": "1.0.0",
+      "category": "cli",
+      "tags": [
+        "cli"
+      ],
+      "path": "./plugins/cli-ripgrep"
+    },
+    {
+      "name": "cli-tmux",
+      "description": "Terminal multiplexer for interactive and background commands. Use when: (1) script prompts for input (y/n, confirmation, passwords), (2) bash command fails due to interactive prompt, (3) long-running process needs monitoring, (4) need to send keystrokes to running program. Triggers: /cli-tmux, script needs input, answer prompts, y/n confirmation, command timed out waiting for input.",
+      "version": "1.0.0",
+      "category": "cli",
+      "tags": [
+        "cli"
+      ],
+      "path": "./plugins/cli-tmux"
+    },
+    {
+      "name": "cli-tree",
+      "description": "Generate directory trees for documentation. Use when: (1) creating project structure docs, (2) visualizing folder layout, (3) updating directory trees in markdown files. Triggers: directory tree, folder structure, project structure, tree command.",
+      "version": "1.0.0",
+      "category": "cli",
+      "tags": [
+        "cli"
+      ],
+      "path": "./plugins/cli-tree"
+    },
+    {
+      "name": "cli-yq",
+      "description": "YAML/JSON/XML processing with jq-like syntax. Use for: (1) querying and updating YAML configs (Kubernetes, Docker Compose, CI/CD), (2) converting between YAML/JSON/XML formats, (3) merging configuration files, (4) automating config management. Triggers: parse YAML, update config file, convert YAML to JSON, merge YAML files, edit Kubernetes manifest.",
+      "version": "1.0.0",
+      "category": "cli",
+      "tags": [
+        "cli"
+      ],
+      "path": "./plugins/cli-yq"
+    },
+    {
+      "name": "dev-backlog",
+      "description": "Markdown-native task manager and Kanban board for Git repositories. Use for: (1) managing project backlogs with tasks stored as markdown files, (2) spec-driven AI development with acceptance criteria and implementation plans, (3) Kanban board visualization (TUI and web), (4) task dependencies, milestones, and decision records. Triggers: backlog, kanban, task management, project backlog, acceptance criteria, definition of done.",
+      "version": "1.0.0",
+      "category": "dev",
+      "tags": [
+        "dev"
+      ],
+      "path": "./plugins/dev-backlog"
+    },
+    {
+      "name": "dev-compress",
+      "description": "Rewrite markdown for conciseness. Use when: optimizing markdown for LLM context, making documentation more concise, reducing token count in files. Triggers: optimize this file, make this more concise, reduce tokens, token optimize.",
+      "version": "1.0.0",
+      "category": "dev",
+      "tags": [
+        "dev"
+      ],
+      "path": "./plugins/dev-compress"
+    },
+    {
+      "name": "dev-learn",
+      "description": "Capture learnings into documentation. Use when: completing work that revealed missing instructions, finding workarounds for undocumented blockers, discovering patterns that work better than documented, capturing session learnings. Triggers: update the instructions based on what we learned, add this pattern to the docs, capture this workaround, improve the workflow documentation.",
+      "version": "1.0.0",
+      "category": "dev",
+      "tags": [
+        "dev"
+      ],
+      "path": "./plugins/dev-learn"
+    },
+    {
+      "name": "dev-review",
+      "description": "Code review orchestrator. Auto-detects context and routes to the appropriate reviewer. Handles: file/directory review (static analysis), PR review (GitHub PRs), diff review (staged/unstaged changes). Scores code on six pillars with numeric 1-10 grading. Use when: reviewing code, code review, give me feedback. Triggers: review this, code review, review my code, review PR, review these files.",
+      "version": "1.0.0",
+      "category": "dev",
+      "tags": [
+        "dev"
+      ],
+      "path": "./plugins/dev-review"
+    },
+    {
+      "name": "dev-review-file",
+      "description": "Deep code review of files and directories. Analyzes quality across six pillars (Security, Performance, Architecture, Error Handling, Testing, Maintainability), scores 1-10 per category with harsh grading. Outputs structured report or inline comments. Use when: reviewing specific files, analyzing a module, code quality audit. Triggers: review this file, review this directory, analyze code quality, code audit, review-file.",
+      "version": "1.0.0",
+      "category": "dev",
+      "tags": [
+        "dev"
+      ],
+      "path": "./plugins/dev-review-file"
+    },
+    {
+      "name": "dev-review-pr",
+      "description": "Review git diffs, staged changes, and GitHub PRs. Change-focused analysis across six pillars (Security, Performance, Architecture, Error Handling, Testing, Maintainability) with numeric scoring 1-10. Supports GitHub PR review, staged changes, and arbitrary diffs. Use when: reviewing a PR, reviewing staged changes, reviewing a diff, pre-commit review. Triggers: review PR, review my changes, review the diff, review staged, review-pr, check my changes.",
+      "version": "1.0.0",
+      "category": "dev",
+      "tags": [
+        "dev"
+      ],
+      "path": "./plugins/dev-review-pr"
+    },
+    {
+      "name": "dev-rlm",
+      "description": "Recursive codebase analysis using the RLM paradigm. Use when: analyzing large codebases (100+ files), investigating cross-cutting patterns, recursive decomposition of complex code questions, scanning for issues across entire repos. Triggers: analyze this codebase, how does X work across the codebase, scan all files for Y, recursive analysis, RLM.",
+      "version": "1.0.0",
+      "category": "dev",
+      "tags": [
+        "dev"
+      ],
+      "path": "./plugins/dev-rlm"
+    },
+    {
+      "name": "dev-skill-create",
+      "description": "Guide for creating effective skills. Use when: creating a new skill, updating an existing skill, extending Claude's capabilities with specialized knowledge or workflows. Triggers: create skill, new skill, skill template, build skill, update skill.",
+      "version": "1.0.0",
+      "category": "dev",
+      "tags": [
+        "dev"
+      ],
+      "path": "./plugins/dev-skill-create"
+    },
+    {
+      "name": "dev-swarm",
+      "description": "Parallelize tasks using Claude agents. Use when: processing multiple files/items concurrently, running analysis across independent code modules, batch operations with cognitive tasks. Triggers: parallelize this task, run on all files in parallel, analyze modules concurrently, batch process these items.",
+      "version": "1.0.0",
+      "category": "dev",
+      "tags": [
+        "dev"
+      ],
+      "path": "./plugins/dev-swarm"
+    },
+    {
+      "name": "doc-claude-md",
+      "description": "Create and update CLAUDE.md and AGENTS.md files. Use when: (1) setting up Claude documentation for a project, (2) updating agent instructions after codebase changes, (3) validating docs match current structure. Triggers: CLAUDE.md, AGENTS.md, agent instructions, project documentation.",
+      "version": "1.0.0",
+      "category": "documentation",
+      "tags": [
+        "documentation"
+      ],
+      "path": "./plugins/doc-claude-md"
+    },
+    {
+      "name": "doc-confluence",
+      "description": "Create and update Confluence Data Center pages from Markdown. Use for: (1) creating documentation pages from README or specs, (2) updating existing wiki pages, (3) publishing code docs to Confluence, (4) embedding draw.io diagrams. Triggers: confluence, wiki page, create page, update docs, publish to confluence.",
+      "version": "1.0.0",
+      "category": "documentation",
+      "tags": [
+        "documentation"
+      ],
+      "path": "./plugins/doc-confluence"
+    },
+    {
+      "name": "doc-mermaid",
+      "description": "Mermaid diagramming for code visualization and documentation. Use for: (1) creating diagrams from architecture descriptions, (2) visualizing code structure (class diagrams, flowcharts), (3) embedding diagrams in markdown/README files, (4) generating sequence diagrams for API flows, (5) rendering diagrams to PNG/SVG. Triggers: mermaid, diagram, flowchart, sequence diagram, class diagram, ER diagram, C4, Gantt, timeline, architecture diagram, visualize code.",
+      "version": "1.0.0",
+      "category": "documentation",
+      "tags": [
+        "documentation"
+      ],
+      "path": "./plugins/doc-mermaid"
+    },
+    {
+      "name": "doc-mermaid-render",
+      "description": "Render Mermaid diagrams to themed SVG or ASCII/Unicode art using beautiful-mermaid. Zero DOM, pure TypeScript, 15 built-in editor themes, mono mode (2 colors). Use for: (1) rendering flowcharts, sequence, class, state, ER diagrams to SVG files, (2) rendering diagrams as ASCII/Unicode for terminal output, (3) themed diagram generation matching editor color schemes. Triggers: beautiful-mermaid, render mermaid, mermaid svg, mermaid ascii, themed diagram, diagram to image.",
+      "version": "1.0.0",
+      "category": "documentation",
+      "tags": [
+        "documentation"
+      ],
+      "path": "./plugins/doc-mermaid-render"
+    },
+    {
+      "name": "doc-notesmd",
+      "description": "NotesMD CLI (notesmd-cli) for Obsidian vault operations from the terminal. Go-based, works WITHOUT Obsidian running. 12 commands: open, daily, search, search-content, create, move, delete, list, print, frontmatter, set-default, print-default. Features: automatic wikilink/markdown link updates on move/rename, YAML frontmatter CRUD, backlink discovery, daily note templates, content search with snippets. Use for: obsidian vault management, note creation, markdown notes automation, daily journaling, frontmatter editing, vault search, note refactoring. Triggers: notesmd, notesmd-cli, obsidian cli, vault notes, daily notes cli, markdown notes cli, note management.",
+      "version": "1.0.0",
+      "category": "documentation",
+      "tags": [
+        "documentation"
+      ],
+      "path": "./plugins/doc-notesmd"
+    },
+    {
+      "name": "doc-obsidian",
+      "description": "Obsidian vault management combining qmd (search) and notesmd-cli (CRUD). No Obsidian app needed. Use for: (1) searching notes with keyword, semantic, or hybrid search, (2) creating/editing/moving/deleting notes, (3) daily journaling, (4) frontmatter management, (5) backlink discovery, (6) AI agent memory workflows, (7) vault automation and scripting. Triggers: obsidian vault, obsidian notes, vault search, note management, daily notes, agent memory, knowledge base, markdown vault.",
+      "version": "1.0.0",
+      "category": "documentation",
+      "tags": [
+        "documentation"
+      ],
+      "path": "./plugins/doc-obsidian"
+    },
+    {
+      "name": "doc-pandoc",
+      "description": "Universal document conversion with pandoc. Use for: (1) converting between formats (Markdown, HTML, DOCX, EPUB, LaTeX, RST, JATS, ODT, RTF, etc.), (2) batch converting multiple files, (3) generating standalone HTML with embedded CSS, (4) extracting text/markdown from DOCX/ODT/EPUB, (5) format-aware transformations with metadata, templates, and Lua filters. Triggers: pandoc, convert document, markdown to docx, docx to markdown, convert to html, convert to epub, document format.",
+      "version": "1.0.0",
+      "category": "documentation",
+      "tags": [
+        "documentation"
+      ],
+      "path": "./plugins/doc-pandoc"
+    },
+    {
+      "name": "doc-qmd",
+      "description": "Local on-device search engine for markdown knowledge bases. Hybrid search with BM25, vector, and LLM reranking. Use for: (1) indexing markdown collections, (2) searching notes and docs with keyword/semantic/hybrid search, (3) retrieving documents for LLM context, (4) managing collections and embeddings, (5) running MCP server for Claude integration. Triggers: qmd, search notes, index markdown, knowledge base, semantic search, find in notes.",
+      "version": "1.0.0",
+      "category": "documentation",
+      "tags": [
+        "documentation"
+      ],
+      "path": "./plugins/doc-qmd"
+    },
+    {
+      "name": "doc-readme",
+      "description": "Create and update README.md files. Use when: (1) generating README for a new project, (2) updating stale README content, (3) validating README matches codebase. Triggers: README, readme, project documentation, create readme.",
+      "version": "1.0.0",
+      "category": "documentation",
+      "tags": [
+        "documentation"
+      ],
+      "path": "./plugins/doc-readme"
+    },
+    {
+      "name": "git-commit",
+      "description": "Generate Conventional Commits messages. Use when: creating commits, writing commit messages, committing changes. Triggers: /git-commit, commit this, commit my changes, finishing code changes.",
+      "version": "1.0.0",
+      "category": "git",
+      "tags": [
+        "git"
+      ],
+      "path": "./plugins/git-commit"
+    },
+    {
+      "name": "git-land",
+      "description": "Commit changes and create PR in one flow. Use when: committing and creating PR in one step, shipping a feature, pushing changes with PR. Triggers: /git-land, ship this, commit and PR, push and create PR.",
+      "version": "1.0.0",
+      "category": "git",
+      "tags": [
+        "git"
+      ],
+      "path": "./plugins/git-land"
+    },
+    {
+      "name": "git-pr-create",
+      "description": "Create GitHub PRs with structured title and body. Use when: opening PRs, creating pull requests after pushing. Triggers: /git-pr-create, create PR, open pull request.",
+      "version": "1.0.0",
+      "category": "git",
+      "tags": [
+        "git"
+      ],
+      "path": "./plugins/git-pr-create"
+    },
+    {
+      "name": "git-pr-manage",
+      "description": "Autonomous PR lifecycle management. Use when: checking PR status, merging PRs, processing reviews, handling CI failures. Triggers: /git-pr-manage, merge the PR, check PR status, is this ready to merge?, handle review comments.",
+      "version": "1.0.0",
+      "category": "git",
+      "tags": [
+        "git"
+      ],
+      "path": "./plugins/git-pr-manage"
+    },
+    {
+      "name": "git-repo",
+      "description": "Create GitHub repositories via OpenTofu in the github-infrastructure repo. Clones repo to tmp, generates repository module (main.tf, outputs.tf, versions.tf), updates root main.tf and outputs.tf, runs fmt+validate, pushes and creates PR. Use when: (1) creating a new GitHub repo, (2) adding a repository to the org, (3) provisioning a new project/spec/infra/template repo. Triggers: new repo, create repository, add repo, github repository, provision repo.",
+      "version": "1.0.0",
+      "category": "git",
+      "tags": [
+        "git"
+      ],
+      "path": "./plugins/git-repo"
+    },
+    {
+      "name": "git-ship",
+      "description": "Commit, create PR, and merge with CI skipped. Disables GitHub Actions workflows via API before push, re-enables after merge. Use when: shipping trivial changes (renames, typos, config), bypassing CI for safe changes, fast-tracking PRs. Triggers: /git-ship, commit and merge skip ci, ship without ci, fast merge.",
+      "version": "1.0.0",
+      "category": "git",
+      "tags": [
+        "git"
+      ],
+      "path": "./plugins/git-ship"
+    },
+    {
+      "name": "git-worktree",
+      "description": "Work on multiple branches simultaneously. Use when: working on multiple branches, reviewing PRs without stashing, parallel builds/tests, bare repo workflows. Triggers: /git-worktree, work on two branches, create worktree, set up bare repo.",
+      "version": "1.0.0",
+      "category": "git",
+      "tags": [
+        "git"
+      ],
+      "path": "./plugins/git-worktree"
+    },
+    {
+      "name": "go-delve",
+      "description": "[Go] Debugger: breakpoints, stepping, variable inspection, goroutine debugging, remote debugging, core dumps. Use for: debugging Go programs, inspecting state, tracing execution. Triggers: dlv, delve, go debug, breakpoint, stepping.",
+      "version": "1.0.0",
+      "category": "go",
+      "tags": [
+        "go"
+      ],
+      "path": "./plugins/go-delve"
+    },
+    {
+      "name": "go-expert",
+      "description": "[Go] Language expertise: idiomatic patterns, project structure, concurrency (goroutines, channels, sync), error handling, testing strategies, generics, modules. Use for: Go architecture decisions, code review, project setup, idiomatic patterns. Delegates to: go-golangci-lint, go-delve, go-pprof, go-goreleaser. Triggers: golang, go code, idiomatic go, go project, go testing, go concurrency, goroutine, channel, go architecture.",
+      "version": "1.0.0",
+      "category": "go",
+      "tags": [
+        "go",
+        "expert"
+      ],
+      "path": "./plugins/go-expert"
+    },
+    {
+      "name": "go-lefthook",
+      "description": "[Go] Git hooks manager for Go projects. Use for: pre-commit hooks, pre-push checks, CI quality gates. Triggers: lefthook, git hooks, pre-commit, pre-push.",
+      "version": "1.0.0",
+      "category": "go",
+      "tags": [
+        "go"
+      ],
+      "path": "./plugins/go-lefthook"
+    },
+    {
+      "name": "go-lint",
+      "description": "[Go] Linter aggregator: 100+ linters (staticcheck, gosec, errcheck, govet, revive, etc.), .golangci.yml configuration, CI integration. Use for: linting Go code, static analysis, code quality, security scanning. Triggers: golangci-lint, go lint, staticcheck, gosec, errcheck.",
+      "version": "1.0.0",
+      "category": "go",
+      "tags": [
+        "go"
+      ],
+      "path": "./plugins/go-lint"
+    },
+    {
+      "name": "go-mockery",
+      "description": "[Go] Mock generation for interfaces using testify. Use for: generating mocks, test setup, interface mocking. Triggers: mockery, go mock, testify mock, mock generation.",
+      "version": "1.0.0",
+      "category": "go",
+      "tags": [
+        "go"
+      ],
+      "path": "./plugins/go-mockery"
+    },
+    {
+      "name": "go-pprof",
+      "description": "[Go] Profiler: CPU profiling, memory allocation, goroutine analysis, block profiling, mutex contention. Use for: performance optimization, memory leaks, goroutine leaks. Triggers: pprof, go profile, cpu profile, memory profile, heap profile.",
+      "version": "1.0.0",
+      "category": "go",
+      "tags": [
+        "go"
+      ],
+      "path": "./plugins/go-pprof"
+    },
+    {
+      "name": "go-release",
+      "description": "[Go] Release automation: cross-compilation, archives, checksums, changelogs, GitHub/GitLab releases, Docker images, Homebrew. Use for: releasing Go binaries, CI/CD release pipelines. Triggers: goreleaser, go release, cross compile, release binary.",
+      "version": "1.0.0",
+      "category": "go",
+      "tags": [
+        "go"
+      ],
+      "path": "./plugins/go-release"
+    },
+    {
+      "name": "go-task",
+      "description": "[Go] Task runner (taskfile.dev) for Go projects. YAML-based alternative to Make. Use for: build automation, development tasks, CI/CD scripts. Triggers: task, taskfile, go-task, task runner.",
+      "version": "1.0.0",
+      "category": "go",
+      "tags": [
+        "go"
+      ],
+      "path": "./plugins/go-task"
+    },
+    {
+      "name": "iac-expert",
+      "description": "Infrastructure as Code architecture expertise: tool selection (Terraform, OpenTofu, Pulumi, CDK), module design, state management, multi-environment patterns, CI/CD pipelines, security (policy-as-code, secrets, compliance), testing strategies, cost optimization, platform engineering. Use for: architecture decisions, IAC tool selection, module composition, state strategies, enterprise patterns, migration planning. Triggers: iac architecture, infrastructure design, which iac tool, terraform vs pulumi, module structure, state management, platform engineering, iac patterns.",
+      "version": "1.0.0",
+      "category": "iac",
+      "tags": [
+        "iac",
+        "expert"
+      ],
+      "path": "./plugins/iac-expert"
+    },
+    {
+      "name": "iac-hcloud",
+      "description": "Hetzner Cloud CLI for managing cloud infrastructure. Use for: (1) server lifecycle (create, resize, rebuild, snapshots), (2) networking (VPCs, firewalls, floating IPs, load balancers), (3) storage (volumes), (4) multi-project context management. Triggers: hcloud, hetzner, hetzner cloud, hcloud server, hcloud network, hcloud firewall.",
+      "version": "1.0.0",
+      "category": "iac",
+      "tags": [
+        "iac"
+      ],
+      "path": "./plugins/iac-hcloud"
+    },
+    {
+      "name": "iac-opa",
+      "description": "Open Policy Agent CLI and Rego policy language. Use for: (1) evaluating Rego policies against data/input, (2) writing and testing Rego rules, (3) building and signing OPA bundles, (4) Kubernetes admission control with Gatekeeper, (5) Terraform plan validation, (6) CI/CD policy gates with conftest. Triggers: opa eval, opa test, rego, policy as code, open policy agent, gatekeeper, admission control, conftest.",
+      "version": "1.0.0",
+      "category": "iac",
+      "tags": [
+        "iac"
+      ],
+      "path": "./plugins/iac-opa"
+    },
+    {
+      "name": "iac-terraform",
+      "description": "Terraform infrastructure as code by HashiCorp. Use for: (1) provisioning cloud infrastructure (AWS, GCP, Azure), (2) managing infrastructure state, (3) multi-environment deployments, (4) module development, (5) Terraform Cloud/Enterprise workflows. Triggers: terraform plan, terraform apply, provision infrastructure, IaC, infrastructure as code, HCP Terraform.",
+      "version": "1.0.0",
+      "category": "iac",
+      "tags": [
+        "iac"
+      ],
+      "path": "./plugins/iac-terraform"
+    },
+    {
+      "name": "iac-tofu",
+      "description": "OpenTofu infrastructure as code. Use for: (1) provisioning cloud infrastructure (AWS, GCP, Azure), (2) managing infrastructure state, (3) multi-environment deployments, (4) module development. Triggers: tofu plan, tofu apply, provision infrastructure, IaC, infrastructure as code, OpenTofu.",
+      "version": "1.0.0",
+      "category": "iac",
+      "tags": [
+        "iac"
+      ],
+      "path": "./plugins/iac-tofu"
+    },
+    {
+      "name": "net-httpx",
+      "description": "Fast HTTP toolkit for probing, technology detection, and web reconnaissance. Use for: (1) HTTP probing, (2) technology fingerprinting, (3) status code filtering, (4) web server enumeration, (5) bug bounty reconnaissance. Triggers: httpx, http probe, web probe, technology detection, http toolkit, web recon, status codes.",
+      "version": "1.0.0",
+      "category": "network",
+      "tags": [
+        "network"
+      ],
+      "path": "./plugins/net-httpx"
+    },
+    {
+      "name": "net-mitmproxy",
+      "description": "Interactive HTTPS proxy for intercepting, inspecting, and modifying HTTP/HTTPS traffic. Use for: (1) API debugging, (2) traffic interception, (3) request/response modification, (4) SSL/TLS inspection, (5) automated testing. Triggers: mitmproxy, mitmdump, mitmweb, https proxy, intercept traffic, ssl interception, http proxy, api debugging.",
+      "version": "1.0.0",
+      "category": "network",
+      "tags": [
+        "network"
+      ],
+      "path": "./plugins/net-mitmproxy"
+    },
+    {
+      "name": "net-nmap",
+      "description": "Network scanner for port discovery, service detection, and OS fingerprinting. Use for: (1) port scanning, (2) service enumeration, (3) vulnerability detection, (4) network mapping, (5) security auditing. Triggers: nmap, port scan, service detection, network scan, os fingerprint, security scan, network discovery.",
+      "version": "1.0.0",
+      "category": "network",
+      "tags": [
+        "network"
+      ],
+      "path": "./plugins/net-nmap"
+    },
+    {
+      "name": "net-tcpdump",
+      "description": "Network packet capture and analysis tool. Capture, filter, and inspect network traffic. Use for: (1) packet capture, (2) network debugging, (3) traffic analysis, (4) protocol inspection, (5) pcap file creation. Triggers: tcpdump, packet capture, network traffic, pcap, sniff packets, network debug.",
+      "version": "1.0.0",
+      "category": "network",
+      "tags": [
+        "network"
+      ],
+      "path": "./plugins/net-tcpdump"
+    },
+    {
+      "name": "net-wireshark",
+      "description": "Network protocol analyzer with GUI and CLI (tshark). Deep packet inspection, protocol dissection, and traffic analysis. Use for: (1) protocol analysis, (2) network troubleshooting, (3) pcap analysis, (4) extracting data from captures, (5) statistics generation. Triggers: wireshark, tshark, protocol analyzer, pcap analysis, packet analysis, network forensics, display filter.",
+      "version": "1.0.0",
+      "category": "network",
+      "tags": [
+        "network"
+      ],
+      "path": "./plugins/net-wireshark"
+    },
+    {
+      "name": "oci-crane",
+      "description": "Container image manipulation tool for registries. Push, pull, copy, mutate, and inspect images. Use for: (1) image manipulation, (2) registry operations, (3) layer extraction, (4) manifest inspection, (5) tag management. Triggers: crane, image manipulation, registry push, image layers, manifest, gcrane, image copy.",
+      "version": "1.0.0",
+      "category": "containers",
+      "tags": [
+        "containers"
+      ],
+      "path": "./plugins/oci-crane"
+    },
+    {
+      "name": "oci-dive",
+      "description": "Docker image layer explorer for analyzing image contents, finding wasted space, and detecting secrets/bloat. Use for: (1) exploring image layers interactively, (2) finding secrets or sensitive files, (3) optimizing image size, (4) CI efficiency checks. Triggers: dive, image layers, docker image analyze, image efficiency, find secrets in image, image bloat.",
+      "version": "1.0.0",
+      "category": "containers",
+      "tags": [
+        "containers"
+      ],
+      "path": "./plugins/oci-dive"
+    },
+    {
+      "name": "oci-skopeo",
+      "description": "Container image operations without Docker daemon. Inspect, copy, delete, and sync images across registries. Use for: (1) inspecting remote images, (2) copying between registries, (3) mirroring images, (4) working without Docker installed. Triggers: skopeo, image inspect, copy image, registry mirror, docker-less, image manifest, image digest.",
+      "version": "1.0.0",
+      "category": "containers",
+      "tags": [
+        "containers"
+      ],
+      "path": "./plugins/oci-skopeo"
+    },
+    {
+      "name": "oci-syft",
+      "description": "SBOM generator for container images, filesystems, and archives. Supports SPDX, CycloneDX, and native formats. Use for: (1) generating software bill of materials, (2) cataloging dependencies, (3) license compliance, (4) supply chain security. Triggers: syft, sbom, software bill of materials, dependency catalog, cyclonedx, spdx, package list.",
+      "version": "1.0.0",
+      "category": "containers",
+      "tags": [
+        "containers"
+      ],
+      "path": "./plugins/oci-syft"
+    },
+    {
+      "name": "re-binwalk",
+      "description": "binwalk firmware analysis: signature scanning, entropy analysis, file extraction, embedded filesystem analysis. Use for: firmware reverse engineering, extracting embedded files, IoT analysis, finding hidden data, analyzing binary blobs. Triggers: binwalk, firmware analysis, extract firmware, find signatures, entropy analysis, embedded filesystem, IoT reversing.",
+      "version": "1.0.0",
+      "category": "reverse-engineering",
+      "tags": [
+        "reverse-engineering"
+      ],
+      "path": "./plugins/re-binwalk"
+    },
+    {
+      "name": "re-docker-expert",
+      "description": "Container forensics and security analysis expertise: layer analysis, secret extraction, build reconstruction, image forensics. Delegates to tool skills (dive, crane, skopeo, syft, trivy, grype). Use for: container security audits, finding secrets in images, reconstructing Dockerfiles, incident response on containers, supply chain analysis. Triggers: docker forensics, container analysis, image layers, find secrets in container, reconstruct dockerfile, container incident response, image security audit.",
+      "version": "1.0.0",
+      "category": "reverse-engineering",
+      "tags": [
+        "reverse-engineering",
+        "expert"
+      ],
+      "path": "./plugins/re-docker-expert"
+    },
+    {
+      "name": "re-dtrace",
+      "description": "DTrace dynamic tracing for macOS/BSD: D language scripts, dtruss (strace equivalent), syscall/file/network/process tracing, probe providers. Use for: macOS syscall tracing, performance analysis, debugging on macOS, understanding binary behavior. Triggers: dtrace, dtruss, macos strace, macos syscall trace, D language tracing, dynamic tracing macos.",
+      "version": "1.0.0",
+      "category": "reverse-engineering",
+      "tags": [
+        "reverse-engineering"
+      ],
+      "path": "./plugins/re-dtrace"
+    },
+    {
+      "name": "re-expert",
+      "description": "Security analysis domain expertise: reverse engineering methodology, tool selection (Ghidra/radare2/GDB), binary formats (ELF/PE/Mach-O), vulnerability patterns, container security, network analysis, SAST, web security. Use for: choosing analysis approach, security auditing, container scanning, network forensics, vulnerability assessment, malware analysis. Triggers: reverse engineer, analyze binary, security audit, container security, network analysis, vulnerability scan, SAST, web security, CTF.",
+      "version": "1.0.0",
+      "category": "reverse-engineering",
+      "tags": [
+        "reverse-engineering",
+        "expert"
+      ],
+      "path": "./plugins/re-expert"
+    },
+    {
+      "name": "re-frida",
+      "description": "Frida dynamic instrumentation: hooking, tracing, memory manipulation, iOS/Android analysis. Use for: runtime hooking, function interception, mobile app analysis, bypassing protections. Triggers: frida, frida-trace, hook function, instrument binary, mobile reversing, intercept calls, bypass ssl pinning.",
+      "version": "1.0.0",
+      "category": "reverse-engineering",
+      "tags": [
+        "reverse-engineering"
+      ],
+      "path": "./plugins/re-frida"
+    },
+    {
+      "name": "re-gdb",
+      "description": "GDB debugger for reverse engineering: breakpoints, memory examination, runtime patching, register manipulation, Python scripting, enhanced GDB (pwndbg/GEF/PEDA). Use for: debugging binaries, memory patching at runtime, setting breakpoints, examining program state. Triggers: gdb, debug binary, set breakpoint, examine memory, gdb script, pwndbg, GEF, PEDA.",
+      "version": "1.0.0",
+      "category": "reverse-engineering",
+      "tags": [
+        "reverse-engineering"
+      ],
+      "path": "./plugins/re-gdb"
+    },
+    {
+      "name": "re-ghidra",
+      "description": "Ghidra reverse engineering tool: GUI workflows, Python/Java scripting, headless batch analysis, decompiler API, function analysis, cross-references. Use for: Ghidra scripting, automated analysis, batch processing binaries, decompilation. Triggers: ghidra script, ghidra headless, analyzeHeadless, ghidra python, ghidra api, use ghidra.",
+      "version": "1.0.0",
+      "category": "reverse-engineering",
+      "tags": [
+        "reverse-engineering"
+      ],
+      "path": "./plugins/re-ghidra"
+    },
+    {
+      "name": "re-lldb",
+      "description": "LLDB debugger for macOS/iOS reverse engineering: breakpoints, memory examination, Python scripting, Xcode integration. Use for: debugging on macOS, iOS analysis, memory patching, macOS binary analysis. Triggers: lldb, macos debug, ios debug, lldb command, debug on mac, xcode debugger.",
+      "version": "1.0.0",
+      "category": "reverse-engineering",
+      "tags": [
+        "reverse-engineering"
+      ],
+      "path": "./plugins/re-lldb"
+    },
+    {
+      "name": "re-objcopy",
+      "description": "Binary manipulation with objcopy: sections, symbols, format conversion. Use for: adding/removing sections, stripping symbols, converting binary formats, extracting sections. Triggers: objcopy, add section, remove section, strip symbols, binary conversion.",
+      "version": "1.0.0",
+      "category": "reverse-engineering",
+      "tags": [
+        "reverse-engineering"
+      ],
+      "path": "./plugins/re-objcopy"
+    },
+    {
+      "name": "re-patchelf",
+      "description": "ELF binary modification with patchelf: RPATH, interpreter, dependencies, SONAME. Use for: changing library paths, modifying ELF dynamic info, fixing binary dependencies. Triggers: patchelf, rpath, runpath, change interpreter, elf modify, add needed.",
+      "version": "1.0.0",
+      "category": "reverse-engineering",
+      "tags": [
+        "reverse-engineering"
+      ],
+      "path": "./plugins/re-patchelf"
+    },
+    {
+      "name": "re-pwntools",
+      "description": "pwntools exploit development framework: process interaction, shellcode, ROP chains, ELF analysis, CTF utilities. Use for: CTF challenges, exploit development, binary interaction, shellcode crafting, format string exploits, buffer overflows. Triggers: pwntools, pwn, exploit script, ROP chain, shellcode, CTF pwn, buffer overflow exploit.",
+      "version": "1.0.0",
+      "category": "reverse-engineering",
+      "tags": [
+        "reverse-engineering"
+      ],
+      "path": "./plugins/re-pwntools"
+    },
+    {
+      "name": "re-python-expert",
+      "description": "Python reverse engineering expertise: bytecode analysis (dis, marshal, opcodes), decompilation (uncompyle6, pycdc, decompyle3), obfuscation analysis (PyArmor, pyobfuscate), frozen executable unpacking (PyInstaller, py2exe, cx_Freeze, Nuitka). Use for: .pyc/.pyo analysis, decompiling Python, unpacking frozen executables, analyzing obfuscated Python, CTF Python challenges. Triggers: python reverse, pyc analysis, decompile python, unpack pyinstaller, pyarmor, bytecode, python obfuscation, frozen python.",
+      "version": "1.0.0",
+      "category": "reverse-engineering",
+      "tags": [
+        "reverse-engineering",
+        "expert"
+      ],
+      "path": "./plugins/re-python-expert"
+    },
+    {
+      "name": "re-radare2",
+      "description": "radare2/rizin reverse engineering framework: disassembly, analysis, patching, debugging, scripting. Use for: binary analysis, instruction patching, debug sessions, scripting with r2pipe, visual mode navigation. Triggers: radare2, r2, rizin, r2 command, radare patching, r2pipe, r2 analysis.",
+      "version": "1.0.0",
+      "category": "reverse-engineering",
+      "tags": [
+        "reverse-engineering"
+      ],
+      "path": "./plugins/re-radare2"
+    },
+    {
+      "name": "re-strace",
+      "description": "Linux system call tracing with strace/ltrace: trace syscalls, library calls, filter by type, follow processes. Use for: dynamic analysis on Linux, understanding binary behavior, debugging, identifying file/network access. For macOS/BSD, use /re-dtrace instead. Triggers: strace, ltrace, trace syscalls linux, trace library calls, what syscalls, what files accessed.",
+      "version": "1.0.0",
+      "category": "reverse-engineering",
+      "tags": [
+        "reverse-engineering"
+      ],
+      "path": "./plugins/re-strace"
+    },
+    {
+      "name": "re-xxd",
+      "description": "Hex dump and binary patching with xxd/hexdump: view hex, patch bytes, reverse hex to binary. Use for: viewing binary in hex, patching specific bytes, hex editing workflow. Triggers: xxd, hexdump, hex dump, hex edit, patch bytes, view hex.",
+      "version": "1.0.0",
+      "category": "reverse-engineering",
+      "tags": [
+        "reverse-engineering"
+      ],
+      "path": "./plugins/re-xxd"
+    },
+    {
+      "name": "res-deep",
+      "description": "Iterative multi-round deep research with structured analysis frameworks. Use for: deep research on a topic, compare X vs Y, landscape analysis, evaluate options for a decision, deep dive into a technology, comprehensive research with cross-referencing. Triggers: deep research, compare, landscape, evaluate, deep dive, comprehensive research, which is better, should we use.",
+      "version": "1.0.0",
+      "category": "research",
+      "tags": [
+        "research"
+      ],
+      "path": "./plugins/res-deep"
+    },
+    {
+      "name": "res-trends",
+      "description": "Research trending topics using Claude Code WebSearch + xAI (X/Twitter). Multi-source synthesis with merged results, engagement metrics, intent parsing, and prompt generation. Use for: trend analysis, topic research, social listening, market research, competitive intelligence, prompt discovery. Triggers: trending topics, what's trending, research trends, X trends, Twitter trends, Reddit discussions, social pulse, market trends, find prompts for.",
+      "version": "1.0.0",
+      "category": "research",
+      "tags": [
+        "research"
+      ],
+      "path": "./plugins/res-trends"
+    },
+    {
+      "name": "res-web",
+      "description": "Research topics with web search. Use when: researching a topic or concept, finding current information, answering factual questions, comparing options or technologies. Triggers: research [topic], find out about, what are the best practices for, research the latest on.",
+      "version": "1.0.0",
+      "category": "research",
+      "tags": [
+        "research"
+      ],
+      "path": "./plugins/res-web"
+    },
+    {
+      "name": "sec-bandit",
+      "description": "Python security linter for finding common security issues. Static analysis for vulnerabilities, hardcoded secrets, and dangerous functions. Use for: (1) Python security auditing, (2) CI security gates, (3) finding hardcoded credentials, (4) detecting dangerous function calls. Triggers: bandit, python security, python linter, security audit python, find vulnerabilities python, hardcoded secrets.",
+      "version": "1.0.0",
+      "category": "security",
+      "tags": [
+        "security"
+      ],
+      "path": "./plugins/sec-bandit"
+    },
+    {
+      "name": "sec-grype",
+      "description": "Fast vulnerability scanner for container images and filesystems using SBOM input. Use for: (1) container vulnerability scanning, (2) SBOM vulnerability matching, (3) CI/CD security gates, (4) multi-format output. Triggers: grype, vulnerability scan, CVE scan, sbom scan, container vulnerabilities, security scan.",
+      "version": "1.0.0",
+      "category": "security",
+      "tags": [
+        "security"
+      ],
+      "path": "./plugins/sec-grype"
+    },
+    {
+      "name": "sec-nuclei",
+      "description": "Fast vulnerability scanner based on templates. Scan for CVEs, misconfigurations, and security issues. Use for: (1) vulnerability scanning, (2) CVE detection, (3) security auditing, (4) custom security checks, (5) bug bounty reconnaissance. Triggers: nuclei, vulnerability scanner, cve scan, security templates, web vulnerability, bug bounty, security audit.",
+      "version": "1.0.0",
+      "category": "security",
+      "tags": [
+        "security"
+      ],
+      "path": "./plugins/sec-nuclei"
+    },
+    {
+      "name": "sec-pip-audit",
+      "description": "Python dependency vulnerability scanner. Audit installed packages and requirements files for known vulnerabilities. Use for: (1) scanning Python dependencies, (2) CI security checks, (3) SBOM generation, (4) finding vulnerable packages. Triggers: pip-audit, python vulnerabilities, dependency audit, pip security, requirements audit, pypi vulnerabilities.",
+      "version": "1.0.0",
+      "category": "security",
+      "tags": [
+        "security"
+      ],
+      "path": "./plugins/sec-pip-audit"
+    },
+    {
+      "name": "sec-semgrep",
+      "description": "Multi-language static analysis tool with security-focused rules. Pattern-based code scanning for vulnerabilities, bugs, and code standards. Use for: (1) security vulnerability detection, (2) custom rule enforcement, (3) multi-language SAST, (4) code review automation. Triggers: semgrep, static analysis, sast, security scan, code patterns, vulnerability scan, code review.",
+      "version": "1.0.0",
+      "category": "security",
+      "tags": [
+        "security"
+      ],
+      "path": "./plugins/sec-semgrep"
+    },
+    {
+      "name": "sec-trivy",
+      "description": "Comprehensive vulnerability and misconfiguration scanner for containers, filesystems, repos, and Kubernetes. Use for: (1) container image scanning, (2) filesystem vulnerability detection, (3) IaC misconfiguration scanning, (4) Kubernetes security audits, (5) SBOM vulnerability matching. Triggers: trivy, vulnerability scan, container security, CVE scan, image scan, misconfiguration, security scanner.",
+      "version": "1.0.0",
+      "category": "security",
+      "tags": [
+        "security"
+      ],
+      "path": "./plugins/sec-trivy"
+    },
+    {
+      "name": "speckit-audit",
+      "description": "Find unspecced work and fix spec drift. Use when: (1) auditing spec coverage, (2) finding features implemented without specs, (3) creating retroactive specs, (4) identifying technical debt from unspecced changes, (5) detecting and fixing spec drift. Triggers: run speckit-audit, find unspecced work, what PRs don't have specs, audit spec coverage, fix spec drift.",
+      "version": "1.0.0",
+      "category": "speckit",
+      "tags": [
+        "speckit"
+      ],
+      "path": "./plugins/speckit-audit"
+    },
+    {
+      "name": "speckit-flow",
+      "description": "Full spec-to-implementation workflow. Use when: (1) starting a new feature from scratch, (2) want end-to-end spec-driven development, (3) need autonomous workflow with minimal intervention. Triggers: implement [feature], build from spec, run full speckit flow, create and implement feature.",
+      "version": "1.0.0",
+      "category": "speckit",
+      "tags": [
+        "speckit"
+      ],
+      "path": "./plugins/speckit-flow"
+    },
+    {
+      "name": "speckit-loop",
+      "description": "Autonomous spec-driven development loop. Use when: (1) working through spec repos with tasks.md, (2) implementing features from specs, (3) processing spec backlogs, (4) managing implementation PRs against specs. Triggers: work through specs, implement pending tasks, process spec backlog, what tasks are left.",
+      "version": "1.0.0",
+      "category": "speckit",
+      "tags": [
+        "speckit"
+      ],
+      "path": "./plugins/speckit-loop"
+    },
+    {
+      "name": "speckit-retro",
+      "description": "Update specs with implementation learnings. Use when: (1) implementation is complete, (2) bugs were fixed that weren't in spec, (3) discovered edge cases, timing issues, or environment quirks, (4) improving spec quality for future features. Triggers: run speckit-retro, update spec with learnings, what did we learn, retroactively improve spec.",
+      "version": "1.0.0",
+      "category": "speckit",
+      "tags": [
+        "speckit"
+      ],
+      "path": "./plugins/speckit-retro"
+    },
+    {
+      "name": "speckit-verify",
+      "description": "Verify implementation matches spec, update spec on drift. Use when: (1) checking if spec matches implementation, (2) implementation changed and spec needs updating, (3) before release to ensure spec accuracy, (4) auditing spec drift over time. Triggers: verify spec matches implementation, check for spec drift, sync spec to code, run speckit-verify.",
+      "version": "1.0.0",
+      "category": "speckit",
+      "tags": [
+        "speckit"
+      ],
+      "path": "./plugins/speckit-verify"
+    }
+  ]
+}

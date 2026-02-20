@@ -1,0 +1,10 @@
+{
+  "name": "iac-terraform",
+  "version": "1.0.0",
+  "description": "Terraform infrastructure as code by HashiCorp. Use for: (1) provisioning cloud infrastructure (AWS, GCP, Azure), (2) managing infrastructure state, (3) multi-environment deployments, (4) module development, (5) Terraform Cloud/Enterprise workflows. Triggers: terraform plan, terraform apply, provision infrastructure, IaC, infrastructure as code, HCP Terraform.",
+  "author": "MOlechowski",
+  "category": "iac",
+  "tags": [
+    "iac"
+  ]
+}

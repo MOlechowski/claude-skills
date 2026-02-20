@@ -1,0 +1,10 @@
+{
+  "name": "oci-skopeo",
+  "version": "1.0.0",
+  "description": "Container image operations without Docker daemon. Inspect, copy, delete, and sync images across registries. Use for: (1) inspecting remote images, (2) copying between registries, (3) mirroring images, (4) working without Docker installed. Triggers: skopeo, image inspect, copy image, registry mirror, docker-less, image manifest, image digest.",
+  "author": "MOlechowski",
+  "category": "containers",
+  "tags": [
+    "containers"
+  ]
+}

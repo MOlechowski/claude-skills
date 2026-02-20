@@ -1,0 +1,10 @@
+{
+  "name": "re-strace",
+  "version": "1.0.0",
+  "description": "Linux system call tracing with strace/ltrace: trace syscalls, library calls, filter by type, follow processes. Use for: dynamic analysis on Linux, understanding binary behavior, debugging, identifying file/network access. For macOS/BSD, use /re-dtrace instead. Triggers: strace, ltrace, trace syscalls linux, trace library calls, what syscalls, what files accessed.",
+  "author": "MOlechowski",
+  "category": "reverse-engineering",
+  "tags": [
+    "reverse-engineering"
+  ]
+}

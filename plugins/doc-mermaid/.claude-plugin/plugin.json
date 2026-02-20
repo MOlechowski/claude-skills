@@ -1,0 +1,10 @@
+{
+  "name": "doc-mermaid",
+  "version": "1.0.0",
+  "description": "Mermaid diagramming for code visualization and documentation. Use for: (1) creating diagrams from architecture descriptions, (2) visualizing code structure (class diagrams, flowcharts), (3) embedding diagrams in markdown/README files, (4) generating sequence diagrams for API flows, (5) rendering diagrams to PNG/SVG. Triggers: mermaid, diagram, flowchart, sequence diagram, class diagram, ER diagram, C4, Gantt, timeline, architecture diagram, visualize code.",
+  "author": "MOlechowski",
+  "category": "documentation",
+  "tags": [
+    "documentation"
+  ]
+}

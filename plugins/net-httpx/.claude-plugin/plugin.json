@@ -1,0 +1,10 @@
+{
+  "name": "net-httpx",
+  "version": "1.0.0",
+  "description": "Fast HTTP toolkit for probing, technology detection, and web reconnaissance. Use for: (1) HTTP probing, (2) technology fingerprinting, (3) status code filtering, (4) web server enumeration, (5) bug bounty reconnaissance. Triggers: httpx, http probe, web probe, technology detection, http toolkit, web recon, status codes.",
+  "author": "MOlechowski",
+  "category": "network",
+  "tags": [
+    "network"
+  ]
+}

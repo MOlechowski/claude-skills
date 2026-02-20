@@ -1,0 +1,10 @@
+{
+  "name": "sec-trivy",
+  "version": "1.0.0",
+  "description": "Comprehensive vulnerability and misconfiguration scanner for containers, filesystems, repos, and Kubernetes. Use for: (1) container image scanning, (2) filesystem vulnerability detection, (3) IaC misconfiguration scanning, (4) Kubernetes security audits, (5) SBOM vulnerability matching. Triggers: trivy, vulnerability scan, container security, CVE scan, image scan, misconfiguration, security scanner.",
+  "author": "MOlechowski",
+  "category": "security",
+  "tags": [
+    "security"
+  ]
+}

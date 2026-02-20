@@ -1,0 +1,10 @@
+{
+  "name": "sec-grype",
+  "version": "1.0.0",
+  "description": "Fast vulnerability scanner for container images and filesystems using SBOM input. Use for: (1) container vulnerability scanning, (2) SBOM vulnerability matching, (3) CI/CD security gates, (4) multi-format output. Triggers: grype, vulnerability scan, CVE scan, sbom scan, container vulnerabilities, security scan.",
+  "author": "MOlechowski",
+  "category": "security",
+  "tags": [
+    "security"
+  ]
+}

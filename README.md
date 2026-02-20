@@ -1,6 +1,6 @@
 # Claude Skills
 
-A curated collection of Claude Skills following Anthropic's [Agent Skills framework](https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills) for use with Claude Code, Claude.ai, and the Claude Agent SDK.
+A curated collection of Claude Skills distributed as a **plugin marketplace** for [Claude Code](https://docs.claude.com/en/docs/claude-code). Each skill is an individual plugin you can install, enable, and disable independently.
 
 ## What are Claude Skills?
 
@@ -8,95 +8,67 @@ Skills are organized directories containing instructions, scripts, and resources
 
 ### Key Features
 
-- **Modular Design**: Each skill is self-contained in its own directory
+- **Plugin Marketplace**: Install only the skills you need via `/plugin install`
+- **Granular Control**: Enable/disable individual skills with `/plugin enable/disable`
 - **Progressive Loading**: Metadata loads first, then full instructions, then additional resources on-demand
 - **Executable Code**: Skills can include Python scripts and other tools for deterministic operations
-- **Context Efficient**: Unbounded resources accessed via filesystem without bloating context
-- **Composable**: Package and share domain expertise across teams and projects
+- **Context Efficient**: Only installed and enabled skills consume context tokens
+
+## Installation
+
+### From Plugin Marketplace
+
+```bash
+# In Claude Code, install the marketplace
+/plugin install https://github.com/MOlechowski/claude-skills
+
+# List available plugins
+/plugin list
+
+# Enable specific skills
+/plugin enable aws-cli
+/plugin enable cli-jq
+
+# Disable skills you don't need
+/plugin disable re-ghidra
+```
+
+### Manual Installation
+
+```bash
+# Clone and copy a specific skill
+git clone https://github.com/MOlechowski/claude-skills.git
+cp -r claude-skills/plugins/aws-cli/skills/aws-cli ~/.claude/skills/
+```
 
 ## Repository Structure
 
 ```
 claude-skills/
-├── .claude/
-│   ├── skills/                # Skill directories
-│   │   ├── example-skill/    # Each skill in its own directory
-│   │   │   ├── SKILL.md      # Main skill definition with YAML frontmatter
-│   │   │   ├── forms.md      # Optional: Additional reference files
-│   │   │   └── script.py     # Optional: Executable code
-│   └── settings.local.json    # Local permissions configuration
-├── install.sh                 # Installation script
-├── CLAUDE.md                  # Repository guidance for Claude
-├── CHANGELOG.md               # Version history
-├── LICENSE                    # MIT license
-└── README.md                  # This file
+├── .claude-plugin/
+│   └── marketplace.json          # Marketplace catalog (94 plugins)
+├── plugins/
+│   ├── aws-cli/
+│   │   ├── .claude-plugin/
+│   │   │   └── plugin.json       # Plugin metadata
+│   │   └── skills/
+│   │       └── aws-cli/
+│   │           ├── SKILL.md      # Main skill definition
+│   │           └── references/   # Optional supporting files
+│   ├── aws-expert/
+│   │   └── ...
+│   └── ... (94 plugins total)
+├── scripts/                      # Build/migration scripts
+├── AGENTS.md                     # Agent instructions
+├── CLAUDE.md                     # Repository guidance
+├── CHANGELOG.md                  # Version history
+├── LICENSE                       # MIT license
+└── README.md                     # This file
 ```
 
-## Installation
+## Available Skills (94 total)
 
-### Quick Start
-
-```bash
-# Clone the repository
-git clone https://github.com/MOlechowski/claude-skills.git
-cd claude-skills
-
-# Run the installation script
-./install.sh
-```
-
-The installation script will:
-- Create `~/.claude/skills/` directory if it doesn't exist
-- Copy all skill directories to your user directory
-- Prompt for confirmation before overwriting existing skills
-- Provide a summary of installed skills
-
-### Manual Installation
-
-```bash
-# Copy skills to Claude's configuration directory
-cp -r .claude/skills/* ~/.claude/skills/
-```
-
-## Creating Skills
-
-### Skill Structure
-
-Each skill follows Anthropic's specification with a `SKILL.md` file containing YAML frontmatter:
-
-```markdown
----
-name: skill-name
-description: Clear description of what this skill does and when to use it
----
-
-# Skill Instructions
-
-Detailed instructions for Claude on how to use this skill...
-```
-
-### Required Frontmatter
-
-- **name**: Unique identifier for the skill
-- **description**: Concise explanation of the skill's purpose and usage
-
-### Optional Components
-
-Skills can include additional files in their directory:
-- Reference documents (`.md` files)
-- Python scripts (`.py` files)
-- Configuration files
-- Data files
-
-### Progressive Disclosure Pattern
-
-1. **Level 1 (Startup)**: Name and description load into system prompt
-2. **Level 2 (Activation)**: Full `SKILL.md` loads when skill is relevant
-3. **Level 3+ (On-Demand)**: Additional files load as needed
-
-## Available Skills (93 total)
-
-All skills use domain prefixes for discoverability. See [AGENTS.md](AGENTS.md) for the full naming convention.
+All skills use domain prefixes for discoverability. Each skill is its own plugin.
 
 ### aws- (AWS + LocalStack)
 | Skill | Description |
@@ -150,6 +122,7 @@ All skills use domain prefixes for discoverability. See [AGENTS.md](AGENTS.md) f
 | **doc-mermaid-render** | Render Mermaid diagrams to themed SVG or ASCII/Unicode art |
 | **doc-notesmd** | NotesMD CLI for Obsidian vault operations from the terminal |
 | **doc-obsidian** | Obsidian vault management combining search and CRUD |
+| **doc-pandoc** | Universal document conversion with Pandoc |
 | **doc-qmd** | Local on-device search engine for markdown knowledge bases |
 | **doc-readme** | Create, update, and validate README.md files |
 
@@ -249,29 +222,28 @@ All skills use domain prefixes for discoverability. See [AGENTS.md](AGENTS.md) f
 
 ## Usage
 
-Once installed, skills automatically become available to Claude Code. Claude will:
-1. See skill metadata at startup
-2. Activate appropriate skills based on context
-3. Load additional resources on-demand as needed
-
-### With Claude Code
+Once installed via the plugin marketplace, skills activate automatically based on context:
 
 ```bash
 # Skills work automatically in Claude Code sessions
 claude
 
 # Claude will recognize when to use skills based on your requests
+# Skills are namespaced: /claude-skills:aws-cli
 ```
 
-### With Claude Agent SDK
+### Managing Plugins
 
-```typescript
-import { ClaudeAgent } from '@anthropic-ai/claude-agent-sdk';
+```bash
+# List all installed plugins and their status
+/plugin list
 
-// Skills are automatically discovered from ~/.claude/skills/
-const agent = new ClaudeAgent({
-  // ... configuration
-});
+# Enable/disable individual skills
+/plugin enable go-expert
+/plugin disable re-ghidra
+
+# Check which skills are consuming context
+/context
 ```
 
 ## Skills vs Agents
@@ -285,79 +257,14 @@ const agent = new ClaudeAgent({
 | **Progressive Loading** | Yes (3 levels) | Partial |
 | **Status** | Production (since October 16, 2025) | Fully supported |
 
-## Compatibility
-
-**Supported Platforms:**
-- Claude.ai (web interface)
-- Claude Code (CLI tool)
-- Claude Agent SDK (programmatic access)
-- Claude Developer Platform (API)
-
-**Current Status:** Skills are fully supported in Claude Code 1.0+ (production-ready since October 16, 2025). This repository provides curated, reusable skills for common development workflows.
-
-## Development
-
-### Creating a New Skill
-
-1. Create a directory in `.claude/skills/` with your skill name
-2. Add a `SKILL.md` file with YAML frontmatter
-3. Include any additional files needed
-4. Test the skill locally
-5. Submit a pull request
-
-### Skill Guidelines
-
-- **Single Responsibility**: Each skill should focus on one domain
-- **Clear Description**: Make it obvious when the skill applies
-- **Self-Contained**: Bundle all necessary resources
-- **Documentation**: Include examples in the skill description
-- **Testing**: Verify the skill works as intended
-
-### Example Skill Template
-
-```markdown
----
-name: example-skill
-description: |
-  This skill helps with [specific task]. Use it when you need to [scenario].
-
-  Examples:
-  - "I need to [use case 1]" → Activate this skill
-  - "Help me with [use case 2]" → Activate this skill
----
-
-# Example Skill Instructions
-
-You are an expert in [domain]. Your role is to [primary function].
-
-## Core Capabilities
-
-1. **Capability 1**: Description
-2. **Capability 2**: Description
-3. **Capability 3**: Description
-
-## Usage Guidelines
-
-- When to use this skill: [conditions]
-- Key techniques: [approaches]
-- Output format: [expectations]
-
-## Additional Resources
-
-You can reference additional files in this skill directory:
-- `reference.md` - Additional documentation
-- `script.py` - Executable code for deterministic operations
-```
-
 ## Contributing
-
-Contributions are welcome! Please:
 
 1. Fork the repository
 2. Create a feature branch
-3. Add your skill following the guidelines
-4. Test thoroughly
-5. Submit a pull request with clear description
+3. Add your skill as a plugin in `plugins/<skill-name>/`
+4. Follow the structure: `.claude-plugin/plugin.json` + `skills/<name>/SKILL.md`
+5. Test thoroughly
+6. Submit a pull request
 
 ## Related Projects
 
@@ -366,13 +273,9 @@ Contributions are welcome! Please:
 ## Resources
 
 - [Anthropic: Equipping Agents for the Real World with Agent Skills](https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills)
-- [Claude Code Documentation](https://docs.claude.com/en/docs/claude-code)
-- [Claude Agent SDK](https://github.com/anthropics/claude-agent-sdk)
+- [Claude Code Plugins](https://code.claude.com/docs/en/plugins)
+- [Claude Code Plugin Marketplaces](https://code.claude.com/docs/en/plugin-marketplaces)
 
 ## License
 
 MIT License - see [LICENSE](LICENSE) file for details.
-
-## Acknowledgments
-
-This repository follows Anthropic's Agent Skills framework and is designed to complement Claude Code's capability system.

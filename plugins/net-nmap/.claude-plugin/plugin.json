@@ -1,0 +1,10 @@
+{
+  "name": "net-nmap",
+  "version": "1.0.0",
+  "description": "Network scanner for port discovery, service detection, and OS fingerprinting. Use for: (1) port scanning, (2) service enumeration, (3) vulnerability detection, (4) network mapping, (5) security auditing. Triggers: nmap, port scan, service detection, network scan, os fingerprint, security scan, network discovery.",
+  "author": "MOlechowski",
+  "category": "network",
+  "tags": [
+    "network"
+  ]
+}

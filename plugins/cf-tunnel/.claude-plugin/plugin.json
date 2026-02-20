@@ -1,0 +1,10 @@
+{
+  "name": "cf-tunnel",
+  "version": "1.0.0",
+  "description": "Cloudflare Tunnel CLI for exposing local services. Use for: quick tunnels (dev), named tunnels (prod), DNS routing, system service setup. Triggers: cloudflared, tunnel, expose localhost.",
+  "author": "MOlechowski",
+  "category": "cloudflare",
+  "tags": [
+    "cloudflare"
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "name": "aws-cli",
+  "version": "1.0.0",
+  "description": "AWS CLI v2 expertise: authentication (IAM, SSO, roles, profiles), 20+ service commands, output formatting (--query, jq), multi-account patterns, CI/CD integration. Use for: aws commands, credential management, scripting AWS operations, debugging API calls. Triggers: aws cli, aws configure, aws s3, aws ec2, assume-role, aws sso.",
+  "author": "MOlechowski",
+  "category": "aws",
+  "tags": [
+    "aws"
+  ]
+}

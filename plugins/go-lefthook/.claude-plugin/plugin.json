@@ -1,0 +1,10 @@
+{
+  "name": "go-lefthook",
+  "version": "1.0.0",
+  "description": "[Go] Git hooks manager for Go projects. Use for: pre-commit hooks, pre-push checks, CI quality gates. Triggers: lefthook, git hooks, pre-commit, pre-push.",
+  "author": "MOlechowski",
+  "category": "go",
+  "tags": [
+    "go"
+  ]
+}

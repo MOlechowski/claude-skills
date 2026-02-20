@@ -1,0 +1,10 @@
+{
+  "name": "dev-review-pr",
+  "version": "1.0.0",
+  "description": "Review git diffs, staged changes, and GitHub PRs. Change-focused analysis across six pillars (Security, Performance, Architecture, Error Handling, Testing, Maintainability) with numeric scoring 1-10. Supports GitHub PR review, staged changes, and arbitrary diffs. Use when: reviewing a PR, reviewing staged changes, reviewing a diff, pre-commit review. Triggers: review PR, review my changes, review the diff, review staged, review-pr, check my changes.",
+  "author": "MOlechowski",
+  "category": "dev",
+  "tags": [
+    "dev"
+  ]
+}

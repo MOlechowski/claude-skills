@@ -1,0 +1,10 @@
+{
+  "name": "sec-pip-audit",
+  "version": "1.0.0",
+  "description": "Python dependency vulnerability scanner. Audit installed packages and requirements files for known vulnerabilities. Use for: (1) scanning Python dependencies, (2) CI security checks, (3) SBOM generation, (4) finding vulnerable packages. Triggers: pip-audit, python vulnerabilities, dependency audit, pip security, requirements audit, pypi vulnerabilities.",
+  "author": "MOlechowski",
+  "category": "security",
+  "tags": [
+    "security"
+  ]
+}
