@@ -1,10 +1,5 @@
 {
   "name": "res-deep",
   "version": "1.0.0",
-  "description": "Iterative multi-round deep research with structured analysis frameworks. Use for: deep research on a topic, compare X vs Y, landscape analysis, evaluate options for a decision, deep dive into a technology, comprehensive research with cross-referencing. Triggers: deep research, compare, landscape, evaluate, deep dive, comprehensive research, which is better, should we use.",
-  "author": "MOlechowski",
-  "category": "research",
-  "tags": [
-    "research"
-  ]
+  "description": "Iterative multi-round deep research with structured analysis frameworks. Use for: deep research on a topic, compare X vs Y, landscape analysis, evaluate options for a decision, deep dive into a technology, comprehensive research with cross-referencing. Triggers: deep research, compare, landscape, evaluate, deep dive, comprehensive research, which is better, should we use."
 }

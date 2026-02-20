@@ -1,10 +1,5 @@
 {
   "name": "git-commit",
   "version": "1.0.0",
-  "description": "Generate Conventional Commits messages. Use when: creating commits, writing commit messages, committing changes. Triggers: /git-commit, commit this, commit my changes, finishing code changes.",
-  "author": "MOlechowski",
-  "category": "git",
-  "tags": [
-    "git"
-  ]
+  "description": "Generate Conventional Commits messages. Use when: creating commits, writing commit messages, committing changes. Triggers: /git-commit, commit this, commit my changes, finishing code changes."
 }

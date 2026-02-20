@@ -1,10 +1,5 @@
 {
   "name": "iac-tofu",
   "version": "1.0.0",
-  "description": "OpenTofu infrastructure as code. Use for: (1) provisioning cloud infrastructure (AWS, GCP, Azure), (2) managing infrastructure state, (3) multi-environment deployments, (4) module development. Triggers: tofu plan, tofu apply, provision infrastructure, IaC, infrastructure as code, OpenTofu.",
-  "author": "MOlechowski",
-  "category": "iac",
-  "tags": [
-    "iac"
-  ]
+  "description": "OpenTofu infrastructure as code. Use for: (1) provisioning cloud infrastructure (AWS, GCP, Azure), (2) managing infrastructure state, (3) multi-environment deployments, (4) module development. Triggers: tofu plan, tofu apply, provision infrastructure, IaC, infrastructure as code, OpenTofu."
 }

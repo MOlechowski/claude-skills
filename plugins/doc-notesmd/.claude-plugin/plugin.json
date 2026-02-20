@@ -1,10 +1,5 @@
 {
   "name": "doc-notesmd",
   "version": "1.0.0",
-  "description": "NotesMD CLI (notesmd-cli) for Obsidian vault operations from the terminal. Go-based, works WITHOUT Obsidian running. 12 commands: open, daily, search, search-content, create, move, delete, list, print, frontmatter, set-default, print-default. Features: automatic wikilink/markdown link updates on move/rename, YAML frontmatter CRUD, backlink discovery, daily note templates, content search with snippets. Use for: obsidian vault management, note creation, markdown notes automation, daily journaling, frontmatter editing, vault search, note refactoring. Triggers: notesmd, notesmd-cli, obsidian cli, vault notes, daily notes cli, markdown notes cli, note management.",
-  "author": "MOlechowski",
-  "category": "documentation",
-  "tags": [
-    "documentation"
-  ]
+  "description": "NotesMD CLI (notesmd-cli) for Obsidian vault operations from the terminal. Go-based, works WITHOUT Obsidian running. 12 commands: open, daily, search, search-content, create, move, delete, list, print, frontmatter, set-default, print-default. Features: automatic wikilink/markdown link updates on move/rename, YAML frontmatter CRUD, backlink discovery, daily note templates, content search with snippets. Use for: obsidian vault management, note creation, markdown notes automation, daily journaling, frontmatter editing, vault search, note refactoring. Triggers: notesmd, notesmd-cli, obsidian cli, vault notes, daily notes cli, markdown notes cli, note management."
 }

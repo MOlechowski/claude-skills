@@ -1,10 +1,5 @@
 {
   "name": "re-lldb",
   "version": "1.0.0",
-  "description": "LLDB debugger for macOS/iOS reverse engineering: breakpoints, memory examination, Python scripting, Xcode integration. Use for: debugging on macOS, iOS analysis, memory patching, macOS binary analysis. Triggers: lldb, macos debug, ios debug, lldb command, debug on mac, xcode debugger.",
-  "author": "MOlechowski",
-  "category": "reverse-engineering",
-  "tags": [
-    "reverse-engineering"
-  ]
+  "description": "LLDB debugger for macOS/iOS reverse engineering: breakpoints, memory examination, Python scripting, Xcode integration. Use for: debugging on macOS, iOS analysis, memory patching, macOS binary analysis. Triggers: lldb, macos debug, ios debug, lldb command, debug on mac, xcode debugger."
 }

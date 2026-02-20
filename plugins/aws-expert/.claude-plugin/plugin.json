@@ -1,11 +1,5 @@
 {
   "name": "aws-expert",
   "version": "1.0.0",
-  "description": "AWS architecture expertise: Well-Architected Framework (6 pillars), service selection, security (IAM, encryption, VPC), cost optimization (Reserved/Savings Plans/Spot), DR/HA patterns, observability. Use for: architecture decisions, choosing AWS services, security best practices, cost optimization, multi-region design. Triggers: aws architecture, well-architected, which aws service, aws security, aws cost, multi-region, disaster recovery.",
-  "author": "MOlechowski",
-  "category": "aws",
-  "tags": [
-    "aws",
-    "expert"
-  ]
+  "description": "AWS architecture expertise: Well-Architected Framework (6 pillars), service selection, security (IAM, encryption, VPC), cost optimization (Reserved/Savings Plans/Spot), DR/HA patterns, observability. Use for: architecture decisions, choosing AWS services, security best practices, cost optimization, multi-region design. Triggers: aws architecture, well-architected, which aws service, aws security, aws cost, multi-region, disaster recovery."
 }

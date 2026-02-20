@@ -1,11 +1,5 @@
 {
   "name": "re-python-expert",
   "version": "1.0.0",
-  "description": "Python reverse engineering expertise: bytecode analysis (dis, marshal, opcodes), decompilation (uncompyle6, pycdc, decompyle3), obfuscation analysis (PyArmor, pyobfuscate), frozen executable unpacking (PyInstaller, py2exe, cx_Freeze, Nuitka). Use for: .pyc/.pyo analysis, decompiling Python, unpacking frozen executables, analyzing obfuscated Python, CTF Python challenges. Triggers: python reverse, pyc analysis, decompile python, unpack pyinstaller, pyarmor, bytecode, python obfuscation, frozen python.",
-  "author": "MOlechowski",
-  "category": "reverse-engineering",
-  "tags": [
-    "reverse-engineering",
-    "expert"
-  ]
+  "description": "Python reverse engineering expertise: bytecode analysis (dis, marshal, opcodes), decompilation (uncompyle6, pycdc, decompyle3), obfuscation analysis (PyArmor, pyobfuscate), frozen executable unpacking (PyInstaller, py2exe, cx_Freeze, Nuitka). Use for: .pyc/.pyo analysis, decompiling Python, unpacking frozen executables, analyzing obfuscated Python, CTF Python challenges. Triggers: python reverse, pyc analysis, decompile python, unpack pyinstaller, pyarmor, bytecode, python obfuscation, frozen python."
 }

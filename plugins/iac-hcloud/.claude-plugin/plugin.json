@@ -1,10 +1,5 @@
 {
   "name": "iac-hcloud",
   "version": "1.0.0",
-  "description": "Hetzner Cloud CLI for managing cloud infrastructure. Use for: (1) server lifecycle (create, resize, rebuild, snapshots), (2) networking (VPCs, firewalls, floating IPs, load balancers), (3) storage (volumes), (4) multi-project context management. Triggers: hcloud, hetzner, hetzner cloud, hcloud server, hcloud network, hcloud firewall.",
-  "author": "MOlechowski",
-  "category": "iac",
-  "tags": [
-    "iac"
-  ]
+  "description": "Hetzner Cloud CLI for managing cloud infrastructure. Use for: (1) server lifecycle (create, resize, rebuild, snapshots), (2) networking (VPCs, firewalls, floating IPs, load balancers), (3) storage (volumes), (4) multi-project context management. Triggers: hcloud, hetzner, hetzner cloud, hcloud server, hcloud network, hcloud firewall."
 }

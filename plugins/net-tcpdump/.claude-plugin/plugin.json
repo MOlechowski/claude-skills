@@ -1,10 +1,5 @@
 {
   "name": "net-tcpdump",
   "version": "1.0.0",
-  "description": "Network packet capture and analysis tool. Capture, filter, and inspect network traffic. Use for: (1) packet capture, (2) network debugging, (3) traffic analysis, (4) protocol inspection, (5) pcap file creation. Triggers: tcpdump, packet capture, network traffic, pcap, sniff packets, network debug.",
-  "author": "MOlechowski",
-  "category": "network",
-  "tags": [
-    "network"
-  ]
+  "description": "Network packet capture and analysis tool. Capture, filter, and inspect network traffic. Use for: (1) packet capture, (2) network debugging, (3) traffic analysis, (4) protocol inspection, (5) pcap file creation. Triggers: tcpdump, packet capture, network traffic, pcap, sniff packets, network debug."
 }

@@ -1,10 +1,5 @@
 {
   "name": "re-objcopy",
   "version": "1.0.0",
-  "description": "Binary manipulation with objcopy: sections, symbols, format conversion. Use for: adding/removing sections, stripping symbols, converting binary formats, extracting sections. Triggers: objcopy, add section, remove section, strip symbols, binary conversion.",
-  "author": "MOlechowski",
-  "category": "reverse-engineering",
-  "tags": [
-    "reverse-engineering"
-  ]
+  "description": "Binary manipulation with objcopy: sections, symbols, format conversion. Use for: adding/removing sections, stripping symbols, converting binary formats, extracting sections. Triggers: objcopy, add section, remove section, strip symbols, binary conversion."
 }

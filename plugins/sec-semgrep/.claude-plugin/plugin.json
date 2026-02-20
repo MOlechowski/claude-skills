@@ -1,10 +1,5 @@
 {
   "name": "sec-semgrep",
   "version": "1.0.0",
-  "description": "Multi-language static analysis tool with security-focused rules. Pattern-based code scanning for vulnerabilities, bugs, and code standards. Use for: (1) security vulnerability detection, (2) custom rule enforcement, (3) multi-language SAST, (4) code review automation. Triggers: semgrep, static analysis, sast, security scan, code patterns, vulnerability scan, code review.",
-  "author": "MOlechowski",
-  "category": "security",
-  "tags": [
-    "security"
-  ]
+  "description": "Multi-language static analysis tool with security-focused rules. Pattern-based code scanning for vulnerabilities, bugs, and code standards. Use for: (1) security vulnerability detection, (2) custom rule enforcement, (3) multi-language SAST, (4) code review automation. Triggers: semgrep, static analysis, sast, security scan, code patterns, vulnerability scan, code review."
 }

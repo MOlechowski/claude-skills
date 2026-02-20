@@ -1,10 +1,5 @@
 {
   "name": "net-wireshark",
   "version": "1.0.0",
-  "description": "Network protocol analyzer with GUI and CLI (tshark). Deep packet inspection, protocol dissection, and traffic analysis. Use for: (1) protocol analysis, (2) network troubleshooting, (3) pcap analysis, (4) extracting data from captures, (5) statistics generation. Triggers: wireshark, tshark, protocol analyzer, pcap analysis, packet analysis, network forensics, display filter.",
-  "author": "MOlechowski",
-  "category": "network",
-  "tags": [
-    "network"
-  ]
+  "description": "Network protocol analyzer with GUI and CLI (tshark). Deep packet inspection, protocol dissection, and traffic analysis. Use for: (1) protocol analysis, (2) network troubleshooting, (3) pcap analysis, (4) extracting data from captures, (5) statistics generation. Triggers: wireshark, tshark, protocol analyzer, pcap analysis, packet analysis, network forensics, display filter."
 }

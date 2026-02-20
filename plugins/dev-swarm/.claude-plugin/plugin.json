@@ -1,10 +1,5 @@
 {
   "name": "dev-swarm",
   "version": "1.0.0",
-  "description": "Parallelize tasks using Claude agents. Use when: processing multiple files/items concurrently, running analysis across independent code modules, batch operations with cognitive tasks. Triggers: parallelize this task, run on all files in parallel, analyze modules concurrently, batch process these items.",
-  "author": "MOlechowski",
-  "category": "dev",
-  "tags": [
-    "dev"
-  ]
+  "description": "Parallelize tasks using Claude agents. Use when: processing multiple files/items concurrently, running analysis across independent code modules, batch operations with cognitive tasks. Triggers: parallelize this task, run on all files in parallel, analyze modules concurrently, batch process these items."
 }

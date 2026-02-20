@@ -1,10 +1,5 @@
 {
   "name": "dev-review",
   "version": "1.0.0",
-  "description": "Code review orchestrator. Auto-detects context and routes to the appropriate reviewer. Handles: file/directory review (static analysis), PR review (GitHub PRs), diff review (staged/unstaged changes). Scores code on six pillars with numeric 1-10 grading. Use when: reviewing code, code review, give me feedback. Triggers: review this, code review, review my code, review PR, review these files.",
-  "author": "MOlechowski",
-  "category": "dev",
-  "tags": [
-    "dev"
-  ]
+  "description": "Code review orchestrator. Auto-detects context and routes to the appropriate reviewer. Handles: file/directory review (static analysis), PR review (GitHub PRs), diff review (staged/unstaged changes). Scores code on six pillars with numeric 1-10 grading. Use when: reviewing code, code review, give me feedback. Triggers: review this, code review, review my code, review PR, review these files."
 }

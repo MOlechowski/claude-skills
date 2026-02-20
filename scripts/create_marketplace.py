@@ -43,14 +43,6 @@ def get_category(skill_name: str) -> str:
     return "general"
 
 
-def get_tags(skill_name: str, category: str) -> list[str]:
-    """Generate tags from skill name and category."""
-    tags = [category]
-    # Add "expert" tag for expertise skills
-    if skill_name.endswith("-expert"):
-        tags.append("expert")
-    return tags
-
 
 def parse_frontmatter(skill_md_path: Path) -> dict:
     """Extract YAML frontmatter fields from SKILL.md."""
@@ -72,31 +64,23 @@ def parse_frontmatter(skill_md_path: Path) -> dict:
 
 def create_plugin_json(skill_name: str, frontmatter: dict) -> dict:
     """Create plugin.json for a single skill."""
-    category = get_category(skill_name)
-    tags = get_tags(skill_name, category)
-
     return {
         "name": skill_name,
         "version": "1.0.0",
         "description": frontmatter.get("description", ""),
-        "author": "MOlechowski",
-        "category": category,
-        "tags": tags,
     }
 
 
 def create_marketplace_entry(skill_name: str, frontmatter: dict) -> dict:
     """Create a marketplace.json entry for one plugin."""
     category = get_category(skill_name)
-    tags = get_tags(skill_name, category)
 
     return {
         "name": skill_name,
         "description": frontmatter.get("description", ""),
-        "version": "1.0.0",
+        "source": f"./plugins/{skill_name}",
         "category": category,
-        "tags": tags,
-        "path": f"./plugins/{skill_name}",
+        "version": "1.0.0",
     }
 
 
@@ -170,10 +154,12 @@ def migrate(repo_root: Path, dry_run: bool = False) -> None:
     # Write marketplace.json
     marketplace = {
         "name": "claude-skills",
+        "version": "1.0.0",
         "description": "Curated collection of 90+ Claude Code skills for DevOps, security, reverse engineering, and development workflows",
-        "author": "MOlechowski",
-        "repository": "https://github.com/MOlechowski/claude-skills",
-        "pluginRoot": "./plugins",
+        "owner": {
+            "name": "MOlechowski",
+            "email": "michal@olechowski.cloud",
+        },
         "plugins": marketplace_entries,
     }
 

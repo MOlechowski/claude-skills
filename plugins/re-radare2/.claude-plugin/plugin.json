@@ -1,10 +1,5 @@
 {
   "name": "re-radare2",
   "version": "1.0.0",
-  "description": "radare2/rizin reverse engineering framework: disassembly, analysis, patching, debugging, scripting. Use for: binary analysis, instruction patching, debug sessions, scripting with r2pipe, visual mode navigation. Triggers: radare2, r2, rizin, r2 command, radare patching, r2pipe, r2 analysis.",
-  "author": "MOlechowski",
-  "category": "reverse-engineering",
-  "tags": [
-    "reverse-engineering"
-  ]
+  "description": "radare2/rizin reverse engineering framework: disassembly, analysis, patching, debugging, scripting. Use for: binary analysis, instruction patching, debug sessions, scripting with r2pipe, visual mode navigation. Triggers: radare2, r2, rizin, r2 command, radare patching, r2pipe, r2 analysis."
 }

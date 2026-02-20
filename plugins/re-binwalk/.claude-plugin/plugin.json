@@ -1,10 +1,5 @@
 {
   "name": "re-binwalk",
   "version": "1.0.0",
-  "description": "binwalk firmware analysis: signature scanning, entropy analysis, file extraction, embedded filesystem analysis. Use for: firmware reverse engineering, extracting embedded files, IoT analysis, finding hidden data, analyzing binary blobs. Triggers: binwalk, firmware analysis, extract firmware, find signatures, entropy analysis, embedded filesystem, IoT reversing.",
-  "author": "MOlechowski",
-  "category": "reverse-engineering",
-  "tags": [
-    "reverse-engineering"
-  ]
+  "description": "binwalk firmware analysis: signature scanning, entropy analysis, file extraction, embedded filesystem analysis. Use for: firmware reverse engineering, extracting embedded files, IoT analysis, finding hidden data, analyzing binary blobs. Triggers: binwalk, firmware analysis, extract firmware, find signatures, entropy analysis, embedded filesystem, IoT reversing."
 }

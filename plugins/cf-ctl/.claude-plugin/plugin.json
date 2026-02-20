@@ -1,10 +1,5 @@
 {
   "name": "cf-ctl",
   "version": "1.0.0",
-  "description": "Cloudflare infrastructure CLI. Use for: DNS records, firewall rules, zone management, cache purging. Triggers: flarectl, cloudflare dns, cloudflare firewall.",
-  "author": "MOlechowski",
-  "category": "cloudflare",
-  "tags": [
-    "cloudflare"
-  ]
+  "description": "Cloudflare infrastructure CLI. Use for: DNS records, firewall rules, zone management, cache purging. Triggers: flarectl, cloudflare dns, cloudflare firewall."
 }

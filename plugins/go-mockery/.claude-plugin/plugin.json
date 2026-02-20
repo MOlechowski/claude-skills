@@ -1,10 +1,5 @@
 {
   "name": "go-mockery",
   "version": "1.0.0",
-  "description": "[Go] Mock generation for interfaces using testify. Use for: generating mocks, test setup, interface mocking. Triggers: mockery, go mock, testify mock, mock generation.",
-  "author": "MOlechowski",
-  "category": "go",
-  "tags": [
-    "go"
-  ]
+  "description": "[Go] Mock generation for interfaces using testify. Use for: generating mocks, test setup, interface mocking. Triggers: mockery, go mock, testify mock, mock generation."
 }

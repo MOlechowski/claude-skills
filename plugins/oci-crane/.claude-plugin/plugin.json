@@ -1,10 +1,5 @@
 {
   "name": "oci-crane",
   "version": "1.0.0",
-  "description": "Container image manipulation tool for registries. Push, pull, copy, mutate, and inspect images. Use for: (1) image manipulation, (2) registry operations, (3) layer extraction, (4) manifest inspection, (5) tag management. Triggers: crane, image manipulation, registry push, image layers, manifest, gcrane, image copy.",
-  "author": "MOlechowski",
-  "category": "containers",
-  "tags": [
-    "containers"
-  ]
+  "description": "Container image manipulation tool for registries. Push, pull, copy, mutate, and inspect images. Use for: (1) image manipulation, (2) registry operations, (3) layer extraction, (4) manifest inspection, (5) tag management. Triggers: crane, image manipulation, registry push, image layers, manifest, gcrane, image copy."
 }

@@ -1,11 +1,5 @@
 {
   "name": "go-expert",
   "version": "1.0.0",
-  "description": "[Go] Language expertise: idiomatic patterns, project structure, concurrency (goroutines, channels, sync), error handling, testing strategies, generics, modules. Use for: Go architecture decisions, code review, project setup, idiomatic patterns. Delegates to: go-golangci-lint, go-delve, go-pprof, go-goreleaser. Triggers: golang, go code, idiomatic go, go project, go testing, go concurrency, goroutine, channel, go architecture.",
-  "author": "MOlechowski",
-  "category": "go",
-  "tags": [
-    "go",
-    "expert"
-  ]
+  "description": "[Go] Language expertise: idiomatic patterns, project structure, concurrency (goroutines, channels, sync), error handling, testing strategies, generics, modules. Use for: Go architecture decisions, code review, project setup, idiomatic patterns. Delegates to: go-golangci-lint, go-delve, go-pprof, go-goreleaser. Triggers: golang, go code, idiomatic go, go project, go testing, go concurrency, goroutine, channel, go architecture."
 }

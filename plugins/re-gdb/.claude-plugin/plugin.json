@@ -1,10 +1,5 @@
 {
   "name": "re-gdb",
   "version": "1.0.0",
-  "description": "GDB debugger for reverse engineering: breakpoints, memory examination, runtime patching, register manipulation, Python scripting, enhanced GDB (pwndbg/GEF/PEDA). Use for: debugging binaries, memory patching at runtime, setting breakpoints, examining program state. Triggers: gdb, debug binary, set breakpoint, examine memory, gdb script, pwndbg, GEF, PEDA.",
-  "author": "MOlechowski",
-  "category": "reverse-engineering",
-  "tags": [
-    "reverse-engineering"
-  ]
+  "description": "GDB debugger for reverse engineering: breakpoints, memory examination, runtime patching, register manipulation, Python scripting, enhanced GDB (pwndbg/GEF/PEDA). Use for: debugging binaries, memory patching at runtime, setting breakpoints, examining program state. Triggers: gdb, debug binary, set breakpoint, examine memory, gdb script, pwndbg, GEF, PEDA."
 }

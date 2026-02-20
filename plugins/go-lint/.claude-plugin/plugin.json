@@ -1,10 +1,5 @@
 {
   "name": "go-lint",
   "version": "1.0.0",
-  "description": "[Go] Linter aggregator: 100+ linters (staticcheck, gosec, errcheck, govet, revive, etc.), .golangci.yml configuration, CI integration. Use for: linting Go code, static analysis, code quality, security scanning. Triggers: golangci-lint, go lint, staticcheck, gosec, errcheck.",
-  "author": "MOlechowski",
-  "category": "go",
-  "tags": [
-    "go"
-  ]
+  "description": "[Go] Linter aggregator: 100+ linters (staticcheck, gosec, errcheck, govet, revive, etc.), .golangci.yml configuration, CI integration. Use for: linting Go code, static analysis, code quality, security scanning. Triggers: golangci-lint, go lint, staticcheck, gosec, errcheck."
 }
