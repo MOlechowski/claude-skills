@@ -36,6 +36,7 @@ This is a Claude Skills **plugin marketplace** following Anthropic's Agent Skill
 │   └── ... (94 plugins total)
 ├── .claude/
 │   ├── commands/                  # Speckit slash commands
+│   ├── skills/                    # Project-local skills (gitignored, see SKILLS.md)
 │   └── settings.local.json
 ├── scripts/
 │   ├── common.py
@@ -44,9 +45,14 @@ This is a Claude Skills **plugin marketplace** following Anthropic's Agent Skill
 ├── AGENTS.md                      # This file
 ├── CLAUDE.md                      # Reference pointer
 ├── README.md                      # Public documentation
+├── SKILLS.md                      # Recommended skills for this repo
 ├── CHANGELOG.md                   # Version history
 └── LICENSE                        # MIT license
 ```
+
+## Project Skills
+
+For working on this repository, install the recommended plugins listed in @SKILLS.md. Project-local skills installed to `.claude/skills/` are gitignored — each developer installs from the marketplace.
 
 ## Plugin Marketplace
 
