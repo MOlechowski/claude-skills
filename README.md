@@ -16,29 +16,51 @@ Skills are organized directories containing instructions, scripts, and resources
 
 ## Installation
 
-### From Plugin Marketplace
+### Quick Start
 
 ```bash
-# In Claude Code, install the marketplace
-/plugin install https://github.com/MOlechowski/claude-skills
+# 1. Add the marketplace (registers the catalog, installs nothing)
+/plugin marketplace add MOlechowski/claude-skills
 
-# List available plugins
-/plugin list
+# 2. Install individual skills
+/plugin install go-expert@claude-skills
+/plugin install cli-jq@claude-skills
 
-# Enable specific skills
-/plugin enable aws-cli
-/plugin enable cli-jq
+# 3. Or browse interactively
+/plugin
+# → Discover tab → browse by category → install what you need
+```
 
-# Disable skills you don't need
-/plugin disable re-ghidra
+### Managing Installed Skills
+
+```bash
+/plugin disable go-expert@claude-skills    # Temporarily disable (keeps installed)
+/plugin enable go-expert@claude-skills     # Re-enable
+/plugin uninstall go-expert@claude-skills  # Fully remove
+
+# Check what's consuming context tokens
+/context
 ```
 
 ### Manual Installation
 
 ```bash
-# Clone and copy a specific skill
+# Clone and copy a specific skill directly
 git clone https://github.com/MOlechowski/claude-skills.git
 cp -r claude-skills/plugins/aws-cli/skills/aws-cli ~/.claude/skills/
+```
+
+### Migrating from Global Skills
+
+If you previously installed all skills via `install.sh`:
+
+```bash
+# Remove old global skills (they load ~16k tokens at startup)
+rm -rf ~/.claude/skills/*
+
+# Add the marketplace and install only what you need
+/plugin marketplace add MOlechowski/claude-skills
+/plugin install go-expert@claude-skills
 ```
 
 ## Repository Structure
@@ -222,29 +244,88 @@ All skills use domain prefixes for discoverability. Each skill is its own plugin
 
 ## Usage
 
-Once installed via the plugin marketplace, skills activate automatically based on context:
+Once installed via the plugin marketplace, skills activate automatically based on context. Claude recognizes when to use skills from your requests — no manual invocation needed.
 
-```bash
-# Skills work automatically in Claude Code sessions
-claude
+## Per-Repo Plugin Configuration
 
-# Claude will recognize when to use skills based on your requests
-# Skills are namespaced: /claude-skills:aws-cli
+Control which skills are active per repository by committing `.claude/settings.json`. This is the recommended way to manage skills across teams and projects.
+
+### Settings Scopes
+
+| Scope | File | Committed? | Who sees it |
+|-------|------|-----------|------------|
+| **User** | `~/.claude/settings.json` | N/A | Only you, all repos |
+| **Project** | `.claude/settings.json` | Yes | All team members |
+| **Local** | `.claude/settings.local.json` | No (gitignored) | Only you, this repo |
+
+Precedence: Local > Project > User. A project can disable plugins the user has enabled globally, and local settings can override both.
+
+### Team Setup
+
+Commit this to your repo's `.claude/settings.json` so every developer gets the right skills:
+
+```json
+{
+  "extraKnownMarketplaces": {
+    "claude-skills": {
+      "source": {
+        "source": "github",
+        "repo": "MOlechowski/claude-skills"
+      }
+    }
+  },
+  "enabledPlugins": {
+    "go-expert@claude-skills": true,
+    "go-lint@claude-skills": true,
+    "go-task@claude-skills": true,
+    "git-commit@claude-skills": true,
+    "dev-review-pr@claude-skills": true
+  }
+}
 ```
 
-### Managing Plugins
+When a developer clones and trusts the repo, Claude Code prompts them to install the marketplace and pre-configures the listed plugins.
 
-```bash
-# List all installed plugins and their status
-/plugin list
+### Suggested Plugin Sets by Project Type
 
-# Enable/disable individual skills
-/plugin enable go-expert
-/plugin disable re-ghidra
+| Project Type | Recommended Plugins |
+|-------------|-------------------|
+| **Go service** | `go-expert`, `go-lint`, `go-task`, `go-delve`, `git-commit` |
+| **Python** | `sec-bandit`, `sec-pip-audit`, `cli-jq`, `dev-review-pr` |
+| **Infrastructure** | `iac-expert`, `iac-tofu`, `aws-expert`, `cf-expert` |
+| **Security audit** | `sec-trivy`, `sec-semgrep`, `sec-nuclei`, `re-expert` |
+| **Documentation** | `doc-readme`, `doc-mermaid`, `doc-confluence`, `doc-pandoc` |
 
-# Check which skills are consuming context
-/context
+### Personal Overrides
+
+Developers can add personal plugins in `.claude/settings.local.json` (gitignored) without affecting team config:
+
+```json
+{
+  "enabledPlugins": {
+    "res-deep@claude-skills": true,
+    "cli-fzf@claude-skills": true
+  }
+}
 ```
+
+### Enterprise Lockdown
+
+Organizations can restrict which marketplaces are allowed via managed settings at `/Library/Application Support/ClaudeCode/managed-settings.json` (macOS) or `/etc/claude-code/managed-settings.json` (Linux):
+
+```json
+{
+  "strictKnownMarketplaces": [
+    { "source": "github", "repo": "acme-corp/approved-plugins" }
+  ]
+}
+```
+
+### Known Limitations
+
+- `extraKnownMarketplaces` only triggers during interactive trust dialogs, not in CI/headless mode. Use `claude plugin marketplace add` explicitly in CI.
+- Installing a plugin doesn't always auto-add it to `enabledPlugins`. If a plugin appears installed but inactive, manually add it to `settings.json`.
+- No `defaultEnabled` flag in `marketplace.json` yet — commit `enabledPlugins` in project settings as a workaround.
 
 ## Skills vs Agents
 
