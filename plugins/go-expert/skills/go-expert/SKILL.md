@@ -25,6 +25,31 @@ Domain expertise for Go architecture, idiomatic patterns, and design decisions.
 | Vulnerability scan | `govulncheck` | Built-in since Go 1.20 |
 | Race detection | `go test -race` | Built-in |
 
+## Philosophy
+
+**Start with the standard library, add dependencies only when they block you.** Unlike ecosystems where reaching for a framework is step one, Go's stdlib and compiler-enforced conventions (`internal/` visibility) mean most production backends are built with minimal external dependencies.
+
+## HTTP Framework Decision Guide
+
+| Scenario | Use | Why |
+|----------|-----|-----|
+| New project, learning Go | `net/http` (stdlib) | Full control, no deps |
+| Need routing + middleware | Chi | stdlib-compatible, composable |
+| Rapid prototyping, REST API | Gin | Batteries-included, 48% market share |
+| Express.js-like DX | Fiber | Familiar syntax, fast |
+| Already have stdlib code | Chi | Drop-in compatible with `net/http` |
+
+## Database Layer Decision Guide
+
+| Scenario | Use | Why |
+|----------|-----|-----|
+| Know SQL, want type safety | sqlc | Code-gen from SQL, near-native perf |
+| PostgreSQL-specific | pgx | Fastest Postgres driver |
+| Quick prototyping | GORM | Full ORM, migrations, relations |
+| Existing `database/sql` code | sqlx | Thin wrapper, struct scanning |
+
+For detailed library examples see: [references/ecosystem.md](references/ecosystem.md)
+
 ## Idiomatic Go Principles
 
 ### Accept Interfaces, Return Structs
@@ -264,6 +289,16 @@ srv := NewServer(":8080",
 - Constructor with many optional parameters
 - Configuration that may grow over time
 - Avoiding boolean/config struct proliferation
+
+## Dependency Injection
+
+Manual constructor injection dominates production Go. Start manual, add a framework only when wiring becomes painful.
+
+| Approach | When | Example |
+|----------|------|---------|
+| Manual constructors | Default for all projects | `NewService(repo, logger)` |
+| [Wire](https://github.com/google/wire) | Large codebases, compile-time | Code generation, no runtime cost |
+| [uber-go/fx](https://github.com/uber-go/fx) | Large codebases, runtime | Reflection-based, less boilerplate |
 
 ## Package Design
 
