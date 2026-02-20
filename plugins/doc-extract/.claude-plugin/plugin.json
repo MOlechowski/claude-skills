@@ -1,0 +1,8 @@
+{
+  "name": "doc-extract",
+  "version": "1.0.0",
+  "description": "Document intelligence: extract structured text from PDFs, images, and documents using tiered OCR/extraction engines (MonkeyOCR MLX, Granite-Docling MLX, Docling, ocrmypdf, Tesseract, pypdf). Use for: (1) extracting text/markdown from PDFs (digital and scanned), (2) OCR on scanned PDFs and images (PNG, JPG, TIFF), (3) extracting content from DOCX, PPTX, HTML, (4) detecting available extraction engines, (5) document metadata and scanned-PDF detection. Triggers: extract text, OCR, pdf to markdown, extract from pdf, document extraction, scanned pdf, image to text, read document, doc-extract.",
+  "author": "MOlechowski",
+  "category": "documentation",
+  "tags": ["documentation", "ocr", "pdf", "extraction"]
+}
