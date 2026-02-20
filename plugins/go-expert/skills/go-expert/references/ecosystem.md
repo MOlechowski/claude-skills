@@ -1,6 +1,13 @@
 # Go Ecosystem
 
-Popular libraries by domain.
+Popular libraries by domain. Updated 2025-2026.
+
+## Ecosystem Stats (2025-2026)
+
+- **2.2M professional devs** use Go as primary language (2x from 5 years ago)
+- **TIOBE rank 7** (highest ever)
+- **70%+ use AI coding assistants** (higher than other languages)
+- **gorilla/mux declining** (17%, down from 36%) after 2023 archival
 
 ## Table of Contents
 - [Web Frameworks](#web-frameworks)
@@ -87,13 +94,15 @@ app.Listen(":8080")
 
 ### Comparison
 
-| Framework | Performance | Learning Curve | net/http Compatible |
-|-----------|-------------|----------------|---------------------|
-| net/http | Good | Low | Yes |
-| Gin | Excellent | Low | No |
-| Echo | Excellent | Low | No |
-| Chi | Good | Low | Yes |
-| Fiber | Excellent | Low | No (fasthttp) |
+| Framework | Market Share (2025) | Performance | net/http Compatible | Best For |
+|-----------|-------------------|-------------|---------------------|----------|
+| net/http | Most common | Good | Yes | Maximum control, minimal deps |
+| Gin | 48% of framework users | Excellent | No | REST APIs, middleware-heavy |
+| Echo | 16% | Excellent | No | Clean middleware, good docs |
+| Chi | ~12%, growing | Good | Yes | stdlib-compatible, composable |
+| Fiber | 11%, growing | Excellent | No (fasthttp) | Express.js-like DX |
+
+**Community consensus:** "Use stdlib until it blocks you. Then add the smallest possible dependency." Chi is the most recommended first step up from stdlib.
 
 ## CLI Tools
 
@@ -243,6 +252,18 @@ ti.Focus()
 
 ## Database
 
+### Selection Guide
+
+| Tool | Approach | Performance | Best For |
+|------|----------|-------------|----------|
+| **sqlc** | SQL-first, code generation | ~Equal to raw database/sql | Teams that know SQL, perf-critical |
+| **pgx** | PostgreSQL driver | Fastest Postgres driver | Direct Postgres access |
+| **GORM** | Full ORM | ~2x slower at scale | Rapid prototyping, complex relationships |
+| **sqlx** | Thin wrapper on database/sql | Near-native | Scanning into structs with raw SQL |
+| **ent** | Code-gen ORM | Good | Type-safe queries, graph traversal |
+
+**Trend (2025-2026):** sqlc gaining strong traction among experienced Go devs. "SQL-first" approach aligns with Go's explicit philosophy.
+
 ### database/sql (Standard)
 
 ```go
@@ -298,6 +319,26 @@ db.Create(&User{Name: "John"})
 ```
 
 **Best for:** Full ORM features, rapid development
+
+### sqlc
+
+```go
+// Write SQL, generate Go code
+// sqlc.yaml:
+// queries: ./query.sql
+// schema: ./schema.sql
+
+// query.sql:
+// -- name: GetUser :one
+// SELECT id, name, email FROM users WHERE id = $1;
+
+// Generated Go code:
+func (q *Queries) GetUser(ctx context.Context, id int64) (User, error) {
+    // ...type-safe implementation
+}
+```
+
+**Best for:** SQL-first development, type-safe generated code, performance-critical
 
 ### ent
 
