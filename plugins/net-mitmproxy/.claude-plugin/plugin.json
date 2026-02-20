@@ -1,10 +1,5 @@
 {
   "name": "net-mitmproxy",
   "version": "1.0.0",
-  "description": "Interactive HTTPS proxy for intercepting, inspecting, and modifying HTTP/HTTPS traffic. Use for: (1) API debugging, (2) traffic interception, (3) request/response modification, (4) SSL/TLS inspection, (5) automated testing. Triggers: mitmproxy, mitmdump, mitmweb, https proxy, intercept traffic, ssl interception, http proxy, api debugging.",
-  "author": "MOlechowski",
-  "category": "network",
-  "tags": [
-    "network"
-  ]
+  "description": "Interactive HTTPS proxy for intercepting, inspecting, and modifying HTTP/HTTPS traffic. Use for: (1) API debugging, (2) traffic interception, (3) request/response modification, (4) SSL/TLS inspection, (5) automated testing. Triggers: mitmproxy, mitmdump, mitmweb, https proxy, intercept traffic, ssl interception, http proxy, api debugging."
 }

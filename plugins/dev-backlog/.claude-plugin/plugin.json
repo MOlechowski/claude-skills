@@ -1,10 +1,5 @@
 {
   "name": "dev-backlog",
   "version": "1.0.0",
-  "description": "Markdown-native task manager and Kanban board for Git repositories. Use for: (1) managing project backlogs with tasks stored as markdown files, (2) spec-driven AI development with acceptance criteria and implementation plans, (3) Kanban board visualization (TUI and web), (4) task dependencies, milestones, and decision records. Triggers: backlog, kanban, task management, project backlog, acceptance criteria, definition of done.",
-  "author": "MOlechowski",
-  "category": "dev",
-  "tags": [
-    "dev"
-  ]
+  "description": "Markdown-native task manager and Kanban board for Git repositories. Use for: (1) managing project backlogs with tasks stored as markdown files, (2) spec-driven AI development with acceptance criteria and implementation plans, (3) Kanban board visualization (TUI and web), (4) task dependencies, milestones, and decision records. Triggers: backlog, kanban, task management, project backlog, acceptance criteria, definition of done."
 }

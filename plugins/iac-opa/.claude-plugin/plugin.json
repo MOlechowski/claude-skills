@@ -1,10 +1,5 @@
 {
   "name": "iac-opa",
   "version": "1.0.0",
-  "description": "Open Policy Agent CLI and Rego policy language. Use for: (1) evaluating Rego policies against data/input, (2) writing and testing Rego rules, (3) building and signing OPA bundles, (4) Kubernetes admission control with Gatekeeper, (5) Terraform plan validation, (6) CI/CD policy gates with conftest. Triggers: opa eval, opa test, rego, policy as code, open policy agent, gatekeeper, admission control, conftest.",
-  "author": "MOlechowski",
-  "category": "iac",
-  "tags": [
-    "iac"
-  ]
+  "description": "Open Policy Agent CLI and Rego policy language. Use for: (1) evaluating Rego policies against data/input, (2) writing and testing Rego rules, (3) building and signing OPA bundles, (4) Kubernetes admission control with Gatekeeper, (5) Terraform plan validation, (6) CI/CD policy gates with conftest. Triggers: opa eval, opa test, rego, policy as code, open policy agent, gatekeeper, admission control, conftest."
 }

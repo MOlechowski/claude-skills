@@ -1,10 +1,5 @@
 {
   "name": "doc-pandoc",
   "version": "1.0.0",
-  "description": "Universal document conversion with pandoc. Use for: (1) converting between formats (Markdown, HTML, DOCX, EPUB, LaTeX, RST, JATS, ODT, RTF, etc.), (2) batch converting multiple files, (3) generating standalone HTML with embedded CSS, (4) extracting text/markdown from DOCX/ODT/EPUB, (5) format-aware transformations with metadata, templates, and Lua filters. Triggers: pandoc, convert document, markdown to docx, docx to markdown, convert to html, convert to epub, document format.",
-  "author": "MOlechowski",
-  "category": "documentation",
-  "tags": [
-    "documentation"
-  ]
+  "description": "Universal document conversion with pandoc. Use for: (1) converting between formats (Markdown, HTML, DOCX, EPUB, LaTeX, RST, JATS, ODT, RTF, etc.), (2) batch converting multiple files, (3) generating standalone HTML with embedded CSS, (4) extracting text/markdown from DOCX/ODT/EPUB, (5) format-aware transformations with metadata, templates, and Lua filters. Triggers: pandoc, convert document, markdown to docx, docx to markdown, convert to html, convert to epub, document format."
 }

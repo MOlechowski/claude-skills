@@ -1,10 +1,5 @@
 {
   "name": "re-ghidra",
   "version": "1.0.0",
-  "description": "Ghidra reverse engineering tool: GUI workflows, Python/Java scripting, headless batch analysis, decompiler API, function analysis, cross-references. Use for: Ghidra scripting, automated analysis, batch processing binaries, decompilation. Triggers: ghidra script, ghidra headless, analyzeHeadless, ghidra python, ghidra api, use ghidra.",
-  "author": "MOlechowski",
-  "category": "reverse-engineering",
-  "tags": [
-    "reverse-engineering"
-  ]
+  "description": "Ghidra reverse engineering tool: GUI workflows, Python/Java scripting, headless batch analysis, decompiler API, function analysis, cross-references. Use for: Ghidra scripting, automated analysis, batch processing binaries, decompilation. Triggers: ghidra script, ghidra headless, analyzeHeadless, ghidra python, ghidra api, use ghidra."
 }

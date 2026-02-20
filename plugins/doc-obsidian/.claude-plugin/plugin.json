@@ -1,10 +1,5 @@
 {
   "name": "doc-obsidian",
   "version": "1.0.0",
-  "description": "Obsidian vault management combining qmd (search) and notesmd-cli (CRUD). No Obsidian app needed. Use for: (1) searching notes with keyword, semantic, or hybrid search, (2) creating/editing/moving/deleting notes, (3) daily journaling, (4) frontmatter management, (5) backlink discovery, (6) AI agent memory workflows, (7) vault automation and scripting. Triggers: obsidian vault, obsidian notes, vault search, note management, daily notes, agent memory, knowledge base, markdown vault.",
-  "author": "MOlechowski",
-  "category": "documentation",
-  "tags": [
-    "documentation"
-  ]
+  "description": "Obsidian vault management combining qmd (search) and notesmd-cli (CRUD). No Obsidian app needed. Use for: (1) searching notes with keyword, semantic, or hybrid search, (2) creating/editing/moving/deleting notes, (3) daily journaling, (4) frontmatter management, (5) backlink discovery, (6) AI agent memory workflows, (7) vault automation and scripting. Triggers: obsidian vault, obsidian notes, vault search, note management, daily notes, agent memory, knowledge base, markdown vault."
 }

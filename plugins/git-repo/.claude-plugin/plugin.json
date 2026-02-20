@@ -1,10 +1,5 @@
 {
   "name": "git-repo",
   "version": "1.0.0",
-  "description": "Create GitHub repositories via OpenTofu in the github-infrastructure repo. Clones repo to tmp, generates repository module (main.tf, outputs.tf, versions.tf), updates root main.tf and outputs.tf, runs fmt+validate, pushes and creates PR. Use when: (1) creating a new GitHub repo, (2) adding a repository to the org, (3) provisioning a new project/spec/infra/template repo. Triggers: new repo, create repository, add repo, github repository, provision repo.",
-  "author": "MOlechowski",
-  "category": "git",
-  "tags": [
-    "git"
-  ]
+  "description": "Create GitHub repositories via OpenTofu in the github-infrastructure repo. Clones repo to tmp, generates repository module (main.tf, outputs.tf, versions.tf), updates root main.tf and outputs.tf, runs fmt+validate, pushes and creates PR. Use when: (1) creating a new GitHub repo, (2) adding a repository to the org, (3) provisioning a new project/spec/infra/template repo. Triggers: new repo, create repository, add repo, github repository, provision repo."
 }

@@ -1,10 +1,5 @@
 {
   "name": "doc-mermaid-render",
   "version": "1.0.0",
-  "description": "Render Mermaid diagrams to themed SVG or ASCII/Unicode art using beautiful-mermaid. Zero DOM, pure TypeScript, 15 built-in editor themes, mono mode (2 colors). Use for: (1) rendering flowcharts, sequence, class, state, ER diagrams to SVG files, (2) rendering diagrams as ASCII/Unicode for terminal output, (3) themed diagram generation matching editor color schemes. Triggers: beautiful-mermaid, render mermaid, mermaid svg, mermaid ascii, themed diagram, diagram to image.",
-  "author": "MOlechowski",
-  "category": "documentation",
-  "tags": [
-    "documentation"
-  ]
+  "description": "Render Mermaid diagrams to themed SVG or ASCII/Unicode art using beautiful-mermaid. Zero DOM, pure TypeScript, 15 built-in editor themes, mono mode (2 colors). Use for: (1) rendering flowcharts, sequence, class, state, ER diagrams to SVG files, (2) rendering diagrams as ASCII/Unicode for terminal output, (3) themed diagram generation matching editor color schemes. Triggers: beautiful-mermaid, render mermaid, mermaid svg, mermaid ascii, themed diagram, diagram to image."
 }

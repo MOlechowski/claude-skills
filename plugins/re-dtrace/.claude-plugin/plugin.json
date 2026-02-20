@@ -1,10 +1,5 @@
 {
   "name": "re-dtrace",
   "version": "1.0.0",
-  "description": "DTrace dynamic tracing for macOS/BSD: D language scripts, dtruss (strace equivalent), syscall/file/network/process tracing, probe providers. Use for: macOS syscall tracing, performance analysis, debugging on macOS, understanding binary behavior. Triggers: dtrace, dtruss, macos strace, macos syscall trace, D language tracing, dynamic tracing macos.",
-  "author": "MOlechowski",
-  "category": "reverse-engineering",
-  "tags": [
-    "reverse-engineering"
-  ]
+  "description": "DTrace dynamic tracing for macOS/BSD: D language scripts, dtruss (strace equivalent), syscall/file/network/process tracing, probe providers. Use for: macOS syscall tracing, performance analysis, debugging on macOS, understanding binary behavior. Triggers: dtrace, dtruss, macos strace, macos syscall trace, D language tracing, dynamic tracing macos."
 }

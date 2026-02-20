@@ -1,10 +1,5 @@
 {
   "name": "go-task",
   "version": "1.0.0",
-  "description": "[Go] Task runner (taskfile.dev) for Go projects. YAML-based alternative to Make. Use for: build automation, development tasks, CI/CD scripts. Triggers: task, taskfile, go-task, task runner.",
-  "author": "MOlechowski",
-  "category": "go",
-  "tags": [
-    "go"
-  ]
+  "description": "[Go] Task runner (taskfile.dev) for Go projects. YAML-based alternative to Make. Use for: build automation, development tasks, CI/CD scripts. Triggers: task, taskfile, go-task, task runner."
 }

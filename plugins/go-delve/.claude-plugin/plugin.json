@@ -1,10 +1,5 @@
 {
   "name": "go-delve",
   "version": "1.0.0",
-  "description": "[Go] Debugger: breakpoints, stepping, variable inspection, goroutine debugging, remote debugging, core dumps. Use for: debugging Go programs, inspecting state, tracing execution. Triggers: dlv, delve, go debug, breakpoint, stepping.",
-  "author": "MOlechowski",
-  "category": "go",
-  "tags": [
-    "go"
-  ]
+  "description": "[Go] Debugger: breakpoints, stepping, variable inspection, goroutine debugging, remote debugging, core dumps. Use for: debugging Go programs, inspecting state, tracing execution. Triggers: dlv, delve, go debug, breakpoint, stepping."
 }

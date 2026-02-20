@@ -1,10 +1,5 @@
 {
   "name": "oci-syft",
   "version": "1.0.0",
-  "description": "SBOM generator for container images, filesystems, and archives. Supports SPDX, CycloneDX, and native formats. Use for: (1) generating software bill of materials, (2) cataloging dependencies, (3) license compliance, (4) supply chain security. Triggers: syft, sbom, software bill of materials, dependency catalog, cyclonedx, spdx, package list.",
-  "author": "MOlechowski",
-  "category": "containers",
-  "tags": [
-    "containers"
-  ]
+  "description": "SBOM generator for container images, filesystems, and archives. Supports SPDX, CycloneDX, and native formats. Use for: (1) generating software bill of materials, (2) cataloging dependencies, (3) license compliance, (4) supply chain security. Triggers: syft, sbom, software bill of materials, dependency catalog, cyclonedx, spdx, package list."
 }

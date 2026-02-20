@@ -1,10 +1,5 @@
 {
   "name": "cli-fastmod",
   "version": "1.0.0",
-  "description": "Large-scale codebase refactoring with interactive review. Use for: (1) bulk find-and-replace across 20+ files, (2) renaming classes/functions/variables codebase-wide, (3) updating API calls or import patterns systematically, (4) regex-based transformations with human oversight. Triggers: rename across codebase, bulk replace, update all occurrences, refactor imports.",
-  "author": "MOlechowski",
-  "category": "cli",
-  "tags": [
-    "cli"
-  ]
+  "description": "Large-scale codebase refactoring with interactive review. Use for: (1) bulk find-and-replace across 20+ files, (2) renaming classes/functions/variables codebase-wide, (3) updating API calls or import patterns systematically, (4) regex-based transformations with human oversight. Triggers: rename across codebase, bulk replace, update all occurrences, refactor imports."
 }

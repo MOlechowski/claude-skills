@@ -1,10 +1,5 @@
 {
   "name": "dev-rlm",
   "version": "1.0.0",
-  "description": "Recursive codebase analysis using the RLM paradigm. Use when: analyzing large codebases (100+ files), investigating cross-cutting patterns, recursive decomposition of complex code questions, scanning for issues across entire repos. Triggers: analyze this codebase, how does X work across the codebase, scan all files for Y, recursive analysis, RLM.",
-  "author": "MOlechowski",
-  "category": "dev",
-  "tags": [
-    "dev"
-  ]
+  "description": "Recursive codebase analysis using the RLM paradigm. Use when: analyzing large codebases (100+ files), investigating cross-cutting patterns, recursive decomposition of complex code questions, scanning for issues across entire repos. Triggers: analyze this codebase, how does X work across the codebase, scan all files for Y, recursive analysis, RLM."
 }

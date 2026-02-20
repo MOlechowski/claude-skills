@@ -1,11 +1,5 @@
 {
   "name": "aws-localstack-expert",
   "version": "1.0.0",
-  "description": "LocalStack architecture expertise: testing strategies, CI/CD integration, service parity, state management, Pro features. Use for: designing local AWS testing, choosing LocalStack vs real AWS, CI pipeline setup, debugging service differences, Cloud Pods strategy. Triggers: localstack architecture, local aws testing, localstack ci, localstack pro, aws emulation strategy, cloud pods.",
-  "author": "MOlechowski",
-  "category": "aws",
-  "tags": [
-    "aws",
-    "expert"
-  ]
+  "description": "LocalStack architecture expertise: testing strategies, CI/CD integration, service parity, state management, Pro features. Use for: designing local AWS testing, choosing LocalStack vs real AWS, CI pipeline setup, debugging service differences, Cloud Pods strategy. Triggers: localstack architecture, local aws testing, localstack ci, localstack pro, aws emulation strategy, cloud pods."
 }
