@@ -204,6 +204,13 @@
       "version": "1.0.0"
     },
     {
+      "name": "doc-book-reader",
+      "description": "Read entire books (PDF, EPUB, DOCX, TXT) and produce structured synthesis reports. Orchestrates doc-extract and doc-pandoc with parallel agent coordination for chapter-aware processing. Use for: (1) reading and summarizing entire books, (2) extracting key themes and arguments, (3) producing book reports with chapter summaries, (4) processing large PDFs with parallel agents. Triggers: read book, book report, summarize book, read entire pdf, book synthesis, book analysis, doc-book-reader.",
+      "source": "./plugins/doc-book-reader",
+      "category": "documentation",
+      "version": "1.0.0"
+    },
+    {
       "name": "doc-confluence",
       "description": "Create and update Confluence Data Center pages from Markdown. Use for: (1) creating documentation pages from README or specs, (2) updating existing wiki pages, (3) publishing code docs to Confluence, (4) embedding draw.io diagrams. Triggers: confluence, wiki page, create page, update docs, publish to confluence.",
       "source": "./plugins/doc-confluence",
