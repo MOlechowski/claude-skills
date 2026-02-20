@@ -1,0 +1,10 @@
+{
+  "name": "cf-wrangler",
+  "version": "1.0.0",
+  "description": "Cloudflare Workers/Pages CLI. Use for: deploying Workers, local dev, KV/D1/R2 storage, secrets management. Triggers: wrangler, workers, cloudflare pages, D1, KV.",
+  "author": "MOlechowski",
+  "category": "cloudflare",
+  "tags": [
+    "cloudflare"
+  ]
+}

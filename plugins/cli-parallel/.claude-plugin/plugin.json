@@ -1,0 +1,10 @@
+{
+  "name": "cli-parallel",
+  "version": "1.0.0",
+  "description": "Execute shell jobs in parallel using GNU parallel. Use when: batch processing files, running same command on multiple inputs, CPU-intensive transforms, replacing slow loops. Triggers: run in parallel, batch process, parallelize, convert all images, process files concurrently.",
+  "author": "MOlechowski",
+  "category": "cli",
+  "tags": [
+    "cli"
+  ]
+}

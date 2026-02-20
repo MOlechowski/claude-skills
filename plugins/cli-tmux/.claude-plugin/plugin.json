@@ -1,0 +1,10 @@
+{
+  "name": "cli-tmux",
+  "version": "1.0.0",
+  "description": "Terminal multiplexer for interactive and background commands. Use when: (1) script prompts for input (y/n, confirmation, passwords), (2) bash command fails due to interactive prompt, (3) long-running process needs monitoring, (4) need to send keystrokes to running program. Triggers: /cli-tmux, script needs input, answer prompts, y/n confirmation, command timed out waiting for input.",
+  "author": "MOlechowski",
+  "category": "cli",
+  "tags": [
+    "cli"
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "name": "res-trends",
+  "version": "1.0.0",
+  "description": "Research trending topics using Claude Code WebSearch + xAI (X/Twitter). Multi-source synthesis with merged results, engagement metrics, intent parsing, and prompt generation. Use for: trend analysis, topic research, social listening, market research, competitive intelligence, prompt discovery. Triggers: trending topics, what's trending, research trends, X trends, Twitter trends, Reddit discussions, social pulse, market trends, find prompts for.",
+  "author": "MOlechowski",
+  "category": "research",
+  "tags": [
+    "research"
+  ]
+}

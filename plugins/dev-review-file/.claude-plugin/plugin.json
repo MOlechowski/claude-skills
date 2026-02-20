@@ -1,0 +1,10 @@
+{
+  "name": "dev-review-file",
+  "version": "1.0.0",
+  "description": "Deep code review of files and directories. Analyzes quality across six pillars (Security, Performance, Architecture, Error Handling, Testing, Maintainability), scores 1-10 per category with harsh grading. Outputs structured report or inline comments. Use when: reviewing specific files, analyzing a module, code quality audit. Triggers: review this file, review this directory, analyze code quality, code audit, review-file.",
+  "author": "MOlechowski",
+  "category": "dev",
+  "tags": [
+    "dev"
+  ]
+}

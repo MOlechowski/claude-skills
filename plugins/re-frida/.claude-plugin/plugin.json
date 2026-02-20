@@ -1,0 +1,10 @@
+{
+  "name": "re-frida",
+  "version": "1.0.0",
+  "description": "Frida dynamic instrumentation: hooking, tracing, memory manipulation, iOS/Android analysis. Use for: runtime hooking, function interception, mobile app analysis, bypassing protections. Triggers: frida, frida-trace, hook function, instrument binary, mobile reversing, intercept calls, bypass ssl pinning.",
+  "author": "MOlechowski",
+  "category": "reverse-engineering",
+  "tags": [
+    "reverse-engineering"
+  ]
+}

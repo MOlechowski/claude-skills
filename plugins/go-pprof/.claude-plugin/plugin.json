@@ -1,0 +1,10 @@
+{
+  "name": "go-pprof",
+  "version": "1.0.0",
+  "description": "[Go] Profiler: CPU profiling, memory allocation, goroutine analysis, block profiling, mutex contention. Use for: performance optimization, memory leaks, goroutine leaks. Triggers: pprof, go profile, cpu profile, memory profile, heap profile.",
+  "author": "MOlechowski",
+  "category": "go",
+  "tags": [
+    "go"
+  ]
+}

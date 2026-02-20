@@ -1,0 +1,10 @@
+{
+  "name": "doc-readme",
+  "version": "1.0.0",
+  "description": "Create and update README.md files. Use when: (1) generating README for a new project, (2) updating stale README content, (3) validating README matches codebase. Triggers: README, readme, project documentation, create readme.",
+  "author": "MOlechowski",
+  "category": "documentation",
+  "tags": [
+    "documentation"
+  ]
+}

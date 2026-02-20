@@ -1,0 +1,10 @@
+{
+  "name": "re-pwntools",
+  "version": "1.0.0",
+  "description": "pwntools exploit development framework: process interaction, shellcode, ROP chains, ELF analysis, CTF utilities. Use for: CTF challenges, exploit development, binary interaction, shellcode crafting, format string exploits, buffer overflows. Triggers: pwntools, pwn, exploit script, ROP chain, shellcode, CTF pwn, buffer overflow exploit.",
+  "author": "MOlechowski",
+  "category": "reverse-engineering",
+  "tags": [
+    "reverse-engineering"
+  ]
+}

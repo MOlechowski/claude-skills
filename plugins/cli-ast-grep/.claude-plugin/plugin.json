@@ -1,0 +1,10 @@
+{
+  "name": "cli-ast-grep",
+  "version": "1.0.0",
+  "description": "Semantic code search and transformation using ASTs. Use for: (1) structural pattern matching beyond regex, (2) AST-based refactoring with metavariables, (3) finding architectural patterns or anti-patterns, (4) language-aware code transformations. Triggers: semantic search, find code patterns, refactor class/function structure, AST matching.",
+  "author": "MOlechowski",
+  "category": "cli",
+  "tags": [
+    "cli"
+  ]
+}

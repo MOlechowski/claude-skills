@@ -1,0 +1,11 @@
+{
+  "name": "re-docker-expert",
+  "version": "1.0.0",
+  "description": "Container forensics and security analysis expertise: layer analysis, secret extraction, build reconstruction, image forensics. Delegates to tool skills (dive, crane, skopeo, syft, trivy, grype). Use for: container security audits, finding secrets in images, reconstructing Dockerfiles, incident response on containers, supply chain analysis. Triggers: docker forensics, container analysis, image layers, find secrets in container, reconstruct dockerfile, container incident response, image security audit.",
+  "author": "MOlechowski",
+  "category": "reverse-engineering",
+  "tags": [
+    "reverse-engineering",
+    "expert"
+  ]
+}

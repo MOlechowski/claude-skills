@@ -1,0 +1,11 @@
+{
+  "name": "re-expert",
+  "version": "1.0.0",
+  "description": "Security analysis domain expertise: reverse engineering methodology, tool selection (Ghidra/radare2/GDB), binary formats (ELF/PE/Mach-O), vulnerability patterns, container security, network analysis, SAST, web security. Use for: choosing analysis approach, security auditing, container scanning, network forensics, vulnerability assessment, malware analysis. Triggers: reverse engineer, analyze binary, security audit, container security, network analysis, vulnerability scan, SAST, web security, CTF.",
+  "author": "MOlechowski",
+  "category": "reverse-engineering",
+  "tags": [
+    "reverse-engineering",
+    "expert"
+  ]
+}

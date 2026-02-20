@@ -1,0 +1,10 @@
+{
+  "name": "sec-nuclei",
+  "version": "1.0.0",
+  "description": "Fast vulnerability scanner based on templates. Scan for CVEs, misconfigurations, and security issues. Use for: (1) vulnerability scanning, (2) CVE detection, (3) security auditing, (4) custom security checks, (5) bug bounty reconnaissance. Triggers: nuclei, vulnerability scanner, cve scan, security templates, web vulnerability, bug bounty, security audit.",
+  "author": "MOlechowski",
+  "category": "security",
+  "tags": [
+    "security"
+  ]
+}

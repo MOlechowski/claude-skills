@@ -1,0 +1,10 @@
+{
+  "name": "go-release",
+  "version": "1.0.0",
+  "description": "[Go] Release automation: cross-compilation, archives, checksums, changelogs, GitHub/GitLab releases, Docker images, Homebrew. Use for: releasing Go binaries, CI/CD release pipelines. Triggers: goreleaser, go release, cross compile, release binary.",
+  "author": "MOlechowski",
+  "category": "go",
+  "tags": [
+    "go"
+  ]
+}

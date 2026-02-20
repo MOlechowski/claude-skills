@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
+- **Migrated to plugin marketplace architecture** — each of 94 skills is now an individual plugin in `plugins/<name>/` with its own `.claude-plugin/plugin.json`. Users install the marketplace once (`/plugin install`) then enable/disable individual skills. This replaces the flat `.claude/skills/` directory and `install.sh` that loaded all skills globally.
 - **Standardized all 93 skill names with domain prefixes** — 66 skills renamed across 14 namespaces (`aws-`, `cf-`, `cli-`, `dev-`, `doc-`, `git-`, `go-`, `iac-`, `net-`, `oci-`, `re-`, `res-`, `sec-`, `speckit-`). Key renames include:
   - Git workflow: `commit` → `git-commit`, `commit-pr` → `git-land`, `commit-pr-ci-merge` → `git-ship`
   - Cloudflare: `cloudflared` → `cf-tunnel`, `flarectl` → `cf-ctl`, `wrangler` → `cf-wrangler`

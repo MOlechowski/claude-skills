@@ -1,0 +1,10 @@
+{
+  "name": "re-xxd",
+  "version": "1.0.0",
+  "description": "Hex dump and binary patching with xxd/hexdump: view hex, patch bytes, reverse hex to binary. Use for: viewing binary in hex, patching specific bytes, hex editing workflow. Triggers: xxd, hexdump, hex dump, hex edit, patch bytes, view hex.",
+  "author": "MOlechowski",
+  "category": "reverse-engineering",
+  "tags": [
+    "reverse-engineering"
+  ]
+}

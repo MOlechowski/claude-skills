@@ -1,0 +1,10 @@
+{
+  "name": "dev-compress",
+  "version": "1.0.0",
+  "description": "Rewrite markdown for conciseness. Use when: optimizing markdown for LLM context, making documentation more concise, reducing token count in files. Triggers: optimize this file, make this more concise, reduce tokens, token optimize.",
+  "author": "MOlechowski",
+  "category": "dev",
+  "tags": [
+    "dev"
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "name": "re-patchelf",
+  "version": "1.0.0",
+  "description": "ELF binary modification with patchelf: RPATH, interpreter, dependencies, SONAME. Use for: changing library paths, modifying ELF dynamic info, fixing binary dependencies. Triggers: patchelf, rpath, runpath, change interpreter, elf modify, add needed.",
+  "author": "MOlechowski",
+  "category": "reverse-engineering",
+  "tags": [
+    "reverse-engineering"
+  ]
+}

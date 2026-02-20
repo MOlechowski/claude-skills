@@ -1,0 +1,10 @@
+{
+  "name": "git-pr-manage",
+  "version": "1.0.0",
+  "description": "Autonomous PR lifecycle management. Use when: checking PR status, merging PRs, processing reviews, handling CI failures. Triggers: /git-pr-manage, merge the PR, check PR status, is this ready to merge?, handle review comments.",
+  "author": "MOlechowski",
+  "category": "git",
+  "tags": [
+    "git"
+  ]
+}

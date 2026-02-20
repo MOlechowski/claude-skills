@@ -1,0 +1,10 @@
+{
+  "name": "git-land",
+  "version": "1.0.0",
+  "description": "Commit changes and create PR in one flow. Use when: committing and creating PR in one step, shipping a feature, pushing changes with PR. Triggers: /git-land, ship this, commit and PR, push and create PR.",
+  "author": "MOlechowski",
+  "category": "git",
+  "tags": [
+    "git"
+  ]
+}

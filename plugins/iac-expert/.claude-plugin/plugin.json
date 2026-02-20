@@ -1,0 +1,11 @@
+{
+  "name": "iac-expert",
+  "version": "1.0.0",
+  "description": "Infrastructure as Code architecture expertise: tool selection (Terraform, OpenTofu, Pulumi, CDK), module design, state management, multi-environment patterns, CI/CD pipelines, security (policy-as-code, secrets, compliance), testing strategies, cost optimization, platform engineering. Use for: architecture decisions, IAC tool selection, module composition, state strategies, enterprise patterns, migration planning. Triggers: iac architecture, infrastructure design, which iac tool, terraform vs pulumi, module structure, state management, platform engineering, iac patterns.",
+  "author": "MOlechowski",
+  "category": "iac",
+  "tags": [
+    "iac",
+    "expert"
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "name": "git-ship",
+  "version": "1.0.0",
+  "description": "Commit, create PR, and merge with CI skipped. Disables GitHub Actions workflows via API before push, re-enables after merge. Use when: shipping trivial changes (renames, typos, config), bypassing CI for safe changes, fast-tracking PRs. Triggers: /git-ship, commit and merge skip ci, ship without ci, fast merge.",
+  "author": "MOlechowski",
+  "category": "git",
+  "tags": [
+    "git"
+  ]
+}

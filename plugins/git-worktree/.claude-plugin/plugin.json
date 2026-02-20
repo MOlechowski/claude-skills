@@ -1,0 +1,10 @@
+{
+  "name": "git-worktree",
+  "version": "1.0.0",
+  "description": "Work on multiple branches simultaneously. Use when: working on multiple branches, reviewing PRs without stashing, parallel builds/tests, bare repo workflows. Triggers: /git-worktree, work on two branches, create worktree, set up bare repo.",
+  "author": "MOlechowski",
+  "category": "git",
+  "tags": [
+    "git"
+  ]
+}

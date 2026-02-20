@@ -1,0 +1,10 @@
+{
+  "name": "cli-fzf",
+  "version": "1.0.0",
+  "description": "Interactive fuzzy finder for files, history, and lists. Use for: (1) interactive file/directory selection, (2) command history search with preview, (3) building selection menus in scripts, (4) filtering large lists or command outputs. Triggers: fuzzy search, interactive selector, pick from list, file finder with preview.",
+  "author": "MOlechowski",
+  "category": "cli",
+  "tags": [
+    "cli"
+  ]
+}

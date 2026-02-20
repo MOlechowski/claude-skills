@@ -1,0 +1,10 @@
+{
+  "name": "res-web",
+  "version": "1.0.0",
+  "description": "Research topics with web search. Use when: researching a topic or concept, finding current information, answering factual questions, comparing options or technologies. Triggers: research [topic], find out about, what are the best practices for, research the latest on.",
+  "author": "MOlechowski",
+  "category": "research",
+  "tags": [
+    "research"
+  ]
+}

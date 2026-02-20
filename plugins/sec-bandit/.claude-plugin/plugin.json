@@ -1,0 +1,10 @@
+{
+  "name": "sec-bandit",
+  "version": "1.0.0",
+  "description": "Python security linter for finding common security issues. Static analysis for vulnerabilities, hardcoded secrets, and dangerous functions. Use for: (1) Python security auditing, (2) CI security gates, (3) finding hardcoded credentials, (4) detecting dangerous function calls. Triggers: bandit, python security, python linter, security audit python, find vulnerabilities python, hardcoded secrets.",
+  "author": "MOlechowski",
+  "category": "security",
+  "tags": [
+    "security"
+  ]
+}

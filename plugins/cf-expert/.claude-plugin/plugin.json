@@ -1,0 +1,11 @@
+{
+  "name": "cf-expert",
+  "version": "1.0.0",
+  "description": "Cloudflare infrastructure expertise: architecture decisions, Zero Trust, security (WAF, DDoS, bots), rate limiting, caching, Workers AI, MCP servers, IaC. Use for: choosing tunnel types, storage selection, Access policies, security configuration, Workers vs Pages, caching strategy, AI patterns, migration. Triggers: cloudflare architecture, zero trust, rate limiting, cloudflare terraform, WAF, DDoS, bot management, tiered cache, argo, workers ai, vectorize, cloudflare mcp.",
+  "author": "MOlechowski",
+  "category": "cloudflare",
+  "tags": [
+    "cloudflare",
+    "expert"
+  ]
+}
