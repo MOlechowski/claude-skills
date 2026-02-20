@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- **Standardized all 93 skill names with domain prefixes** — 66 skills renamed across 14 namespaces (`aws-`, `cf-`, `cli-`, `dev-`, `doc-`, `git-`, `go-`, `iac-`, `net-`, `oci-`, `re-`, `res-`, `sec-`, `speckit-`). Key renames include:
+  - Git workflow: `commit` → `git-commit`, `commit-pr` → `git-land`, `commit-pr-ci-merge` → `git-ship`
+  - Cloudflare: `cloudflared` → `cf-tunnel`, `flarectl` → `cf-ctl`, `wrangler` → `cf-wrangler`
+  - Go: `go-golangci-lint` → `go-lint`, `go-goreleaser` → `go-release`, `go-lang-expert` → `go-expert`
+  - AWS: `localstack` → `aws-localstack`, `awslocal` → `aws-local`
+  - IaC: `platform-architect` → `iac-expert`, `terraform` → `iac-terraform`
+  - Security: `bandit` → `sec-bandit`, `trivy` → `sec-trivy`, etc.
+  - All cross-references between skills updated (71+ integration points)
+
 ### Added
 - **hcloud skill** - Hetzner Cloud CLI for infrastructure management
   - Server lifecycle (create, resize, rebuild, snapshots, backups)

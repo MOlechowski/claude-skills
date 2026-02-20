@@ -8,7 +8,7 @@ description: "AWS architecture expertise: Well-Architected Framework (6 pillars)
 Domain expertise for AWS architecture decisions, service selection, and best practices.
 
 For CLI implementation, see: `aws-cli` skill.
-For IaC implementation, see: `terraform` or `tofu` skills.
+For IaC implementation, see: `iac-terraform` or `iac-tofu` skills.
 
 ## Well-Architected Framework Overview
 
@@ -336,7 +336,7 @@ For full catalog (64+ servers), configuration examples, and IAM permissions, see
 
 ### Web Tools
 
-Use `/web-research AWS pricing [service]` or:
+Use `/res-web AWS pricing [service]` or:
 - [AWS Pricing Calculator](https://calculator.aws/) - Interactive estimates
 - [AWS Cost Explorer](https://aws.amazon.com/aws-cost-management/aws-cost-explorer/) - Historical analysis
 
@@ -465,7 +465,7 @@ Client → API Gateway → Lambda → DynamoDB
 - Existing Terraform expertise
 - Need provider ecosystem (non-AWS resources)
 
-For Terraform patterns, see: `terraform` or `tofu` skills.
+For Terraform patterns, see: `iac-terraform` or `iac-tofu` skills.
 
 ## Common Anti-Patterns
 

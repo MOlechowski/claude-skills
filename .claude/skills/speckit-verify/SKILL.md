@@ -11,7 +11,7 @@ Verify specs match implementation. Implementation is truth; update spec on drift
 
 | Tier | Type | Method | Speed |
 |------|------|--------|-------|
-| 1 | Static | grep/ripgrep | Fast |
+| 1 | Static | grep/cli-ripgrep | Fast |
 | 2 | Pattern | ast-grep/semantic | Medium |
 | 3 | Analysis | LLM agents | Slow |
 

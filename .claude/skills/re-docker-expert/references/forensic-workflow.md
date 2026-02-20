@@ -105,7 +105,7 @@ for layer in $(cat extracted/manifest.json | jq -r '.[0].Layers[]'); do
 done
 
 # Note: This doesn't handle whiteout files properly
-# For accurate reconstruction, use dive or manual processing
+# For accurate reconstruction, use oci-dive or manual processing
 ```
 
 **Handle whiteout files:**

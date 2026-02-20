@@ -141,5 +141,5 @@ git worktree add -b feature ../feature main
 |-------|----------|
 | `'<branch>' is already checked out` | Branch in another worktree. Use different branch or remove other worktree |
 | `<path> already exists` | Path exists. Use `--force` or choose different path |
-| `not a valid object name` | Branch/commit doesn't exist. Fetch first: `git fetch origin` |
+| `not a valid object name` | Branch/git-commit doesn't exist. Fetch first: `git fetch origin` |
 | `fatal: <path> is locked` | Worktree is locked. Use `git worktree unlock <path>` |

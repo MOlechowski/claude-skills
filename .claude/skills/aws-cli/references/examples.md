@@ -727,7 +727,7 @@ docker run -d \
   --name localstack \
   -p 4566:4566 \
   -e SERVICES=s3,dynamodb,lambda,sqs \
-  localstack/localstack
+  localstack/aws-localstack
 
 # Wait for LocalStack to be ready
 echo "Waiting for LocalStack..."
