@@ -41,6 +41,10 @@ DEFAULT_MAX_WORDS = 15000
 DEFAULT_MAX_PAGES = 30
 WORDS_PER_PAGE_ESTIMATE = 300
 
+HEADING_MAX_LEN = 80
+NUMBERED_HEADING_MAX_LEN = 60
+
+# Standard chapter/part/section headings (max HEADING_MAX_LEN chars)
 CHAPTER_PATTERNS = [
     re.compile(r"^chapter\s+\d+", re.IGNORECASE),
     re.compile(r"^chapter\s+[IVXLCDM]+", re.IGNORECASE),
@@ -51,8 +55,16 @@ CHAPTER_PATTERNS = [
     re.compile(r"^PART\s+\d+"),
     re.compile(r"^PART\s+[IVXLCDM]+"),
     re.compile(r"^section\s+\d+", re.IGNORECASE),
+]
+
+# Numbered headings like "1. Introduction" — stricter max length
+# to avoid matching numbered list items in body text
+NUMBERED_PATTERNS = [
     re.compile(r"^\d+\.\s+[A-Z]"),
 ]
+
+# Bare "Chapter N" (no subtitle) — used to detect endnotes headings
+_BARE_CHAPTER_RE = re.compile(r"^chapter\s+\d+\s*$", re.IGNORECASE)
 
 
 # ---------------------------------------------------------------------------
@@ -145,6 +157,44 @@ def pdf_metadata(reader: PdfReader, filepath: Path) -> dict:
     }
 
 
+def _match_heading(line: str) -> bool:
+    """Check if a line matches any chapter heading pattern, respecting length limits."""
+    if len(line) <= HEADING_MAX_LEN:
+        for pattern in CHAPTER_PATTERNS:
+            if pattern.match(line):
+                return True
+    if len(line) <= NUMBERED_HEADING_MAX_LEN:
+        for pattern in NUMBERED_PATTERNS:
+            if pattern.match(line):
+                return True
+    return False
+
+
+def _filter_endnotes_chapters(chapters: list[dict], total_pages: int) -> list[dict]:
+    """Remove bare 'Chapter N' headings in the last 25% of the book (likely endnotes)."""
+    if not chapters:
+        return chapters
+
+    endnotes_threshold = total_pages * 0.75
+
+    # Only filter if the book has structural headings (Part/Section) earlier
+    has_structural = any(
+        ch["start_page"] < endnotes_threshold
+        and re.match(r"^(part|section)\s+", ch["title"], re.IGNORECASE)
+        for ch in chapters
+    )
+    if not has_structural:
+        return chapters
+
+    return [
+        ch for ch in chapters
+        if not (
+            ch["start_page"] > endnotes_threshold
+            and _BARE_CHAPTER_RE.match(ch["title"])
+        )
+    ]
+
+
 def pdf_detect_chapters(reader: PdfReader) -> list[dict]:
     """Detect chapter boundaries in a PDF by scanning page text for heading patterns."""
     chapters = []
@@ -155,24 +205,22 @@ def pdf_detect_chapters(reader: PdfReader) -> list[dict]:
         if not text:
             continue
 
-        # Check first few lines of each page for chapter headings
-        lines = text.split("\n")[:5]
+        # Check first 3 lines of each page (headings appear at page top)
+        lines = text.split("\n")[:3]
         for line in lines:
             line = line.strip()
             if not line:
                 continue
-            for pattern in CHAPTER_PATTERNS:
-                if pattern.match(line):
-                    # Clean up the title
-                    title = line[:120].strip()
-                    chapters.append({
-                        "title": title,
-                        "start_page": i + 1,  # 1-indexed
-                    })
-                    break
-            else:
-                continue
-            break  # Found a chapter on this page, move to next page
+            if _match_heading(line):
+                title = line[:120].strip()
+                chapters.append({
+                    "title": title,
+                    "start_page": i + 1,  # 1-indexed
+                })
+                break
+
+    # Remove likely endnotes headings
+    chapters = _filter_endnotes_chapters(chapters, pages)
 
     # Compute end pages
     for idx in range(len(chapters)):
@@ -238,14 +286,13 @@ def text_detect_chapters(text: str) -> list[dict]:
             })
             continue
 
-        # Plain text chapter patterns
-        for pattern in CHAPTER_PATTERNS:
-            if pattern.match(stripped):
-                chapters.append({
-                    "title": stripped[:120],
-                    "line_start": i,
-                })
-                break
+        # Plain text chapter patterns (with length filtering)
+        if _match_heading(stripped):
+            chapters.append({
+                "title": stripped[:120],
+                "line_start": i,
+            })
+            continue
 
     # Compute line ranges
     for idx in range(len(chapters)):
