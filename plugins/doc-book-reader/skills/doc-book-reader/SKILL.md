@@ -1,6 +1,6 @@
 ---
 name: doc-book-reader
-description: "Read entire books (PDF, EPUB, DOCX, TXT) and produce structured synthesis reports. Orchestrates doc-extract and doc-pandoc with parallel agent coordination for chapter-aware processing. Use for: (1) reading and summarizing entire books, (2) extracting key themes and arguments from long documents, (3) producing book reports with chapter summaries, (4) processing large PDFs with parallel agents. Triggers: read book, book report, summarize book, read entire pdf, book synthesis, book analysis, doc-book-reader."
+description: "Read entire books (PDF, EPUB, DOCX, TXT) and produce structured synthesis reports or convert to markdown. Orchestrates doc-extract and doc-pandoc with parallel agent coordination for chapter-aware processing. Use for: (1) reading and summarizing entire books, (2) extracting key themes and arguments from long documents, (3) producing book reports with chapter summaries, (4) processing large PDFs with parallel agents, (5) converting books to markdown files. Triggers: read book, book report, summarize book, read entire pdf, book synthesis, book analysis, convert book to markdown, book to md, doc-book-reader."
 ---
 
 # doc-book-reader
@@ -13,7 +13,7 @@ Orchestrates two helper skills with parallel agent coordination:
 
 | Component | Role |
 |-----------|------|
-| `book.py` (bundled script) | Format detection, metadata extraction, text extraction, chapter-aware chunking, manifest generation, JSON merging |
+| `book.py` (bundled script) | Format detection, metadata extraction, text extraction, book-to-markdown conversion, chapter-aware chunking, manifest generation, JSON merging |
 | doc-extract (sibling plugin) | PDF/image text extraction with tiered OCR engines |
 | doc-pandoc (sibling plugin) | EPUB/DOCX/HTML → Markdown via pandoc CLI |
 | Claude agents (Task tool) | Parallel chunk summarization |
@@ -27,7 +27,35 @@ Orchestrates two helper skills with parallel agent coordination:
 
 doc-extract is optional — book.py falls back to bundled pypdf for digital PDFs.
 
-## Workflow
+## Quick Convert: Book to Markdown
+
+For converting a book to markdown without synthesis, use the `extract` command directly:
+
+```bash
+# Single markdown file
+uv run scripts/book.py extract book.pdf --output book.md
+
+# One file per chapter
+uv run scripts/book.py extract book.pdf --split-chapters --output-dir ./chapters/
+
+# EPUB to markdown
+uv run scripts/book.py extract book.epub --output book.md
+
+# To stdout (pipe-friendly)
+uv run scripts/book.py extract book.pdf | head -100
+```
+
+| Flag | Purpose | Default |
+|------|---------|---------|
+| `--output`, `-o` | Output file path | stdout |
+| `--split-chapters` | Write one `.md` file per detected chapter | off |
+| `--output-dir` | Directory for `--split-chapters` output | current directory |
+
+When using `--split-chapters`, files are named `01-chapter-title.md`, `02-chapter-title.md`, etc.
+
+## Synthesis Workflow
+
+For full book analysis with agent-powered summarization:
 
 ```
 1. Detect  →  2. Chunk  →  3. Summarize (agents)  →  4. Merge  →  5. Synthesize  →  6. Report

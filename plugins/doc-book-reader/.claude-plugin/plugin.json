@@ -1,7 +1,7 @@
 {
   "name": "doc-book-reader",
   "version": "1.0.0",
-  "description": "Read entire books (PDF, EPUB, DOCX, TXT) and produce structured synthesis reports. Orchestrates doc-extract and doc-pandoc with parallel agent coordination for chapter-aware processing. Use for: (1) reading and summarizing entire books, (2) extracting key themes and arguments from long documents, (3) producing book reports with chapter summaries, (4) processing large PDFs with parallel agents. Triggers: read book, book report, summarize book, read entire pdf, book synthesis, book analysis, doc-book-reader.",
+  "description": "Read entire books (PDF, EPUB, DOCX, TXT) and produce structured synthesis reports or convert to markdown. Orchestrates doc-extract and doc-pandoc with parallel agent coordination for chapter-aware processing. Use for: (1) reading and summarizing entire books, (2) extracting key themes and arguments from long documents, (3) producing book reports with chapter summaries, (4) processing large PDFs with parallel agents, (5) converting books to markdown files. Triggers: read book, book report, summarize book, read entire pdf, book synthesis, book analysis, convert book to markdown, book to md, doc-book-reader.",
   "author": "MOlechowski",
   "category": "documentation",
   "tags": ["documentation", "books", "pdf", "epub", "synthesis"]

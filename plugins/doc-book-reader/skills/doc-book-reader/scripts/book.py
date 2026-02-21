@@ -815,19 +815,189 @@ def cmd_merge(args: argparse.Namespace) -> None:
 
 
 # ---------------------------------------------------------------------------
+# Subcommand: extract
+# ---------------------------------------------------------------------------
+
+
+def _slugify(text: str) -> str:
+    """Convert a chapter title to a filename-safe slug."""
+    text = text.lower().strip()
+    text = re.sub(r"[^\w\s-]", "", text)
+    text = re.sub(r"[\s_]+", "-", text)
+    text = re.sub(r"-+", "-", text)
+    return text.strip("-")[:80]
+
+
+def cmd_extract(args: argparse.Namespace) -> None:
+    """Extract full book text to markdown file(s)."""
+    filepath = Path(args.file).resolve()
+    if not filepath.is_file():
+        print(json.dumps({"error": f"File not found: {filepath}"}))
+        sys.exit(1)
+
+    fmt = detect_format(filepath)
+    extract_script = find_extract_script()
+    split_chapters = args.split_chapters
+
+    # --- Extract full text based on format ---
+
+    if fmt == "pdf":
+        reader = PdfReader(str(filepath))
+        meta = pdf_metadata(reader, filepath)
+        chapters = pdf_detect_chapters(reader)
+        pages = meta["pages"]
+
+        if split_chapters and chapters:
+            # Per-chapter extraction
+            chapter_texts = []
+            for ch in chapters:
+                sp, ep = ch["start_page"], ch["end_page"]
+                chunk_text = None
+
+                if extract_script:
+                    import tempfile
+                    with tempfile.NamedTemporaryFile(suffix=".md", delete=False) as tmp:
+                        tmp_path = Path(tmp.name)
+                    if pdf_extract_pages_docextract(extract_script, filepath, sp, ep, tmp_path):
+                        chunk_text = tmp_path.read_text(encoding="utf-8", errors="replace")
+                    tmp_path.unlink(missing_ok=True)
+
+                if chunk_text is None:
+                    chunk_text = pdf_extract_pages_pypdf(reader, sp - 1, ep - 1)
+
+                chapter_texts.append({
+                    "title": ch["title"],
+                    "text": chunk_text,
+                    "start_page": sp,
+                    "end_page": ep,
+                })
+            full_text = None  # not needed in split mode
+        else:
+            # Single file — extract all pages
+            if extract_script:
+                import tempfile
+                with tempfile.NamedTemporaryFile(suffix=".md", delete=False) as tmp:
+                    tmp_path = Path(tmp.name)
+                if pdf_extract_pages_docextract(extract_script, filepath, 1, pages, tmp_path):
+                    full_text = tmp_path.read_text(encoding="utf-8", errors="replace")
+                else:
+                    full_text = pdf_extract_pages_pypdf(reader, 0, pages - 1)
+                tmp_path.unlink(missing_ok=True)
+            else:
+                full_text = pdf_extract_pages_pypdf(reader, 0, pages - 1)
+            chapter_texts = None
+
+    elif fmt in ("epub", "docx", "odt", "rtf", "html"):
+        full_text = epub_to_markdown(filepath)
+        if full_text is None:
+            print(json.dumps({
+                "error": f"pandoc required for {fmt} but not found. Install: brew install pandoc",
+            }))
+            sys.exit(1)
+        meta = {"title": filepath.stem, "author": "Unknown", "pages": 0, "estimated_words": word_count(full_text)}
+        chapters = text_detect_chapters(full_text) if split_chapters else []
+        chapter_texts = None
+
+        if split_chapters and chapters:
+            lines = full_text.split("\n")
+            chapter_texts = []
+            for ch in chapters:
+                start = ch.get("line_start", 0)
+                end = ch.get("line_end", len(lines) - 1)
+                chapter_texts.append({
+                    "title": ch["title"],
+                    "text": "\n".join(lines[start : end + 1]),
+                })
+            full_text = None
+
+    elif fmt in ("txt", "markdown"):
+        full_text = filepath.read_text(encoding="utf-8", errors="replace")
+        meta = {"title": filepath.stem, "author": "Unknown", "pages": 0, "estimated_words": word_count(full_text)}
+        chapters = text_detect_chapters(full_text) if split_chapters else []
+        chapter_texts = None
+
+        if split_chapters and chapters:
+            lines = full_text.split("\n")
+            chapter_texts = []
+            for ch in chapters:
+                start = ch.get("line_start", 0)
+                end = ch.get("line_end", len(lines) - 1)
+                chapter_texts.append({
+                    "title": ch["title"],
+                    "text": "\n".join(lines[start : end + 1]),
+                })
+            full_text = None
+
+    else:
+        print(json.dumps({"error": f"Unsupported format: {fmt}"}))
+        sys.exit(1)
+
+    # --- Write output ---
+
+    if split_chapters and chapter_texts:
+        output_dir = Path(args.output_dir) if args.output_dir else Path.cwd()
+        output_dir.mkdir(parents=True, exist_ok=True)
+
+        files_written = []
+        for i, ch in enumerate(chapter_texts):
+            slug = _slugify(ch["title"]) or f"chapter-{i + 1}"
+            filename = f"{i + 1:02d}-{slug}.md"
+            out_path = output_dir / filename
+
+            # Add a heading with chapter title
+            content = f"# {ch['title']}\n\n{ch['text']}"
+            out_path.write_text(content, encoding="utf-8")
+            files_written.append({
+                "file": str(out_path),
+                "title": ch["title"],
+                "words": word_count(ch["text"]),
+            })
+
+        result = {
+            "mode": "split-chapters",
+            "output_dir": str(output_dir),
+            "chapters": len(files_written),
+            "total_words": sum(f["words"] for f in files_written),
+            "files": files_written,
+        }
+        print(json.dumps(result, indent=2))
+
+    else:
+        # Single file output
+        if args.output:
+            out_path = Path(args.output)
+            out_path.parent.mkdir(parents=True, exist_ok=True)
+            out_path.write_text(full_text, encoding="utf-8")
+        else:
+            # stdout
+            sys.stdout.write(full_text)
+            return
+
+        result = {
+            "mode": "single-file",
+            "output": str(out_path),
+            "words": word_count(full_text),
+            "format": fmt,
+            "title": meta.get("title", filepath.stem),
+        }
+        print(json.dumps(result, indent=2))
+
+
+# ---------------------------------------------------------------------------
 # CLI
 # ---------------------------------------------------------------------------
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Book reader: detect, chunk, and merge book content",
+        description="Book reader: detect, extract, chunk, and merge book content",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=textwrap.dedent("""\
             subcommands:
-              detect   Identify format, metadata, chapters, recommended strategy
-              chunk    Extract text and create chunk manifest
-              merge    Combine agent summary JSONs into synthesis input
+              detect    Identify format, metadata, chapters, recommended strategy
+              extract   Extract full book text to markdown
+              chunk     Extract text and create chunk manifest
+              merge     Combine agent summary JSONs into synthesis input
         """),
     )
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -858,6 +1028,26 @@ def main() -> None:
         help=f"Max pages per chunk for PDFs (default: {DEFAULT_MAX_PAGES})",
     )
 
+    # extract
+    p_extract = subparsers.add_parser("extract", help="Extract full book text to markdown")
+    p_extract.add_argument("file", help="Path to book file")
+    p_extract.add_argument(
+        "--output", "-o",
+        default=None,
+        help="Output file path (default: stdout)",
+    )
+    p_extract.add_argument(
+        "--split-chapters",
+        action="store_true",
+        default=False,
+        help="Write one .md file per chapter instead of a single file",
+    )
+    p_extract.add_argument(
+        "--output-dir",
+        default=None,
+        help="Output directory for --split-chapters (default: current directory)",
+    )
+
     # merge
     p_merge = subparsers.add_parser("merge", help="Merge agent summaries")
     p_merge.add_argument("session_dir", help="Path to session directory")
@@ -866,6 +1056,8 @@ def main() -> None:
 
     if args.command == "detect":
         cmd_detect(args)
+    elif args.command == "extract":
+        cmd_extract(args)
     elif args.command == "chunk":
         cmd_chunk(args)
     elif args.command == "merge":
