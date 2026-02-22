@@ -1,6 +1,6 @@
 ---
 name: doc-extract
-description: "Document intelligence: extract structured text from PDFs, images, and documents using tiered OCR/extraction engines (MonkeyOCR MLX, Granite-Docling MLX, Docling, ocrmypdf, Tesseract, pypdf). Use for: (1) extracting text/markdown from PDFs (digital and scanned), (2) OCR on scanned PDFs and images (PNG, JPG, TIFF), (3) extracting content from DOCX, PPTX, HTML, (4) detecting available extraction engines, (5) document metadata and scanned-PDF detection. Triggers: extract text, OCR, pdf to markdown, extract from pdf, document extraction, scanned pdf, image to text, read document, doc-extract."
+description: "Document intelligence: extract structured text from PDFs, images, and documents using tiered OCR/extraction engines (MonkeyOCR MLX, Granite-Docling MLX, Docling, PyMuPDF4LLM, ocrmypdf, Tesseract, pypdf). Use for: (1) extracting text/markdown from PDFs (digital and scanned), (2) OCR on scanned PDFs and images (PNG, JPG, TIFF), (3) extracting content from DOCX, PPTX, HTML, (4) detecting available extraction engines, (5) document metadata and scanned-PDF detection. Triggers: extract text, OCR, pdf to markdown, extract from pdf, document extraction, scanned pdf, image to text, read document, doc-extract."
 ---
 
 # doc-extract
@@ -9,16 +9,17 @@ Extract structured text from PDFs, images, and documents using the best availabl
 
 ## Architecture
 
-Six extraction engines, auto-selected by availability and document type:
+Seven extraction engines, auto-selected by availability and document type:
 
 | Tier | Engine | Strengths | Install |
 |------|--------|-----------|---------|
 | 1 | MonkeyOCR (MLX) | Best accuracy, Apple Silicon 3x speedup | `pip install mlx-vlm` + model download |
 | 2 | Granite-Docling-258M (MLX) | Smallest/fastest VLM, Apache 2.0 | `pip install mlx-vlm` + model download |
 | 3 | Docling (Python) | Good quality, MIT, 16+ formats | `pip install docling` |
-| 4 | ocrmypdf | CPU fallback for scanned PDFs | `brew install ocrmypdf` |
-| 5 | Tesseract | Basic fallback for images | `brew install tesseract` |
-| 6 | pypdf | Lightweight, digital PDFs only (no OCR) | Always available (bundled) |
+| 4 | PyMuPDF4LLM | Heading hierarchy via font-size detection, fast | `pip install pymupdf4llm` |
+| 5 | ocrmypdf | CPU fallback for scanned PDFs | `brew install ocrmypdf` |
+| 6 | Tesseract | Basic fallback for images | `brew install tesseract` |
+| 7 | pypdf | Lightweight, digital PDFs only (no OCR) | Always available (bundled) |
 
 Engine selection is automatic. The script detects what is installed and uses the highest-tier engine that supports the input format.
 
