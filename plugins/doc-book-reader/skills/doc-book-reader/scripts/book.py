@@ -163,12 +163,12 @@ def extract_text(filepath: Path) -> tuple[str, str, bool]:
 # ---------------------------------------------------------------------------
 
 
-def split_by_h1(text: str) -> list[dict]:
-    """Split markdown text on H1 headings.
+def _split_by_heading(text: str, pattern: str) -> list[dict]:
+    """Split markdown text on a heading pattern.
 
     Returns list of {"title": str, "text": str, "words": int}.
     """
-    parts = re.split(r"^(# .+)$", text, flags=re.MULTILINE)
+    parts = re.split(pattern, text, flags=re.MULTILINE)
     # parts = [preamble, "# Title1", content1, "# Title2", content2, ...]
     chapters = []
     i = 1
@@ -182,6 +182,21 @@ def split_by_h1(text: str) -> list[dict]:
         })
         i += 2
     return chapters
+
+
+def split_by_headings(text: str) -> list[dict]:
+    """Split markdown on the best heading level.
+
+    Tries H1 first. If that gives fewer than 3 results (common when
+    the book title is H1 and chapters are H2), falls back to H2.
+    """
+    h1 = _split_by_heading(text, r"^(# [^#].*)$")
+    if len(h1) >= 3:
+        return h1
+    h2 = _split_by_heading(text, r"^(## [^#].*)$")
+    if len(h2) >= 3:
+        return h2
+    return h1 or h2
 
 
 def split_by_patterns(text: str) -> list[dict]:
@@ -221,7 +236,7 @@ def split_chapters(text: str, structured: bool) -> list[dict]:
     If structured=False (pypdf flat text), split on Chapter/Part patterns.
     """
     if structured:
-        chapters = split_by_h1(text)
+        chapters = split_by_headings(text)
         if chapters:
             return chapters
 
@@ -230,9 +245,9 @@ def split_chapters(text: str, structured: bool) -> list[dict]:
     if chapters:
         return chapters
 
-    # Last resort: try H1 split even on unstructured text
+    # Last resort: try heading split even on unstructured text
     if not structured:
-        chapters = split_by_h1(text)
+        chapters = split_by_headings(text)
         if chapters:
             return chapters
 
