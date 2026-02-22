@@ -6,45 +6,37 @@
 # ]
 # ///
 """
-Book reader orchestration script for doc-book-reader skill.
+Book reader: extract and split books into markdown.
 
-Detects book format, extracts text via doc-extract/pandoc, splits into
-chapter-aware chunks, and merges agent summaries for synthesis.
+Uses doc-extract for structured extraction (heading hierarchy preserved),
+falls back to pypdf + pattern matching when doc-extract is unavailable.
 
 Usage:
-    uv run book.py detect <file>
-    uv run book.py chunk <file> [--strategy S] [--max-words N] [--max-pages N]
-    uv run book.py merge <session_dir>
-
-Dependencies are managed via PEP 723 (only pypdf is bundled).
-doc-extract and pandoc are called via subprocess when available.
+    uv run book.py extract <file> --output book.md
+    uv run book.py extract <file> --split --output-dir ./chapters/
+    uv run book.py chunk <file> [--max-words N]
 """
 
 import argparse
 import json
-import os
 import re
 import secrets
 import subprocess
 import sys
 import textwrap
-import time
 from pathlib import Path
 
-from pypdf import PdfReader
 
 # ---------------------------------------------------------------------------
 # Constants
 # ---------------------------------------------------------------------------
 
 DEFAULT_MAX_WORDS = 15000
-DEFAULT_MAX_PAGES = 30
-WORDS_PER_PAGE_ESTIMATE = 300
 
 HEADING_MAX_LEN = 80
 NUMBERED_HEADING_MAX_LEN = 60
 
-# Standard chapter/part/section headings (max HEADING_MAX_LEN chars)
+# Explicit chapter/part/section patterns — high confidence
 CHAPTER_PATTERNS = [
     re.compile(r"^chapter\s+\d+", re.IGNORECASE),
     re.compile(r"^chapter\s+[IVXLCDM]+", re.IGNORECASE),
@@ -55,16 +47,8 @@ CHAPTER_PATTERNS = [
     re.compile(r"^PART\s+\d+"),
     re.compile(r"^PART\s+[IVXLCDM]+"),
     re.compile(r"^section\s+\d+", re.IGNORECASE),
+    re.compile(r"^appendix\s+[A-Z]", re.IGNORECASE),
 ]
-
-# Numbered headings like "1. Introduction" — stricter max length
-# to avoid matching numbered list items in body text
-NUMBERED_PATTERNS = [
-    re.compile(r"^\d+\.\s+[A-Z]"),
-]
-
-# Bare "Chapter N" (no subtitle) — used to detect endnotes headings
-_BARE_CHAPTER_RE = re.compile(r"^chapter\s+\d+\s*$", re.IGNORECASE)
 
 
 # ---------------------------------------------------------------------------
@@ -77,11 +61,27 @@ def word_count(text: str) -> int:
     return len(text.split())
 
 
+def _slugify(text: str) -> str:
+    """Convert a chapter title to a filename-safe slug."""
+    text = text.lower().strip()
+    text = re.sub(r"[^\w\s-]", "", text)
+    text = re.sub(r"[\s_]+", "-", text)
+    text = re.sub(r"-+", "-", text)
+    return text.strip("-")[:80]
+
+
+def _match_heading(line: str) -> bool:
+    """Check if a line matches any chapter heading pattern."""
+    if len(line) <= HEADING_MAX_LEN:
+        for pattern in CHAPTER_PATTERNS:
+            if pattern.match(line):
+                return True
+    return False
+
+
 def find_extract_script() -> Path | None:
     """Locate doc-extract's extract.py relative to this script."""
     this_dir = Path(__file__).resolve().parent
-    # Installed plugin layout: plugins/doc-book-reader/skills/doc-book-reader/scripts/book.py
-    # Sibling plugin:          plugins/doc-extract/skills/doc-extract/scripts/extract.py
     candidates = [
         this_dir / ".." / ".." / ".." / ".." / "doc-extract" / "skills" / "doc-extract" / "scripts" / "extract.py",
         Path.home() / ".claude" / "skills" / "doc-extract" / "scripts" / "extract.py",
@@ -93,348 +93,267 @@ def find_extract_script() -> Path | None:
     return None
 
 
-def find_pandoc() -> str | None:
-    """Check if pandoc is available."""
-    try:
-        subprocess.run(
-            ["pandoc", "--version"],
-            capture_output=True,
-            timeout=10,
-        )
-        return "pandoc"
-    except (FileNotFoundError, subprocess.TimeoutExpired):
-        return None
-
-
-def detect_format(filepath: Path) -> str:
-    """Detect book format from extension."""
-    ext = filepath.suffix.lower()
-    fmt_map = {
-        ".pdf": "pdf",
-        ".epub": "epub",
-        ".docx": "docx",
-        ".doc": "docx",
-        ".txt": "txt",
-        ".md": "markdown",
-        ".markdown": "markdown",
-        ".html": "html",
-        ".htm": "html",
-        ".odt": "odt",
-        ".rtf": "rtf",
-    }
-    return fmt_map.get(ext, "unknown")
-
-
 # ---------------------------------------------------------------------------
-# PDF helpers
+# Extraction
 # ---------------------------------------------------------------------------
 
 
-def pdf_metadata(reader: PdfReader, filepath: Path) -> dict:
-    """Extract metadata from a PDF."""
-    meta = reader.metadata or {}
-    pages = len(reader.pages)
+def extract_via_doc_extract(filepath: Path) -> tuple[str, str]:
+    """Extract markdown from a file using doc-extract.
 
-    # Estimate words from first few pages
-    sample_pages = min(5, pages)
-    sample_words = 0
-    for i in range(sample_pages):
-        text = reader.pages[i].extract_text() or ""
-        sample_words += word_count(text)
+    Returns (markdown_text, engine_name).
+    Raises RuntimeError if doc-extract is not available or fails.
+    """
+    extract_script = find_extract_script()
+    if not extract_script:
+        raise RuntimeError("doc-extract not found")
 
-    avg_words_per_page = sample_words / max(sample_pages, 1)
-    estimated_words = int(avg_words_per_page * pages)
-
-    # Check if text is extractable
-    has_text = avg_words_per_page > 10
-
-    return {
-        "title": str(meta.get("/Title", filepath.stem)),
-        "author": str(meta.get("/Author", "Unknown")),
-        "pages": pages,
-        "estimated_words": estimated_words,
-        "has_text": has_text,
-    }
-
-
-def _match_heading(line: str) -> bool:
-    """Check if a line matches any chapter heading pattern, respecting length limits."""
-    if len(line) <= HEADING_MAX_LEN:
-        for pattern in CHAPTER_PATTERNS:
-            if pattern.match(line):
-                return True
-    if len(line) <= NUMBERED_HEADING_MAX_LEN:
-        for pattern in NUMBERED_PATTERNS:
-            if pattern.match(line):
-                return True
-    return False
-
-
-def _filter_endnotes_chapters(chapters: list[dict], total_pages: int) -> list[dict]:
-    """Remove bare 'Chapter N' headings in the last 25% of the book (likely endnotes)."""
-    if not chapters:
-        return chapters
-
-    endnotes_threshold = total_pages * 0.75
-
-    # Only filter if the book has structural headings (Part/Section) earlier
-    has_structural = any(
-        ch["start_page"] < endnotes_threshold
-        and re.match(r"^(part|section)\s+", ch["title"], re.IGNORECASE)
-        for ch in chapters
+    result = subprocess.run(
+        ["uv", "run", str(extract_script), "extract", str(filepath), "--format", "json"],
+        capture_output=True,
+        text=True,
+        timeout=600,
     )
-    if not has_structural:
-        return chapters
+    if result.returncode != 0:
+        raise RuntimeError(f"doc-extract failed: {result.stderr}")
 
-    return [
-        ch for ch in chapters
-        if not (
-            ch["start_page"] > endnotes_threshold
-            and _BARE_CHAPTER_RE.match(ch["title"])
-        )
-    ]
+    data = json.loads(result.stdout)
+    return data.get("content", ""), data.get("engine", "unknown")
 
 
-def pdf_detect_chapters(reader: PdfReader) -> list[dict]:
-    """Detect chapter boundaries in a PDF by scanning page text for heading patterns."""
-    chapters = []
-    pages = len(reader.pages)
+def extract_via_pypdf(filepath: Path) -> str:
+    """Extract flat text from a PDF using pypdf (no heading hierarchy)."""
+    from pypdf import PdfReader
 
-    for i in range(pages):
-        text = (reader.pages[i].extract_text() or "").strip()
-        if not text:
-            continue
-
-        # Check first 3 lines of each page (headings appear at page top)
-        lines = text.split("\n")[:3]
-        for line in lines:
-            line = line.strip()
-            if not line:
-                continue
-            if _match_heading(line):
-                title = line[:120].strip()
-                chapters.append({
-                    "title": title,
-                    "start_page": i + 1,  # 1-indexed
-                })
-                break
-
-    # Remove likely endnotes headings
-    chapters = _filter_endnotes_chapters(chapters, pages)
-
-    # Compute end pages
-    for idx in range(len(chapters)):
-        if idx + 1 < len(chapters):
-            chapters[idx]["end_page"] = chapters[idx + 1]["start_page"] - 1
-        else:
-            chapters[idx]["end_page"] = pages
-
-    return chapters
-
-
-def pdf_extract_pages_pypdf(reader: PdfReader, start: int, end: int) -> str:
-    """Extract text from a range of pages using pypdf (0-indexed start, inclusive end)."""
+    reader = PdfReader(str(filepath))
     parts = []
-    for i in range(start, min(end + 1, len(reader.pages))):
-        text = reader.pages[i].extract_text() or ""
+    for page in reader.pages:
+        text = page.extract_text() or ""
         if text.strip():
             parts.append(text)
     return "\n\n".join(parts)
 
 
-def pdf_extract_pages_docextract(
-    extract_script: Path, filepath: Path, start_page: int, end_page: int, output: Path
-) -> bool:
-    """Extract pages using doc-extract's extract.py. Pages are 1-indexed."""
+def extract_text(filepath: Path) -> tuple[str, str, bool]:
+    """Extract text from any supported file.
+
+    Returns (text, engine, structured) where structured=True means
+    the output has reliable heading hierarchy.
+    """
     try:
-        result = subprocess.run(
-            [
-                "uv", "run", str(extract_script),
-                "extract", str(filepath),
-                "--pages", f"{start_page}-{end_page}",
-                "--output", str(output),
-            ],
-            capture_output=True,
-            text=True,
-            timeout=120,
-        )
-        return result.returncode == 0 and output.is_file()
-    except (subprocess.TimeoutExpired, FileNotFoundError):
-        return False
+        text, engine = extract_via_doc_extract(filepath)
+        structured = engine != "pypdf"
+        return text, engine, structured
+    except (RuntimeError, subprocess.TimeoutExpired, FileNotFoundError):
+        pass
+
+    # Fallback: pypdf for PDFs, raw read for text files
+    ext = filepath.suffix.lower()
+    if ext == ".pdf":
+        return extract_via_pypdf(filepath), "pypdf", False
+    elif ext in (".txt", ".md", ".markdown"):
+        text = filepath.read_text(encoding="utf-8", errors="replace")
+        return text, "native", True
+    else:
+        raise RuntimeError(f"Unsupported format: {ext}. Install doc-extract for EPUB/DOCX support.")
 
 
 # ---------------------------------------------------------------------------
-# Text/Markdown helpers
+# Splitting
 # ---------------------------------------------------------------------------
 
 
-def text_detect_chapters(text: str) -> list[dict]:
-    """Detect chapters in plain text / markdown by heading patterns."""
+def split_by_h1(text: str) -> list[dict]:
+    """Split markdown text on H1 headings.
+
+    Returns list of {"title": str, "text": str, "words": int}.
+    """
+    parts = re.split(r"^(# .+)$", text, flags=re.MULTILINE)
+    # parts = [preamble, "# Title1", content1, "# Title2", content2, ...]
     chapters = []
-    lines = text.split("\n")
-
-    for i, line in enumerate(lines):
-        stripped = line.strip()
-        if not stripped:
-            continue
-
-        # Markdown headings
-        if stripped.startswith("# ") and not stripped.startswith("## "):
-            chapters.append({
-                "title": stripped.lstrip("# ").strip()[:120],
-                "line_start": i,
-            })
-            continue
-
-        # Plain text chapter patterns (with length filtering)
-        if _match_heading(stripped):
-            chapters.append({
-                "title": stripped[:120],
-                "line_start": i,
-            })
-            continue
-
-    # Compute line ranges
-    for idx in range(len(chapters)):
-        if idx + 1 < len(chapters):
-            chapters[idx]["line_end"] = chapters[idx + 1]["line_start"] - 1
-        else:
-            chapters[idx]["line_end"] = len(lines) - 1
-
+    i = 1
+    while i < len(parts) - 1:
+        title = parts[i].lstrip("# ").strip()
+        content = parts[i] + parts[i + 1]
+        chapters.append({
+            "title": title,
+            "text": content.strip(),
+            "words": word_count(content),
+        })
+        i += 2
     return chapters
 
 
-def epub_to_markdown(filepath: Path) -> str | None:
-    """Convert EPUB/DOCX to markdown via pandoc."""
-    if not find_pandoc():
-        return None
-    try:
-        result = subprocess.run(
-            ["pandoc", str(filepath), "-t", "markdown", "--wrap=none"],
-            capture_output=True,
-            text=True,
-            timeout=120,
-        )
-        if result.returncode == 0:
-            return result.stdout
-    except (subprocess.TimeoutExpired, FileNotFoundError):
-        pass
-    return None
+def split_by_patterns(text: str) -> list[dict]:
+    """Split text on Chapter/Part/Section/Appendix pattern matches.
+
+    Fallback for flat text without heading hierarchy (pypdf output).
+    Returns list of {"title": str, "text": str, "words": int}.
+    """
+    lines = text.split("\n")
+    boundaries = []
+
+    for i, line in enumerate(lines):
+        stripped = line.strip()
+        if stripped and _match_heading(stripped):
+            boundaries.append({"title": stripped[:120], "line": i})
+
+    if not boundaries:
+        return []
+
+    chapters = []
+    for idx, b in enumerate(boundaries):
+        start = b["line"]
+        end = boundaries[idx + 1]["line"] if idx + 1 < len(boundaries) else len(lines)
+        chunk = "\n".join(lines[start:end])
+        chapters.append({
+            "title": b["title"],
+            "text": chunk.strip(),
+            "words": word_count(chunk),
+        })
+    return chapters
+
+
+def split_chapters(text: str, structured: bool) -> list[dict]:
+    """Split text into chapters using the best available method.
+
+    If structured=True (doc-extract with heading-aware engine), split on H1.
+    If structured=False (pypdf flat text), split on Chapter/Part patterns.
+    """
+    if structured:
+        chapters = split_by_h1(text)
+        if chapters:
+            return chapters
+
+    # Fallback to pattern matching
+    chapters = split_by_patterns(text)
+    if chapters:
+        return chapters
+
+    # Last resort: try H1 split even on unstructured text
+    if not structured:
+        chapters = split_by_h1(text)
+        if chapters:
+            return chapters
+
+    return []
+
+
+def chunk_by_word_limit(text: str, chapters: list[dict], max_words: int) -> list[dict]:
+    """Split text into chunks respecting chapter boundaries and word limits.
+
+    Returns list of {"id": int, "label": str, "text": str, "word_count": int}.
+    """
+    if not chapters:
+        # No chapters — split by word count
+        return _split_by_words(text, max_words)
+
+    chunks = []
+    for ch in chapters:
+        if ch["words"] <= max_words:
+            chunks.append({
+                "id": len(chunks),
+                "label": ch["title"],
+                "text": ch["text"],
+                "word_count": ch["words"],
+            })
+        else:
+            # Oversized chapter — sub-split
+            sub = _split_by_words(ch["text"], max_words)
+            for i, s in enumerate(sub):
+                s["label"] = f"{ch['title']} (part {i + 1}/{len(sub)})"
+                s["id"] = len(chunks)
+                chunks.append(s)
+    return chunks
+
+
+def _split_by_words(text: str, max_words: int) -> list[dict]:
+    """Split text into fixed-size word-count chunks."""
+    words = text.split()
+    chunks = []
+    idx = 0
+    while idx < len(words):
+        chunk_words = words[idx : idx + max_words]
+        chunks.append({
+            "id": len(chunks),
+            "label": f"Chunk {len(chunks) + 1}",
+            "text": " ".join(chunk_words),
+            "word_count": len(chunk_words),
+        })
+        idx += max_words
+    return chunks
 
 
 # ---------------------------------------------------------------------------
-# Strategy selection
+# Subcommand: extract
 # ---------------------------------------------------------------------------
 
 
-def recommend_strategy(pages: int, words: int) -> str:
-    """Recommend processing strategy based on document size."""
-    if pages <= 10 or words <= 5000:
-        return "direct"
-    if pages <= 50 or words <= 25000:
-        return "sequential"
-    if pages <= 450 or words <= 225000:
-        return "map-reduce"
-    return "two-tier"
-
-
-# ---------------------------------------------------------------------------
-# Subcommand: detect
-# ---------------------------------------------------------------------------
-
-
-def cmd_detect(args: argparse.Namespace) -> None:
-    """Detect format, metadata, chapters, and recommended strategy."""
+def cmd_extract(args: argparse.Namespace) -> None:
+    """Extract book text to markdown file(s)."""
     filepath = Path(args.file).resolve()
     if not filepath.is_file():
         print(json.dumps({"error": f"File not found: {filepath}"}))
         sys.exit(1)
 
-    fmt = detect_format(filepath)
+    text, engine, structured = extract_text(filepath)
 
-    if fmt == "pdf":
-        reader = PdfReader(str(filepath))
-        meta = pdf_metadata(reader, filepath)
-        chapters = pdf_detect_chapters(reader)
-        strategy = recommend_strategy(meta["pages"], meta["estimated_words"])
+    if args.split:
+        chapters = split_chapters(text, structured)
 
-        result = {
-            "file": str(filepath),
-            "format": fmt,
-            "title": meta["title"],
-            "author": meta["author"],
-            "pages": meta["pages"],
-            "estimated_words": meta["estimated_words"],
-            "has_text": meta["has_text"],
-            "chapters": chapters,
-            "chapter_count": len(chapters),
-            "recommended_strategy": strategy,
-            "extract_script_available": find_extract_script() is not None,
-            "pandoc_available": find_pandoc() is not None,
-        }
-
-    elif fmt in ("epub", "docx", "odt", "rtf", "html"):
-        text = epub_to_markdown(filepath)
-        if text is None:
+        if not chapters:
             print(json.dumps({
-                "error": f"pandoc required for {fmt} format but not found. Install: brew install pandoc",
-                "file": str(filepath),
-                "format": fmt,
+                "error": "No chapters detected. Use without --split for single file output.",
+                "engine": engine,
+                "structured": structured,
             }))
             sys.exit(1)
 
-        words = word_count(text)
-        chapters = text_detect_chapters(text)
-        # Estimate pages from word count
-        est_pages = max(1, words // WORDS_PER_PAGE_ESTIMATE)
-        strategy = recommend_strategy(est_pages, words)
+        output_dir = Path(args.output_dir) if args.output_dir else Path.cwd()
+        output_dir.mkdir(parents=True, exist_ok=True)
+
+        files_written = []
+        for i, ch in enumerate(chapters):
+            slug = _slugify(ch["title"]) or f"chapter-{i + 1}"
+            filename = f"{i + 1:02d}-{slug}.md"
+            out_path = output_dir / filename
+
+            content = f"# {ch['title']}\n\n{ch['text']}" if not ch["text"].startswith("# ") else ch["text"]
+            out_path.write_text(content, encoding="utf-8")
+            files_written.append({
+                "file": str(out_path),
+                "title": ch["title"],
+                "words": ch["words"],
+            })
 
         result = {
-            "file": str(filepath),
-            "format": fmt,
-            "title": filepath.stem,
-            "author": "Unknown",
-            "pages": est_pages,
-            "estimated_words": words,
-            "has_text": True,
-            "chapters": chapters,
-            "chapter_count": len(chapters),
-            "recommended_strategy": strategy,
-            "extract_script_available": find_extract_script() is not None,
-            "pandoc_available": True,
+            "mode": "split-chapters",
+            "output_dir": str(output_dir),
+            "chapters": len(files_written),
+            "total_words": sum(f["words"] for f in files_written),
+            "engine": engine,
+            "structured": structured,
+            "files": files_written,
         }
-
-    elif fmt in ("txt", "markdown"):
-        text = filepath.read_text(encoding="utf-8", errors="replace")
-        words = word_count(text)
-        chapters = text_detect_chapters(text)
-        est_pages = max(1, words // WORDS_PER_PAGE_ESTIMATE)
-        strategy = recommend_strategy(est_pages, words)
-
-        result = {
-            "file": str(filepath),
-            "format": fmt,
-            "title": filepath.stem,
-            "author": "Unknown",
-            "pages": est_pages,
-            "estimated_words": words,
-            "has_text": True,
-            "chapters": chapters,
-            "chapter_count": len(chapters),
-            "recommended_strategy": strategy,
-            "extract_script_available": find_extract_script() is not None,
-            "pandoc_available": find_pandoc() is not None,
-        }
+        print(json.dumps(result, indent=2))
 
     else:
-        print(json.dumps({
-            "error": f"Unsupported format: {fmt} ({filepath.suffix})",
-            "file": str(filepath),
-            "format": fmt,
-        }))
-        sys.exit(1)
+        if args.output:
+            out_path = Path(args.output)
+            out_path.parent.mkdir(parents=True, exist_ok=True)
+            out_path.write_text(text, encoding="utf-8")
+        else:
+            sys.stdout.write(text)
+            return
 
-    print(json.dumps(result, indent=2))
+        result = {
+            "mode": "single-file",
+            "output": str(out_path),
+            "words": word_count(text),
+            "engine": engine,
+            "structured": structured,
+        }
+        print(json.dumps(result, indent=2))
 
 
 # ---------------------------------------------------------------------------
@@ -442,260 +361,44 @@ def cmd_detect(args: argparse.Namespace) -> None:
 # ---------------------------------------------------------------------------
 
 
-def split_text_by_chapters(
-    text: str, chapters: list[dict], max_words: int
-) -> list[dict]:
-    """Split text into chunks following chapter boundaries."""
-    lines = text.split("\n")
-    chunks = []
-
-    if not chapters:
-        # No chapters detected — split by word count
-        return split_text_by_words(text, max_words)
-
-    for ch in chapters:
-        start = ch.get("line_start", 0)
-        end = ch.get("line_end", len(lines) - 1)
-        chunk_text = "\n".join(lines[start : end + 1])
-        chunk_words = word_count(chunk_text)
-
-        if chunk_words > max_words:
-            # Oversized chapter — sub-split
-            sub_chunks = split_text_by_words(chunk_text, max_words)
-            for i, sc in enumerate(sub_chunks):
-                sc["label"] = f"{ch['title']} (part {i + 1}/{len(sub_chunks)})"
-            chunks.extend(sub_chunks)
-        else:
-            chunks.append({
-                "label": ch["title"],
-                "text": chunk_text,
-                "word_count": chunk_words,
-            })
-
-    return chunks
-
-
-def split_text_by_words(text: str, max_words: int) -> list[dict]:
-    """Split text into fixed-size word-count chunks."""
-    words = text.split()
-    chunks = []
-    idx = 0
-
-    while idx < len(words):
-        chunk_words = words[idx : idx + max_words]
-        chunk_text = " ".join(chunk_words)
-        chunks.append({
-            "label": f"Chunk {len(chunks) + 1}",
-            "text": chunk_text,
-            "word_count": len(chunk_words),
-        })
-        idx += max_words
-
-    return chunks
-
-
 def cmd_chunk(args: argparse.Namespace) -> None:
-    """Extract text and create chunk manifest."""
+    """Extract text and create chunk manifest for agent summarization."""
     filepath = Path(args.file).resolve()
     if not filepath.is_file():
         print(json.dumps({"error": f"File not found: {filepath}"}))
         sys.exit(1)
 
     max_words = args.max_words
-    max_pages = args.max_pages
-    fmt = detect_format(filepath)
+    text, engine, structured = extract_text(filepath)
+    chapters = split_chapters(text, structured)
 
-    # Create session directory
     session_id = secrets.token_hex(4)
     session_dir = Path(f"/tmp/book_reader_{session_id}")
     session_dir.mkdir(parents=True, exist_ok=True)
 
-    # Detect first
-    if fmt == "pdf":
-        reader = PdfReader(str(filepath))
-        meta = pdf_metadata(reader, filepath)
-        chapters = pdf_detect_chapters(reader)
-        pages = meta["pages"]
-        estimated_words = meta["estimated_words"]
-    elif fmt in ("epub", "docx", "odt", "rtf", "html"):
-        text = epub_to_markdown(filepath)
-        if text is None:
-            print(json.dumps({
-                "error": f"pandoc required for {fmt} but not found",
-                "session_dir": str(session_dir),
-            }))
-            sys.exit(1)
-        estimated_words = word_count(text)
-        pages = max(1, estimated_words // WORDS_PER_PAGE_ESTIMATE)
-        chapters = text_detect_chapters(text)
-        meta = {"title": filepath.stem, "author": "Unknown", "pages": pages, "estimated_words": estimated_words, "has_text": True}
-    elif fmt in ("txt", "markdown"):
-        text = filepath.read_text(encoding="utf-8", errors="replace")
-        estimated_words = word_count(text)
-        pages = max(1, estimated_words // WORDS_PER_PAGE_ESTIMATE)
-        chapters = text_detect_chapters(text)
-        meta = {"title": filepath.stem, "author": "Unknown", "pages": pages, "estimated_words": estimated_words, "has_text": True}
-    else:
-        print(json.dumps({"error": f"Unsupported format: {fmt}"}))
-        sys.exit(1)
+    chunks = chunk_by_word_limit(text, chapters, max_words)
 
-    # Determine strategy
-    strategy = args.strategy or recommend_strategy(pages, estimated_words)
-
-    # Extract and chunk
     chunk_manifests = []
-    extract_script = find_extract_script()
+    for chunk in chunks:
+        chunk_file = session_dir / f"chunk_{chunk['id']}.md"
+        chunk_file.write_text(chunk["text"], encoding="utf-8")
+        chunk_manifests.append({
+            "id": chunk["id"],
+            "label": chunk["label"],
+            "file": str(chunk_file),
+            "word_count": chunk["word_count"],
+        })
 
-    if fmt == "pdf":
-        if chapters and strategy != "direct":
-            # Chapter-based chunking for PDFs
-            for i, ch in enumerate(chapters):
-                start_page = ch["start_page"]
-                end_page = ch["end_page"]
-
-                # Sub-split oversized chapters by max_pages
-                page_ranges = []
-                if end_page - start_page + 1 > max_pages:
-                    p = start_page
-                    while p <= end_page:
-                        range_end = min(p + max_pages - 1, end_page)
-                        page_ranges.append((p, range_end))
-                        p = range_end + 1
-                else:
-                    page_ranges.append((start_page, end_page))
-
-                for ri, (ps, pe) in enumerate(page_ranges):
-                    chunk_idx = len(chunk_manifests)
-                    chunk_file = session_dir / f"chunk_{chunk_idx}.md"
-
-                    success = False
-                    if extract_script:
-                        success = pdf_extract_pages_docextract(
-                            extract_script, filepath, ps, pe, chunk_file
-                        )
-
-                    if not success:
-                        # Fallback to pypdf (0-indexed)
-                        chunk_text = pdf_extract_pages_pypdf(reader, ps - 1, pe - 1)
-                        chunk_file.write_text(chunk_text, encoding="utf-8")
-
-                    chunk_text_content = chunk_file.read_text(encoding="utf-8", errors="replace")
-                    label = ch["title"]
-                    if len(page_ranges) > 1:
-                        label = f"{ch['title']} (part {ri + 1}/{len(page_ranges)})"
-
-                    chunk_manifests.append({
-                        "id": chunk_idx,
-                        "label": label,
-                        "file": str(chunk_file),
-                        "start_page": ps,
-                        "end_page": pe,
-                        "word_count": word_count(chunk_text_content),
-                    })
-        else:
-            # No chapters or direct strategy — split by page ranges
-            p = 1
-            while p <= pages:
-                chunk_idx = len(chunk_manifests)
-                pe = min(p + max_pages - 1, pages)
-                chunk_file = session_dir / f"chunk_{chunk_idx}.md"
-
-                success = False
-                if extract_script:
-                    success = pdf_extract_pages_docextract(
-                        extract_script, filepath, p, pe, chunk_file
-                    )
-
-                if not success:
-                    chunk_text = pdf_extract_pages_pypdf(reader, p - 1, pe - 1)
-                    chunk_file.write_text(chunk_text, encoding="utf-8")
-
-                chunk_text_content = chunk_file.read_text(encoding="utf-8", errors="replace")
-                chunk_manifests.append({
-                    "id": chunk_idx,
-                    "label": f"Pages {p}-{pe}",
-                    "file": str(chunk_file),
-                    "start_page": p,
-                    "end_page": pe,
-                    "word_count": word_count(chunk_text_content),
-                })
-                p = pe + 1
-
-    else:
-        # Text-based formats (already have full text)
-        if fmt in ("epub", "docx", "odt", "rtf", "html"):
-            # text already set from pandoc above
-            pass
-        # For txt/markdown, text already set
-
-        if chapters and strategy != "direct":
-            raw_chunks = split_text_by_chapters(text, chapters, max_words)
-        else:
-            raw_chunks = split_text_by_words(text, max_words)
-
-        for i, chunk in enumerate(raw_chunks):
-            chunk_file = session_dir / f"chunk_{i}.md"
-            chunk_file.write_text(chunk["text"], encoding="utf-8")
-            chunk_manifests.append({
-                "id": i,
-                "label": chunk["label"],
-                "file": str(chunk_file),
-                "word_count": chunk["word_count"],
-            })
-
-    # For two-tier strategy, compute tier2 groups
-    tier2_groups = None
-    if strategy == "two-tier" and len(chunk_manifests) > 5:
-        # Balance chunks into 3-5 groups by total word count
-        total_words = sum(c["word_count"] for c in chunk_manifests)
-        num_groups = min(5, max(3, len(chunk_manifests) // 5))
-        target_per_group = total_words / num_groups
-
-        groups = []
-        current_group: list[int] = []
-        current_words = 0
-
-        for chunk in chunk_manifests:
-            current_group.append(chunk["id"])
-            current_words += chunk["word_count"]
-
-            if current_words >= target_per_group and len(groups) < num_groups - 1:
-                groups.append({
-                    "group_id": len(groups),
-                    "chunk_ids": current_group[:],
-                    "total_words": current_words,
-                })
-                current_group = []
-                current_words = 0
-
-        # Last group gets remaining chunks
-        if current_group:
-            groups.append({
-                "group_id": len(groups),
-                "chunk_ids": current_group[:],
-                "total_words": current_words,
-            })
-
-        tier2_groups = groups
-
-    # Write manifest
     manifest = {
         "session_dir": str(session_dir),
         "file": str(filepath),
-        "format": fmt,
-        "title": meta.get("title", filepath.stem),
-        "author": meta.get("author", "Unknown"),
-        "pages": pages,
-        "estimated_words": estimated_words,
-        "has_text": meta.get("has_text", True),
-        "strategy": strategy,
+        "engine": engine,
+        "structured": structured,
+        "estimated_words": word_count(text),
         "chapter_count": len(chapters),
         "chunk_count": len(chunk_manifests),
         "chunks": chunk_manifests,
     }
-
-    if tier2_groups is not None:
-        manifest["tier2_groups"] = tier2_groups
 
     manifest_path = session_dir / "manifest.json"
     manifest_path.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
@@ -709,278 +412,65 @@ def cmd_chunk(args: argparse.Namespace) -> None:
 
 
 def cmd_merge(args: argparse.Namespace) -> None:
-    """Merge chunk/group summary JSONs into synthesis input."""
+    """Merge chunk summary JSONs into synthesis input."""
     session_dir = Path(args.session_dir).resolve()
     if not session_dir.is_dir():
         print(json.dumps({"error": f"Session directory not found: {session_dir}"}))
         sys.exit(1)
 
-    # Load manifest
     manifest_path = session_dir / "manifest.json"
     if not manifest_path.is_file():
         print(json.dumps({"error": "manifest.json not found in session directory"}))
         sys.exit(1)
 
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-    strategy = manifest.get("strategy", "map-reduce")
 
-    # Collect summary files
     summaries = []
     missing = []
-    malformed = []
+    chunk_count = manifest.get("chunk_count", 0)
+    for i in range(chunk_count):
+        summary_file = session_dir / f"summary_{i}.json"
+        if not summary_file.is_file():
+            missing.append(f"summary_{i}.json")
+            continue
+        try:
+            summaries.append(json.loads(summary_file.read_text(encoding="utf-8")))
+        except json.JSONDecodeError as e:
+            missing.append(f"summary_{i}.json (malformed: {e})")
 
-    if strategy == "two-tier":
-        # Look for group_G.json files
-        groups = manifest.get("tier2_groups", [])
-        for group in groups:
-            gid = group["group_id"]
-            group_file = session_dir / f"group_{gid}.json"
-            if not group_file.is_file():
-                missing.append(f"group_{gid}.json")
-                continue
-            try:
-                data = json.loads(group_file.read_text(encoding="utf-8"))
-                summaries.append(data)
-            except (json.JSONDecodeError, KeyError) as e:
-                malformed.append({"file": f"group_{gid}.json", "error": str(e)})
-    else:
-        # Look for summary_N.json files
-        chunk_count = manifest.get("chunk_count", 0)
-        for i in range(chunk_count):
-            summary_file = session_dir / f"summary_{i}.json"
-            if not summary_file.is_file():
-                missing.append(f"summary_{i}.json")
-                continue
-            try:
-                data = json.loads(summary_file.read_text(encoding="utf-8"))
-                summaries.append(data)
-            except (json.JSONDecodeError, KeyError) as e:
-                malformed.append({"file": f"summary_{i}.json", "error": str(e)})
-
-    # Deduplicate themes across all summaries
-    all_themes = []
+    all_themes: list[str] = []
     seen_themes: set[str] = set()
-    all_quotes = []
-    all_arguments = []
-    chapter_summaries = []
+    all_quotes: list[dict] = []
+    all_arguments: list[str] = []
+    chapter_summaries: list[dict] = []
 
     for s in summaries:
-        # Collect themes
         for theme in s.get("key_themes", []):
-            theme_lower = theme.lower().strip()
-            if theme_lower not in seen_themes:
-                seen_themes.add(theme_lower)
+            if theme.lower().strip() not in seen_themes:
+                seen_themes.add(theme.lower().strip())
                 all_themes.append(theme)
-
-        # Collect quotes
-        for quote in s.get("notable_quotes", []):
-            all_quotes.append(quote)
-
-        # Collect arguments
-        for arg in s.get("key_arguments", []):
-            all_arguments.append(arg)
-
-        # Collect summaries
+        all_quotes.extend(s.get("notable_quotes", []))
+        all_arguments.extend(s.get("key_arguments", []))
         chapter_summaries.append({
             "id": s.get("id"),
             "label": s.get("label", f"Section {s.get('id', '?')}"),
             "summary": s.get("summary", ""),
-            "word_count": s.get("word_count", 0),
         })
 
     merged = {
         "session_dir": str(session_dir),
-        "strategy": strategy,
         "total_summaries": len(summaries),
         "missing_files": missing,
-        "malformed_files": malformed,
         "chapter_summaries": chapter_summaries,
         "all_themes": all_themes,
         "all_quotes": all_quotes,
         "all_arguments": all_arguments,
-        "manifest": {
-            "title": manifest.get("title", "Unknown"),
-            "author": manifest.get("author", "Unknown"),
-            "format": manifest.get("format", "unknown"),
-            "pages": manifest.get("pages", 0),
-            "estimated_words": manifest.get("estimated_words", 0),
-            "chunk_count": manifest.get("chunk_count", 0),
-        },
+        "manifest": manifest,
     }
 
     merged_path = session_dir / "merged.json"
     merged_path.write_text(json.dumps(merged, indent=2), encoding="utf-8")
-
     print(json.dumps(merged, indent=2))
-
-
-# ---------------------------------------------------------------------------
-# Subcommand: extract
-# ---------------------------------------------------------------------------
-
-
-def _slugify(text: str) -> str:
-    """Convert a chapter title to a filename-safe slug."""
-    text = text.lower().strip()
-    text = re.sub(r"[^\w\s-]", "", text)
-    text = re.sub(r"[\s_]+", "-", text)
-    text = re.sub(r"-+", "-", text)
-    return text.strip("-")[:80]
-
-
-def cmd_extract(args: argparse.Namespace) -> None:
-    """Extract full book text to markdown file(s)."""
-    filepath = Path(args.file).resolve()
-    if not filepath.is_file():
-        print(json.dumps({"error": f"File not found: {filepath}"}))
-        sys.exit(1)
-
-    fmt = detect_format(filepath)
-    extract_script = find_extract_script()
-    split_chapters = args.split_chapters
-
-    # --- Extract full text based on format ---
-
-    if fmt == "pdf":
-        reader = PdfReader(str(filepath))
-        meta = pdf_metadata(reader, filepath)
-        chapters = pdf_detect_chapters(reader)
-        pages = meta["pages"]
-
-        if split_chapters and chapters:
-            # Per-chapter extraction
-            chapter_texts = []
-            for ch in chapters:
-                sp, ep = ch["start_page"], ch["end_page"]
-                chunk_text = None
-
-                if extract_script:
-                    import tempfile
-                    with tempfile.NamedTemporaryFile(suffix=".md", delete=False) as tmp:
-                        tmp_path = Path(tmp.name)
-                    if pdf_extract_pages_docextract(extract_script, filepath, sp, ep, tmp_path):
-                        chunk_text = tmp_path.read_text(encoding="utf-8", errors="replace")
-                    tmp_path.unlink(missing_ok=True)
-
-                if chunk_text is None:
-                    chunk_text = pdf_extract_pages_pypdf(reader, sp - 1, ep - 1)
-
-                chapter_texts.append({
-                    "title": ch["title"],
-                    "text": chunk_text,
-                    "start_page": sp,
-                    "end_page": ep,
-                })
-            full_text = None  # not needed in split mode
-        else:
-            # Single file — extract all pages
-            if extract_script:
-                import tempfile
-                with tempfile.NamedTemporaryFile(suffix=".md", delete=False) as tmp:
-                    tmp_path = Path(tmp.name)
-                if pdf_extract_pages_docextract(extract_script, filepath, 1, pages, tmp_path):
-                    full_text = tmp_path.read_text(encoding="utf-8", errors="replace")
-                else:
-                    full_text = pdf_extract_pages_pypdf(reader, 0, pages - 1)
-                tmp_path.unlink(missing_ok=True)
-            else:
-                full_text = pdf_extract_pages_pypdf(reader, 0, pages - 1)
-            chapter_texts = None
-
-    elif fmt in ("epub", "docx", "odt", "rtf", "html"):
-        full_text = epub_to_markdown(filepath)
-        if full_text is None:
-            print(json.dumps({
-                "error": f"pandoc required for {fmt} but not found. Install: brew install pandoc",
-            }))
-            sys.exit(1)
-        meta = {"title": filepath.stem, "author": "Unknown", "pages": 0, "estimated_words": word_count(full_text)}
-        chapters = text_detect_chapters(full_text) if split_chapters else []
-        chapter_texts = None
-
-        if split_chapters and chapters:
-            lines = full_text.split("\n")
-            chapter_texts = []
-            for ch in chapters:
-                start = ch.get("line_start", 0)
-                end = ch.get("line_end", len(lines) - 1)
-                chapter_texts.append({
-                    "title": ch["title"],
-                    "text": "\n".join(lines[start : end + 1]),
-                })
-            full_text = None
-
-    elif fmt in ("txt", "markdown"):
-        full_text = filepath.read_text(encoding="utf-8", errors="replace")
-        meta = {"title": filepath.stem, "author": "Unknown", "pages": 0, "estimated_words": word_count(full_text)}
-        chapters = text_detect_chapters(full_text) if split_chapters else []
-        chapter_texts = None
-
-        if split_chapters and chapters:
-            lines = full_text.split("\n")
-            chapter_texts = []
-            for ch in chapters:
-                start = ch.get("line_start", 0)
-                end = ch.get("line_end", len(lines) - 1)
-                chapter_texts.append({
-                    "title": ch["title"],
-                    "text": "\n".join(lines[start : end + 1]),
-                })
-            full_text = None
-
-    else:
-        print(json.dumps({"error": f"Unsupported format: {fmt}"}))
-        sys.exit(1)
-
-    # --- Write output ---
-
-    if split_chapters and chapter_texts:
-        output_dir = Path(args.output_dir) if args.output_dir else Path.cwd()
-        output_dir.mkdir(parents=True, exist_ok=True)
-
-        files_written = []
-        for i, ch in enumerate(chapter_texts):
-            slug = _slugify(ch["title"]) or f"chapter-{i + 1}"
-            filename = f"{i + 1:02d}-{slug}.md"
-            out_path = output_dir / filename
-
-            # Add a heading with chapter title
-            content = f"# {ch['title']}\n\n{ch['text']}"
-            out_path.write_text(content, encoding="utf-8")
-            files_written.append({
-                "file": str(out_path),
-                "title": ch["title"],
-                "words": word_count(ch["text"]),
-            })
-
-        result = {
-            "mode": "split-chapters",
-            "output_dir": str(output_dir),
-            "chapters": len(files_written),
-            "total_words": sum(f["words"] for f in files_written),
-            "files": files_written,
-        }
-        print(json.dumps(result, indent=2))
-
-    else:
-        # Single file output
-        if args.output:
-            out_path = Path(args.output)
-            out_path.parent.mkdir(parents=True, exist_ok=True)
-            out_path.write_text(full_text, encoding="utf-8")
-        else:
-            # stdout
-            sys.stdout.write(full_text)
-            return
-
-        result = {
-            "mode": "single-file",
-            "output": str(out_path),
-            "words": word_count(full_text),
-            "format": fmt,
-            "title": meta.get("title", filepath.stem),
-        }
-        print(json.dumps(result, indent=2))
 
 
 # ---------------------------------------------------------------------------
@@ -990,73 +480,33 @@ def cmd_extract(args: argparse.Namespace) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Book reader: detect, extract, chunk, and merge book content",
+        description="Book reader: extract, split, and chunk books",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=textwrap.dedent("""\
             subcommands:
-              detect    Identify format, metadata, chapters, recommended strategy
-              extract   Extract full book text to markdown
-              chunk     Extract text and create chunk manifest
+              extract   Extract book text to markdown (single file or split by chapter)
+              chunk     Create chunks for agent summarization
               merge     Combine agent summary JSONs into synthesis input
         """),
     )
     subparsers = parser.add_subparsers(dest="command", required=True)
 
-    # detect
-    p_detect = subparsers.add_parser("detect", help="Detect book format and metadata")
-    p_detect.add_argument("file", help="Path to book file")
-
-    # chunk
-    p_chunk = subparsers.add_parser("chunk", help="Extract text and create chunks")
-    p_chunk.add_argument("file", help="Path to book file")
-    p_chunk.add_argument(
-        "--strategy",
-        choices=["direct", "sequential", "map-reduce", "two-tier"],
-        default=None,
-        help="Processing strategy (default: auto-detect)",
-    )
-    p_chunk.add_argument(
-        "--max-words",
-        type=int,
-        default=DEFAULT_MAX_WORDS,
-        help=f"Max words per chunk (default: {DEFAULT_MAX_WORDS})",
-    )
-    p_chunk.add_argument(
-        "--max-pages",
-        type=int,
-        default=DEFAULT_MAX_PAGES,
-        help=f"Max pages per chunk for PDFs (default: {DEFAULT_MAX_PAGES})",
-    )
-
-    # extract
-    p_extract = subparsers.add_parser("extract", help="Extract full book text to markdown")
+    p_extract = subparsers.add_parser("extract", help="Extract book text to markdown")
     p_extract.add_argument("file", help="Path to book file")
-    p_extract.add_argument(
-        "--output", "-o",
-        default=None,
-        help="Output file path (default: stdout)",
-    )
-    p_extract.add_argument(
-        "--split-chapters",
-        action="store_true",
-        default=False,
-        help="Write one .md file per chapter instead of a single file",
-    )
-    p_extract.add_argument(
-        "--output-dir",
-        default=None,
-        help="Output directory for --split-chapters (default: current directory)",
-    )
+    p_extract.add_argument("--output", "-o", default=None, help="Output file path (default: stdout)")
+    p_extract.add_argument("--split", action="store_true", default=False, help="Split into one file per chapter")
+    p_extract.add_argument("--output-dir", default=None, help="Output directory for --split")
 
-    # merge
+    p_chunk = subparsers.add_parser("chunk", help="Create chunks for agent summarization")
+    p_chunk.add_argument("file", help="Path to book file")
+    p_chunk.add_argument("--max-words", type=int, default=DEFAULT_MAX_WORDS, help=f"Max words per chunk (default: {DEFAULT_MAX_WORDS})")
+
     p_merge = subparsers.add_parser("merge", help="Merge agent summaries")
     p_merge.add_argument("session_dir", help="Path to session directory")
 
     args = parser.parse_args()
 
-    if args.command == "detect":
-        cmd_detect(args)
-    elif args.command == "extract":
+    if args.command == "extract":
         cmd_extract(args)
     elif args.command == "chunk":
         cmd_chunk(args)
