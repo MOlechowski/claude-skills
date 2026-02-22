@@ -290,7 +290,10 @@ Prioritize:
 - Actively maintained repositories (recent commits)
 - High star count (community validation)
 - Good documentation
-- Relevant to the specific query topic"""
+- Relevant to the specific query topic
+
+Exclude:
+- Archived repositories (marked as "This repository has been archived" or read-only)"""
 
     tools = [{"type": "web_search"}]
     response = call_xai_responses(api_key, prompt, tools, timeout=90 if depth == "quick" else 120)

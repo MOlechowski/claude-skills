@@ -360,6 +360,7 @@ Mode is determined by Step 0 — never skip it or assume Web-Only without checki
 - If xAI key missing: use Claude WebSearch only (Web-Only mode)
 - Run gap analysis between rounds — never skip it
 - Merge and deduplicate results by URL
+- Exclude archived GitHub repositories from results — they are unmaintained and read-only
 - Mark every claim with confidence: `[HIGH]`, `[MEDIUM]`, or `[LOW]`
 - Ground synthesis in actual research, not pre-existing knowledge
 - Cite specific sources with URLs
