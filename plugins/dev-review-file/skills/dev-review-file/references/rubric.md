@@ -1,6 +1,6 @@
 # Code Review Rubric
 
-## Six Pillars Scoring
+## Seven Pillars Scoring
 
 ### Security (Weight: 2x)
 
@@ -62,10 +62,20 @@
 | 7-8 | Clean code, good naming, documented interfaces, low cyclomatic complexity |
 | 9-10 | Self-documenting, measured complexity, exemplary readability |
 
+### Paranoia (Weight: 1.5x)
+
+| Score | Criteria |
+|-------|----------|
+| 1-2 | No assertions, unchecked return values, resources leaked on error paths, crash-early violations propagating bad state |
+| 3-4 | Missing default/else clauses, silent exception swallowing, exceptions used for control flow, allocation/deallocation split across routines |
+| 5-6 | Basic assertions present, most return values checked, resources closed on happy path but gaps on error paths |
+| 7-8 | Assertions guard impossible states, Design by Contract (preconditions/postconditions validated), resources balanced with reverse-order deallocation, crash-early on invalid state |
+| 9-10 | Comprehensive: assertions in production, all contracts explicit, resource lifecycle fully managed, every switch/match exhaustive, zero silent failures |
+
 ## Overall Score Calculation
 
 ```
-overall = (security * 2 + error_handling * 1.5 + performance + architecture + testing + maintainability) / 7.5
+overall = (security * 2 + error_handling * 1.5 + paranoia * 1.5 + performance + architecture + testing + maintainability) / 9.0
 ```
 
 Round to one decimal place.
@@ -96,7 +106,7 @@ Each finding MUST include all five fields:
 ```
 **Location:** `file:line` or `file:line-range`
 **Severity:** CRITICAL | HIGH | MEDIUM | LOW | INFO
-**Pillar:** Security | Performance | Architecture | Error Handling | Testing | Maintainability
+**Pillar:** Security | Performance | Architecture | Error Handling | Testing | Maintainability | Paranoia
 **Finding:** [Direct statement of what is wrong]
 **Fix:** [Concrete suggestion, with code snippet if helpful]
 ```
@@ -124,6 +134,7 @@ ALWAYS use this exact structure:
 | Error Handling | X | 1.5x | X.X | [one-line summary] |
 | Testing | X | 1.0x | X.X | [one-line summary] |
 | Maintainability | X | 1.0x | X.X | [one-line summary] |
+| Paranoia | X | 1.5x | X.X | [one-line summary] |
 | **Overall** | | | **X.X** | |
 
 ## Critical Findings
@@ -149,6 +160,9 @@ ALWAYS use this exact structure:
 
 ### Maintainability
 [All maintainability findings]
+
+### Paranoia
+[All paranoia findings]
 
 ## Summary
 
