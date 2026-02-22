@@ -589,6 +589,13 @@
       "version": "1.0.0"
     },
     {
+      "name": "res-price-compare",
+      "description": "Polish market product price comparison: 20+ shops, shipping costs, manufacturer vs seller warranty, B2B/statutory warranty analysis, stock status, distribution chain. Export TXT/XLSX/HTML. Use when: looking for a product to buy, price comparison, where to buy cheapest. Triggers: cena, porównaj, gdzie kupić, najtaniej, sklep, price compare, best price, kup, ile kosztuje.",
+      "source": "./plugins/res-price-compare",
+      "category": "research",
+      "version": "1.1.0"
+    },
+    {
       "name": "res-trends",
       "description": "Research trending topics using Claude Code WebSearch + xAI (X/Twitter). Multi-source synthesis with merged results, engagement metrics, intent parsing, and prompt generation. Use for: trend analysis, topic research, social listening, market research, competitive intelligence, prompt discovery. Triggers: trending topics, what's trending, research trends, X trends, Twitter trends, Reddit discussions, social pulse, market trends, find prompts for.",
       "source": "./plugins/res-trends",
