@@ -49,6 +49,7 @@ qmd embed        # embed new/changed docs
 | **Create note** | notesmd-cli | `notesmd-cli create "name" --content "text"` |
 | **Append to note** | notesmd-cli | `notesmd-cli create "name" --content "text" --append` |
 | **Read note** | notesmd-cli | `notesmd-cli print "name"` |
+| **Partial edit** | notesmd-cli + Edit | Read with `print`, edit via vault path + `Edit` tool |
 | **Move/rename** | notesmd-cli | `notesmd-cli move "old" "new"` (updates all links) |
 | **Delete note** | notesmd-cli | `notesmd-cli delete "name"` (permanent, no trash) |
 | **Daily note** | notesmd-cli | `notesmd-cli daily` |
@@ -120,6 +121,28 @@ notesmd-cli move "drafts/post" "published/post"
 ```
 
 All `[[wikilinks]]` and `[markdown](links)` across the vault are updated automatically.
+
+### Partial Edit (surgical updates)
+
+notesmd-cli has no partial edit — only `--append` and `--overwrite`. For surgical changes (replace a section, update a table row, fix a line), use this workflow:
+
+```bash
+# 1. Get vault path
+VAULT=$(notesmd-cli print-default --path-only)
+
+# 2. Read the note
+notesmd-cli print "note-name"
+
+# 3. Edit in place using the Edit tool with the full file path:
+#    "$VAULT/path/to/note.md"
+```
+
+**Rules:**
+- ALWAYS read with `notesmd-cli print` first — never guess content
+- ALWAYS resolve the vault path via `notesmd-cli print-default --path-only`
+- NEVER hardcode the vault path
+- Use the `Edit` tool for targeted string replacement, not `sed` or `awk`
+- For full rewrites, prefer `notesmd-cli create --overwrite` instead
 
 ### Delete
 
