@@ -3,6 +3,7 @@
 # requires-python = ">=3.10"
 # dependencies = [
 #     "pypdf>=4.0.0",
+#     "pymupdf4llm>=0.3.0",
 # ]
 # ///
 """
@@ -56,6 +57,7 @@ ENGINE_PRIORITY = [
     "monkeyocr",
     "granite-docling-mlx",
     "docling",
+    "pymupdf4llm",
     "ocrmypdf",
     "tesseract",
     "pypdf",
@@ -228,6 +230,29 @@ def detect_docling():
     }
 
 
+def detect_pymupdf4llm():
+    """Check if pymupdf4llm is available."""
+    rc, _, _ = run_cmd(
+        [sys.executable, "-c", "import pymupdf4llm"], timeout=10
+    )
+    importable = rc == 0
+    version = None
+    if importable:
+        version = get_version(
+            [sys.executable, "-c",
+             "import sys, io; sys.stdout = io.StringIO(); import pymupdf4llm; v = pymupdf4llm.__version__; sys.stdout = sys.__stdout__; print(v)"]
+        )
+    return {
+        "name": "pymupdf4llm",
+        "display_name": "PyMuPDF4LLM",
+        "available": importable,
+        "version": version,
+        "formats": [".pdf"],
+        "capabilities": ["text_extraction", "headings", "tables", "markdown"],
+        "install_cmd": "pip install pymupdf4llm",
+    }
+
+
 def detect_ocrmypdf():
     """Check if ocrmypdf CLI is available."""
     path = shutil.which("ocrmypdf")
@@ -281,6 +306,7 @@ def detect_all_engines():
         detect_monkeyocr(),
         detect_granite_docling(),
         detect_docling(),
+        detect_pymupdf4llm(),
         detect_ocrmypdf(),
         detect_tesseract(),
         detect_pypdf(),
@@ -436,6 +462,27 @@ def extract_docling(path, output_format="md"):
         if not candidates:
             error_exit("Docling produced no output files")
         return candidates[0].read_text(encoding="utf-8", errors="replace")
+
+
+def extract_pymupdf4llm(path, pages=None):
+    """Extract structured markdown with heading hierarchy using PyMuPDF4LLM.
+
+    Uses font-size analysis to infer heading levels (# , ## , ### ).
+    Falls back to PDF TOC/bookmarks when available.
+    """
+    page_arg = "None" if pages is None else repr(pages)
+    script = f"""
+import sys, io
+sys.stdout = io.StringIO()
+import pymupdf4llm
+sys.stdout = sys.__stdout__
+md = pymupdf4llm.to_markdown({repr(str(path))}, pages={page_arg})
+sys.stdout.write(md)
+"""
+    rc, out, err = run_cmd([sys.executable, "-c", script], timeout=300)
+    if rc != 0:
+        error_exit(f"pymupdf4llm failed: {err}")
+    return out
 
 
 def extract_ocrmypdf(path, force_ocr=False):
@@ -673,6 +720,8 @@ def do_extract(path, engines, output_format="markdown", force_ocr=False,
     elif engine_name == "docling":
         fmt_map = {"markdown": "md", "text": "text", "json": "json"}
         content = extract_docling(path, fmt_map.get(output_format, "md"))
+    elif engine_name == "pymupdf4llm":
+        content = extract_pymupdf4llm(path, pages)
     elif engine_name == "ocrmypdf":
         content = extract_ocrmypdf(path, force_ocr=force_ocr)
     elif engine_name == "tesseract":
