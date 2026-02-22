@@ -34,9 +34,20 @@ qmd collection list                    # List all collections
 qmd collection remove <name>           # Remove a collection
 qmd collection rename <old> <new>      # Rename
 qmd ls                                 # List all collections and file counts
-qmd ls notes                           # List files in a collection
+qmd ls notes                           # List files in a collection (with date + size)
 qmd ls notes/subfolder                 # List files in a subdirectory
 ```
+
+### Recently Modified Files
+
+`qmd ls` output includes last-modified date and file size. Sort by date to see recent changes:
+
+```bash
+qmd update                             # re-index to pick up changes
+qmd ls notes | awk '{print $3, $4, $0}' | sort -r | head -20 | sed 's/^[^ ]* [^ ]* //'
+```
+
+Works regardless of how files were modified (editor, CLI, mobile sync, agents). Shows modification date, not creation date.
 
 ### Sync with Git
 

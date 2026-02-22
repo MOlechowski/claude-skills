@@ -141,10 +141,17 @@ qmd query "what do we know about rate limiting" --full -n 5
 
 ### Find Notes Modified Recently
 
+`qmd ls` shows every indexed file with its last-modified date and size. After `qmd update`, it reflects the current filesystem state regardless of source (mobile, CLI, Obsidian app, agents).
+
 ```bash
-# qmd doesn't filter by date -- use filesystem for recency
-find "$(notesmd-cli print-default --path-only)" -name "*.md" -mtime -7 | head -20
+# Re-index then list by modification date (most recent first)
+qmd update
+qmd ls vault | awk '{print $3, $4, $0}' | sort -r | head -20 | sed 's/^[^ ]* [^ ]* //'
 ```
+
+**Limitations:**
+- Shows last-modified date, not creation date — editing an old note moves it to the top
+- Snapshot of current state, not a log — can't query "what was added last Tuesday" without periodic snapshots
 
 ### Find and Read
 

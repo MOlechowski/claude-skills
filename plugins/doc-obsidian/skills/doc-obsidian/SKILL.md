@@ -55,6 +55,7 @@ qmd embed        # embed new/changed docs
 | **Frontmatter** | notesmd-cli | `notesmd-cli fm "name" --print / --edit / --delete` |
 | **Backlinks** | notesmd-cli | `notesmd-cli print "name" --mentions` |
 | **List files** | notesmd-cli | `notesmd-cli list [path]` |
+| **Recently modified** | qmd | `qmd ls vault` (sorted by date, includes size) |
 | **Get document** | qmd | `qmd get vault/note.md` |
 | **Batch retrieve** | qmd | `qmd multi-get "folder/*.md" --json` |
 
