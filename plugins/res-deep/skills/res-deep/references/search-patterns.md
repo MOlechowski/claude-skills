@@ -97,9 +97,18 @@ Advanced search patterns and operators for multi-source deep research.
 | `site:github.com {repo} issues` | Issue discussions | `site:github.com "deno" issues` |
 | `site:github.com {topic} "breaking change"` | Breaking changes | `site:github.com "next.js" "breaking change"` |
 
+### Filtering Archived Repos
+
+Always exclude archived repositories from results. Archived repos are read-only, unmaintained, and should not be recommended.
+
+- Add `-"archived"` or `-"This repository has been archived"` to web search queries when targeting GitHub
+- When using `gh` CLI: `gh search repos {query} --archived=false`
+- When evaluating results: skip any repo page showing "This repository has been archived by the owner"
+
 ### Activity Signals
 
 When evaluating GitHub results, look for:
+- **Not archived:** Repository is actively accepting contributions (archived = exclude)
 - **Stars:** Community validation (1000+ = significant adoption)
 - **Recent commits:** Active maintenance (commits in last 3 months)
 - **Open issues:** Active community (but check ratio of open vs closed)
