@@ -156,21 +156,21 @@
     },
     {
       "name": "dev-review",
-      "description": "Code review orchestrator. Auto-detects context and routes to the appropriate reviewer. Handles: file/directory review (static analysis), PR review (GitHub PRs), diff review (staged/unstaged changes). Scores code on six pillars with numeric 1-10 grading. Use when: reviewing code, code review, give me feedback. Triggers: review this, code review, review my code, review PR, review these files.",
+      "description": "Code review orchestrator. Auto-detects context and routes to the appropriate reviewer. Handles: file/directory review (static analysis), PR review (GitHub PRs), diff review (staged/unstaged changes). Scores code on seven pillars with numeric 1-10 grading. Use when: reviewing code, code review, give me feedback. Triggers: review this, code review, review my code, review PR, review these files.",
       "source": "./plugins/dev-review",
       "category": "dev",
       "version": "1.0.0"
     },
     {
       "name": "dev-review-file",
-      "description": "Deep code review of files and directories. Analyzes quality across six pillars (Security, Performance, Architecture, Error Handling, Testing, Maintainability), scores 1-10 per category with harsh grading. Outputs structured report or inline comments. Use when: reviewing specific files, analyzing a module, code quality audit. Triggers: review this file, review this directory, analyze code quality, code audit, review-file.",
+      "description": "Deep code review of files and directories. Analyzes quality across seven pillars (Security, Performance, Architecture, Error Handling, Testing, Maintainability, Paranoia), scores 1-10 per category with harsh grading. Outputs structured report or inline comments. Use when: reviewing specific files, analyzing a module, code quality audit. Triggers: review this file, review this directory, analyze code quality, code audit, review-file.",
       "source": "./plugins/dev-review-file",
       "category": "dev",
       "version": "1.0.0"
     },
     {
       "name": "dev-review-pr",
-      "description": "Review git diffs, staged changes, and GitHub PRs. Change-focused analysis across six pillars (Security, Performance, Architecture, Error Handling, Testing, Maintainability) with numeric scoring 1-10. Supports GitHub PR review, staged changes, and arbitrary diffs. Use when: reviewing a PR, reviewing staged changes, reviewing a diff, pre-commit review. Triggers: review PR, review my changes, review the diff, review staged, review-pr, check my changes.",
+      "description": "Review git diffs, staged changes, and GitHub PRs. Change-focused analysis across seven pillars (Security, Performance, Architecture, Error Handling, Testing, Maintainability, Paranoia) with numeric scoring 1-10. Supports GitHub PR review, staged changes, and arbitrary diffs. Use when: reviewing a PR, reviewing staged changes, reviewing a diff, pre-commit review. Triggers: review PR, review my changes, review the diff, review staged, review-pr, check my changes.",
       "source": "./plugins/dev-review-pr",
       "category": "dev",
       "version": "1.0.0"

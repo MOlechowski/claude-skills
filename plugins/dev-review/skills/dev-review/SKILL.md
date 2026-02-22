@@ -1,6 +1,6 @@
 ---
 name: dev-review
-description: "Code review orchestrator. Auto-detects context and routes to the appropriate reviewer. Handles: file/directory review (static analysis), PR review (GitHub PRs), diff review (staged/unstaged changes). Scores code on six pillars with numeric 1-10 grading. Use when: reviewing code, code review, give me feedback. Triggers: review this, code review, review my code, review PR, review these files."
+description: "Code review orchestrator. Auto-detects context and routes to the appropriate reviewer. Handles: file/directory review (static analysis), PR review (GitHub PRs), diff review (staged/unstaged changes). Scores code on seven pillars with numeric 1-10 grading. Use when: reviewing code, code review, give me feedback. Triggers: review this, code review, review my code, review PR, review these files."
 ---
 
 # Code Review
@@ -62,4 +62,4 @@ Delegate entirely. Do not perform the dev-review yourself. Do not add your own s
 | `dev-review-file` | Static code analysis of files and directories |
 | `dev-review-pr` | Change-focused review of diffs and GitHub PRs |
 
-Both sub-skills analyze six pillars (Security, Performance, Architecture, Error Handling, Testing, Maintainability), score 1-10 with harsh grading, and produce structured reports or inline comments.
+Both sub-skills analyze seven pillars (Security, Performance, Architecture, Error Handling, Testing, Maintainability, Paranoia), score 1-10 with harsh grading, and produce structured reports or inline comments.

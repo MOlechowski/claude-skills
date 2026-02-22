@@ -1,6 +1,6 @@
 ---
 name: dev-review-pr
-description: "Review git diffs, staged changes, and GitHub PRs. Change-focused analysis across six pillars (Security, Performance, Architecture, Error Handling, Testing, Maintainability) with numeric scoring 1-10. Supports GitHub PR review, staged changes, and arbitrary diffs. Use when: reviewing a PR, reviewing staged changes, reviewing a diff, pre-commit review. Triggers: review PR, review my changes, review the diff, review staged, review-pr, check my changes."
+description: "Review git diffs, staged changes, and GitHub PRs. Change-focused analysis across seven pillars (Security, Performance, Architecture, Error Handling, Testing, Maintainability, Paranoia) with numeric scoring 1-10. Supports GitHub PR review, staged changes, and arbitrary diffs. Use when: reviewing a PR, reviewing staged changes, reviewing a diff, pre-commit review. Triggers: review PR, review my changes, review the diff, review staged, review-pr, check my changes."
 ---
 
 # Review PR
@@ -100,7 +100,7 @@ For GitHub PRs, also review:
 ```
 **Location:** `file:line` or `file:line-range`
 **Severity:** CRITICAL | HIGH | MEDIUM | LOW | INFO
-**Pillar:** Security | Performance | Architecture | Error Handling | Testing | Maintainability
+**Pillar:** Security | Performance | Architecture | Error Handling | Testing | Maintainability | Paranoia
 **Finding:** [Direct statement of what is wrong with this CHANGE]
 **Fix:** [Concrete suggestion, with code snippet if helpful]
 ```
@@ -118,6 +118,8 @@ For GitHub PRs, also review:
 **Testing:** Tests added for new behavior? Edge cases covered? Negative paths tested? Test-to-code ratio reasonable? Tests actually assert meaningful behavior (not just "no crash")?
 
 **Maintainability:** Clear naming for new code? Consistent with codebase style? Self-documenting changes? New complexity manageable? Comments where logic is non-obvious?
+
+**Paranoia:** Missing assertions for impossible states? Unchecked return values? Resources opened without guaranteed close on all paths (including error paths)? Allocation/deallocation asymmetry (opener != closer)? Deallocation not in reverse order? Silent exception swallowing? Exceptions used for control flow? Missing default/else clauses in switch/case/match? Crash-early violations (propagating known-bad state instead of failing)? Preconditions/postconditions not validated at function boundaries? Design by Contract violations?
 
 See `references/rubric.md` for detailed scoring criteria.
 
@@ -139,6 +141,7 @@ Score each pillar 1-10 based on **change quality**. Apply the harsh curve:
 **Overall score:** Weighted average per formula in `references/rubric.md`.
 - Security: 2x weight
 - Error Handling: 1.5x weight
+- Paranoia: 1.5x weight
 - All others: 1x weight
 
 ### Phase 6: Verdict

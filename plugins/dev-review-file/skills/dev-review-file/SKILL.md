@@ -1,6 +1,6 @@
 ---
 name: dev-review-file
-description: "Deep code review of files and directories. Analyzes quality across six pillars (Security, Performance, Architecture, Error Handling, Testing, Maintainability), scores 1-10 per category with harsh grading. Outputs structured report or inline comments. Use when: reviewing specific files, analyzing a module, code quality audit. Triggers: review this file, review this directory, analyze code quality, code audit, review-file."
+description: "Deep code review of files and directories. Analyzes quality across seven pillars (Security, Performance, Architecture, Error Handling, Testing, Maintainability, Paranoia), scores 1-10 per category with harsh grading. Outputs structured report or inline comments. Use when: reviewing specific files, analyzing a module, code quality audit. Triggers: review this file, review this directory, analyze code quality, code audit, review-file."
 ---
 
 # Review File
@@ -54,12 +54,12 @@ Do not start criticizing until you understand the code's intent.
 
 ### Phase 3: Analyze Per Pillar
 
-Analyze each file against all six pillars. For each finding, include ALL five fields:
+Analyze each file against all seven pillars. For each finding, include ALL five fields:
 
 ```
 **Location:** `file:line` or `file:line-range`
 **Severity:** CRITICAL | HIGH | MEDIUM | LOW | INFO
-**Pillar:** Security | Performance | Architecture | Error Handling | Testing | Maintainability
+**Pillar:** Security | Performance | Architecture | Error Handling | Testing | Maintainability | Paranoia
 **Finding:** [Direct statement of what is wrong]
 **Fix:** [Concrete suggestion, with code snippet if helpful]
 ```
@@ -77,6 +77,8 @@ Analyze each file against all six pillars. For each finding, include ALL five fi
 **Testing:** Test file existence, coverage signals (untested public methods), missing edge case tests, weak assertions (assertTrue vs assertEquals), test isolation, brittle tests coupled to implementation, missing negative path tests.
 
 **Maintainability:** Naming quality, function length (>50 lines is suspicious, >100 is a finding), cyclomatic complexity, dead code, magic numbers/strings, code duplication, deep nesting (>3 levels), unclear control flow.
+
+**Paranoia:** Missing assertions for impossible states? Unchecked return values? Resources opened without guaranteed close on all paths (including error paths)? Allocation/deallocation asymmetry (opener != closer)? Deallocation not in reverse order? Silent exception swallowing? Exceptions used for control flow? Missing default/else clauses in switch/case/match? Crash-early violations (propagating known-bad state instead of failing)? Preconditions/postconditions not validated at function boundaries? Design by Contract violations?
 
 See `references/rubric.md` for detailed scoring criteria per pillar.
 
@@ -99,6 +101,7 @@ Score each pillar 1-10. Apply the harsh curve:
 **Overall score:** Weighted average per formula in `references/rubric.md`.
 - Security: 2x weight (most impactful)
 - Error Handling: 1.5x weight
+- Paranoia: 1.5x weight
 - All others: 1x weight
 
 ### Phase 5: Verdict
