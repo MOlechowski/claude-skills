@@ -28,6 +28,7 @@ Optional skills that improve the development workflow.
 |-------|---------|---------|
 | **git-commit** | Generate Conventional Commits messages | `claude plugin install git-commit@claude-skills` |
 | **dev-review-pr** | Review PRs with structured analysis | `claude plugin install dev-review-pr@claude-skills` |
+| **doc-claude-md** | Create and validate CLAUDE.md/AGENTS.md files | `claude plugin install doc-claude-md@claude-skills` |
 | **doc-readme** | Create and validate README.md files | `claude plugin install doc-readme@claude-skills` |
 
 ## Full Catalog
