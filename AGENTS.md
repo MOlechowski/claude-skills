@@ -1,7 +1,7 @@
 ---
-last_validated: 2026-02-20T12:00:00Z
+last_validated: 2026-02-22T23:05:22Z
 project_type: plugin-marketplace
-skill_count: 94
+skill_count: 97
 ---
 
 # Agent Instructions: claude-skills
@@ -17,7 +17,7 @@ This is a Claude Skills **plugin marketplace** following Anthropic's Agent Skill
 ```
 .
 ├── .claude-plugin/
-│   └── marketplace.json           # Marketplace catalog (94 plugins)
+│   └── marketplace.json           # Marketplace catalog (97 plugins)
 ├── plugins/                       # 94 individual skill plugins
 │   ├── aws-cli/
 │   │   ├── .claude-plugin/
@@ -33,7 +33,7 @@ This is a Claude Skills **plugin marketplace** following Anthropic's Agent Skill
 │   │       └── aws-expert/
 │   │           ├── SKILL.md
 │   │           └── references/
-│   └── ... (94 plugins total)
+│   └── ... (97 plugins total)
 ├── .claude/
 │   ├── commands/                  # Speckit slash commands
 │   ├── skills/                    # Project-local skills (gitignored, see SKILLS.md)
@@ -53,6 +53,33 @@ This is a Claude Skills **plugin marketplace** following Anthropic's Agent Skill
 ## Project Skills
 
 For working on this repository, install the recommended plugins listed in @SKILLS.md. Project-local skills installed to `.claude/skills/` are gitignored — each developer installs from the marketplace.
+
+## Searching the Codebase with qmd
+
+This repository is indexed as a `qmd` collection for fast keyword and semantic search across all 97 plugins.
+
+### Setup
+
+```bash
+qmd collection add /path/to/claude-skills --name claude-skills --mask "**/*.md"
+qmd embed
+```
+
+### Usage
+
+```bash
+# Keyword search
+qmd search "terraform" -c claude-skills -n 10
+
+# Semantic search (find skills by concept, not exact words)
+qmd vsearch "how to analyze container images" -c claude-skills -n 5
+
+# Hybrid search (best quality)
+qmd query "reverse engineering binaries" -c claude-skills
+
+# Keep index fresh after adding/editing plugins
+qmd update && qmd embed
+```
 
 ## Plugin Marketplace
 
@@ -90,7 +117,7 @@ plugins/<name>/
 
 ### marketplace.json
 
-The root `.claude-plugin/marketplace.json` catalogs all 94 plugins with:
+The root `.claude-plugin/marketplace.json` catalogs all 97 plugins with:
 - `pluginRoot`: `"./plugins"` — base path for all plugins
 - `plugins[]`: array of entries with name, description, version, category, tags, path
 

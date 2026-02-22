@@ -68,7 +68,7 @@ rm -rf ~/.claude/skills/*
 ```
 claude-skills/
 ├── .claude-plugin/
-│   └── marketplace.json          # Marketplace catalog (94 plugins)
+│   └── marketplace.json          # Marketplace catalog (97 plugins)
 ├── plugins/
 │   ├── aws-cli/
 │   │   ├── .claude-plugin/
@@ -79,7 +79,7 @@ claude-skills/
 │   │           └── references/   # Optional supporting files
 │   ├── aws-expert/
 │   │   └── ...
-│   └── ... (94 plugins total)
+│   └── ... (97 plugins total)
 ├── scripts/                      # Build/migration scripts
 ├── AGENTS.md                     # Agent instructions
 ├── CLAUDE.md                     # Repository guidance
@@ -88,7 +88,7 @@ claude-skills/
 └── README.md                     # This file
 ```
 
-## Available Skills (94 total)
+## Available Skills (97 total)
 
 All skills use domain prefixes for discoverability. Each skill is its own plugin.
 
@@ -146,6 +146,8 @@ All skills use domain prefixes for discoverability. Each skill is its own plugin
 | **doc-obsidian** | Obsidian vault management combining search and CRUD |
 | **doc-pandoc** | Universal document conversion with Pandoc |
 | **doc-qmd** | Local on-device search engine for markdown knowledge bases |
+| **doc-book-reader** | Read entire books (PDF, EPUB, DOCX, TXT) and produce structured synthesis reports |
+| **doc-extract** | Document intelligence: extract structured text from PDFs, images using tiered OCR engines |
 | **doc-readme** | Create, update, and validate README.md files |
 
 ### git- (Git & Version Control)
@@ -221,6 +223,7 @@ All skills use domain prefixes for discoverability. Each skill is its own plugin
 |-------|-------------|
 | **res-deep** | Iterative multi-round deep research with structured analysis |
 | **res-trends** | Multi-source trend analysis with hybrid search |
+| **res-price-compare** | Polish market product price comparison: 20+ shops, shipping, warranty analysis |
 | **res-web** | Web research and analysis |
 
 ### sec- (Security Scanning)
@@ -245,6 +248,22 @@ All skills use domain prefixes for discoverability. Each skill is its own plugin
 ## Usage
 
 Once installed via the plugin marketplace, skills activate automatically based on context. Claude recognizes when to use skills from your requests — no manual invocation needed.
+
+## Searching Skills with qmd
+
+Use [qmd](https://www.npmjs.com/package/@anthropic/qmd) for fast local search across all plugins:
+
+```bash
+# One-time setup
+qmd collection add /path/to/claude-skills --name claude-skills --mask "**/*.md"
+qmd embed
+
+# Search by keyword
+qmd search "terraform" -c claude-skills
+
+# Search by concept (semantic)
+qmd vsearch "how to analyze container security" -c claude-skills
+```
 
 ## Per-Repo Plugin Configuration
 
