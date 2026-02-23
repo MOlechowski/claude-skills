@@ -247,7 +247,7 @@
     },
     {
       "name": "doc-project",
-      "description": "Update all project documentation in one pass: CLAUDE.md, AGENTS.md, README.md, SKILLS.md. Orchestrates doc-claude-md, doc-readme, and doc-skills-md skills sequentially. Use when: project docs are stale, after major changes, initial project setup, sync all docs. Triggers: update all docs, update project docs, sync documentation, refresh docs, doc-project.",
+      "description": "Update all project documentation in one pass: CLAUDE.md, AGENTS.md, README.md, SKILLS.md, CHANGELOG.md. Orchestrates doc-claude-md, doc-readme, doc-skills-md, and doc-changelog skills sequentially. Use when: project docs are stale, after major changes, initial project setup, sync all docs. Triggers: update all docs, update project docs, sync documentation, refresh docs, doc-project.",
       "source": "./plugins/doc-project",
       "category": "documentation",
       "version": "1.0.0"
