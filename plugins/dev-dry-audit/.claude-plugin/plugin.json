@@ -1,0 +1,8 @@
+{
+  "name": "dev-dry-audit",
+  "version": "1.0.0",
+  "description": "Detect DRY violations across a codebase — knowledge duplication, not just copy-paste. Finds: code clones, repeated constants, config values in multiple places, comments paraphrasing code, API contract drift. Reports as violation pairs with suggested consolidation. Use when: DRY audit, find duplication, code duplication scan, knowledge duplication. Triggers: DRY audit, find duplicates, scan for duplication, repeated code, copy-paste detection.",
+  "author": "MOlechowski",
+  "category": "dev",
+  "tags": ["dev", "code-quality", "pragmatic-programmer"]
+}
