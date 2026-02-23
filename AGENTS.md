@@ -1,7 +1,7 @@
 ---
-last_validated: 2026-02-23T23:30:00Z
+last_validated: 2026-02-24T00:00:00Z
 project_type: plugin-marketplace
-skill_count: 104
+skill_count: 105
 ---
 
 # Agent Instructions: claude-skills
@@ -17,8 +17,8 @@ This is a Claude Skills **plugin marketplace** following Anthropic's Agent Skill
 ```
 .
 ├── .claude-plugin/
-│   └── marketplace.json           # Marketplace catalog (104 plugins)
-├── plugins/                       # 104 individual skill plugins
+│   └── marketplace.json           # Marketplace catalog (105 plugins)
+├── plugins/                       # 105 individual skill plugins
 │   ├── aws-cli/
 │   │   ├── .claude-plugin/
 │   │   │   └── plugin.json        # Plugin metadata (name, version, description)
@@ -33,7 +33,7 @@ This is a Claude Skills **plugin marketplace** following Anthropic's Agent Skill
 │   │       └── aws-expert/
 │   │           ├── SKILL.md
 │   │           └── references/
-│   └── ... (104 plugins total)
+│   └── ... (105 plugins total)
 ├── .claude/
 │   ├── skills/                    # Project-local skills (gitignored, see SKILLS.md)
 │   └── settings.local.json
@@ -51,7 +51,7 @@ For working on this repository, install the recommended plugins listed in @SKILL
 
 ## Searching the Codebase with qmd
 
-This repository is indexed as a `qmd` collection for fast keyword and semantic search across all 104 plugins.
+This repository is indexed as a `qmd` collection for fast keyword and semantic search across all 105 plugins.
 
 ### Setup
 
@@ -112,7 +112,7 @@ plugins/<name>/
 
 ### marketplace.json
 
-The root `.claude-plugin/marketplace.json` catalogs all 104 plugins with:
+The root `.claude-plugin/marketplace.json` catalogs all 105 plugins with:
 - `pluginRoot`: `"./plugins"` — base path for all plugins
 - `plugins[]`: array of entries with name, description, version, category, tags, path
 

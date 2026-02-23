@@ -1,0 +1,5 @@
+{
+  "name": "res-x",
+  "version": "1.0.0",
+  "description": "Fetch X/Twitter tweet content by URL and search X posts. Resolves tweet links that WebFetch cannot scrape. Use for: reading saved X/Twitter links, fetching tweet content from URLs, searching X for posts on a topic, batch-processing X links from notes. Triggers: x.com link, twitter.com link, fetch tweet, read tweet, what does this tweet say, X search, twitter search."
+}

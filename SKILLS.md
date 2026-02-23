@@ -37,4 +37,4 @@ Optional skills that improve the development workflow.
 
 ## Full Catalog
 
-Browse all 104 available plugins: `/plugin` > Discover tab, or see the [README](README.md#available-skills-104-total).
+Browse all 105 available plugins: `/plugin` > Discover tab, or see the [README](README.md#available-skills-105-total).
