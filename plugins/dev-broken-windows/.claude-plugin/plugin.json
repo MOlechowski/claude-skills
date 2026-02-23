@@ -1,8 +1,5 @@
 {
   "name": "dev-broken-windows",
   "version": "1.0.0",
-  "description": "Scan codebase for entropy indicators — broken windows that trigger systemic decay. Detects: skipped tests, commented-out code, TODO/FIXME without issue refs, dead exports, naming inconsistency, empty catch blocks. Produces prioritized report by severity. Use when: codebase health check, entropy scan, broken windows audit, code hygiene. Triggers: broken windows, scan for entropy, codebase health, code hygiene, audit code quality.",
-  "author": "MOlechowski",
-  "category": "dev",
-  "tags": ["dev", "code-quality", "pragmatic-programmer"]
+  "description": "Scan codebase for entropy indicators \u2014 broken windows that trigger systemic decay. Detects: skipped tests, commented-out code, TODO/FIXME without issue refs, dead exports, naming inconsistency, empty catch blocks. Produces prioritized report by severity. Use when: codebase health check, entropy scan, broken windows audit, code hygiene. Triggers: broken windows, scan for entropy, codebase health, code hygiene, audit code quality."
 }
