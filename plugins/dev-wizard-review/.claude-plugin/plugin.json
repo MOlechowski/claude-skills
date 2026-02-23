@@ -1,0 +1,8 @@
+{
+  "name": "dev-wizard-review",
+  "version": "1.0.0",
+  "description": "Review generated/scaffolded code for maintainability — can the user own it? Checks comprehension risks (magic config, implicit behavior), ownership gaps (hidden dependencies, swallowed errors), maintenance risks (framework coupling, upgrade fragility). Use when: reviewing AI-generated code, reviewing scaffolded code, checking generated output, wizard code review. Triggers: review generated code, review scaffolded code, wizard review, can I maintain this, explain this generated code.",
+  "author": "MOlechowski",
+  "category": "dev",
+  "tags": ["dev", "code-quality", "pragmatic-programmer"]
+}

@@ -204,6 +204,13 @@
       "version": "1.0.0"
     },
     {
+      "name": "dev-wizard-review",
+      "description": "Review generated/scaffolded code for maintainability — can the user own it? Checks comprehension risks (magic config, implicit behavior), ownership gaps (hidden dependencies, swallowed errors), maintenance risks (framework coupling, upgrade fragility). Use when: reviewing AI-generated code, reviewing scaffolded code, checking generated output, wizard code review. Triggers: review generated code, review scaffolded code, wizard review, can I maintain this, explain this generated code.",
+      "source": "./plugins/dev-wizard-review",
+      "category": "dev",
+      "version": "1.0.0"
+    },
+    {
       "name": "dev-swarm",
       "description": "Parallelize tasks using Claude agents. Use when: processing multiple files/items concurrently, running analysis across independent code modules, batch operations with cognitive tasks. Triggers: parallelize this task, run on all files in parallel, analyze modules concurrently, batch process these items.",
       "source": "./plugins/dev-swarm",
