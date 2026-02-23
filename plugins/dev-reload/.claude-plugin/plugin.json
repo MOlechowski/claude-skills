@@ -1,8 +1,5 @@
 {
   "name": "dev-reload",
   "version": "1.0.0",
-  "description": "Reload Claude Code configuration without full restart. SIGHUP-based reload for CLAUDE.md, hooks, skills, commands, agents, MCP servers. Includes shell wrapper setup and reload command. Use when: config changed mid-session, CLAUDE.md updated, skills added/removed, hooks modified, need to reload without losing context. Triggers: reload config, reload claude, restart claude, config changed, reload settings, dev-reload.",
-  "author": "MOlechowski",
-  "category": "dev",
-  "tags": ["dev", "configuration", "reload"]
+  "description": "Reload Claude Code configuration without full restart. SIGHUP-based reload for CLAUDE.md, hooks, skills, commands, agents, MCP servers. Includes shell wrapper setup and reload command. Use when: config changed mid-session, CLAUDE.md updated, skills added/removed, hooks modified, need to reload without losing context. Triggers: reload config, reload claude, restart claude, config changed, reload settings, dev-reload."
 }
