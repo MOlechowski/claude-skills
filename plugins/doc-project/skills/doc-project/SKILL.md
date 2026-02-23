@@ -1,6 +1,6 @@
 ---
 name: doc-project
-description: "Update all project documentation in one pass: CLAUDE.md, AGENTS.md, README.md, SKILLS.md. Orchestrates doc-claude-md, doc-readme, and doc-skills-md skills sequentially. Use when: project docs are stale, after major changes, initial project setup, sync all docs. Triggers: update all docs, update project docs, sync documentation, refresh docs, doc-project."
+description: "Update all project documentation in one pass: CLAUDE.md, AGENTS.md, README.md, SKILLS.md, CHANGELOG.md. Orchestrates doc-claude-md, doc-readme, doc-skills-md, and doc-changelog skills sequentially. Use when: project docs are stale, after major changes, initial project setup, sync all docs. Triggers: update all docs, update project docs, sync documentation, refresh docs, doc-project."
 ---
 
 # Project Documentation Sync
@@ -10,7 +10,7 @@ Update all project documentation files in one pass by delegating to specialized 
 ## Workflow
 
 ```
-1. Analyze codebase → 2. CLAUDE.md + AGENTS.md → 3. README.md → 4. SKILLS.md → 5. Summary
+1. Analyze codebase → 2. CLAUDE.md + AGENTS.md → 3. README.md → 4. SKILLS.md → 5. CHANGELOG.md → 6. Summary
 ```
 
 ### 1. Analyze Codebase
@@ -71,7 +71,23 @@ This handles:
 
 Skip this step if the project does not use a plugin marketplace.
 
-### 5. Summary
+### 5. CHANGELOG.md
+
+Delegate to `doc-changelog` skill:
+
+```
+Skill(skill="doc-changelog")
+```
+
+This handles:
+- Generating changelog entries from git history since last release/tag
+- Classifying commits by type (Added, Changed, Fixed, Removed)
+- Enriching entries with PR references
+- Updating the Unreleased section
+
+Skip this step if the project does not maintain a CHANGELOG.md.
+
+### 6. Summary
 
 After all updates, report what changed:
 
@@ -84,13 +100,14 @@ After all updates, report what changed:
 | AGENTS.md | Updated/Created/No change | ... |
 | README.md | Updated/Created/No change | ... |
 | SKILLS.md | Updated/Created/Skipped | ... |
+| CHANGELOG.md | Updated/Created/Skipped | ... |
 ```
 
 ## Modes
 
 ### Full Sync (default)
 
-Update all four files. Use for initial setup or after major changes.
+Update all five files. Use for initial setup or after major changes.
 
 > "Update all project docs"
 
