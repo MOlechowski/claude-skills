@@ -274,6 +274,13 @@
       "version": "1.0.0"
     },
     {
+      "name": "doc-skills-md",
+      "description": "Create and update SKILLS.md files that recommend marketplace plugins for a project. Analyzes codebase to suggest relevant skills, generates Required/Recommended tables with install commands, updates counts. Use when: setting up SKILLS.md for a project, updating skill recommendations, adding recommended plugins. Triggers: SKILLS.md, recommended skills, project skills, update skills list, which plugins for this project, doc-skills-md.",
+      "source": "./plugins/doc-skills-md",
+      "category": "documentation",
+      "version": "1.0.0"
+    },
+    {
       "name": "doc-notesmd",
       "description": "NotesMD CLI (notesmd-cli) for Obsidian vault operations from the terminal. Go-based, works WITHOUT Obsidian running. 12 commands: open, daily, search, search-content, create, move, delete, list, print, frontmatter, set-default, print-default. Features: automatic wikilink/markdown link updates on move/rename, YAML frontmatter CRUD, backlink discovery, daily note templates, content search with snippets. Use for: obsidian vault management, note creation, markdown notes automation, daily journaling, frontmatter editing, vault search, note refactoring. Triggers: notesmd, notesmd-cli, obsidian cli, vault notes, daily notes cli, markdown notes cli, note management.",
       "source": "./plugins/doc-notesmd",

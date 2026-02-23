@@ -1,0 +1,5 @@
+{
+  "name": "doc-skills-md",
+  "version": "1.0.0",
+  "description": "Create and update SKILLS.md files that recommend marketplace plugins for a project. Analyzes codebase to suggest relevant skills, generates Required/Recommended tables with install commands, updates counts. Use when: setting up SKILLS.md for a project, updating skill recommendations, adding recommended plugins. Triggers: SKILLS.md, recommended skills, project skills, update skills list, which plugins for this project, doc-skills-md."
+}
