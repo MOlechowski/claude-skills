@@ -246,6 +246,13 @@
       "version": "1.0.0"
     },
     {
+      "name": "doc-project",
+      "description": "Update all project documentation in one pass: CLAUDE.md, AGENTS.md, README.md, SKILLS.md. Orchestrates doc-claude-md, doc-readme, and doc-skills-md skills sequentially. Use when: project docs are stale, after major changes, initial project setup, sync all docs. Triggers: update all docs, update project docs, sync documentation, refresh docs, doc-project.",
+      "source": "./plugins/doc-project",
+      "category": "documentation",
+      "version": "1.0.0"
+    },
+    {
       "name": "doc-confluence",
       "description": "Create and update Confluence Data Center pages from Markdown. Use for: (1) creating documentation pages from README or specs, (2) updating existing wiki pages, (3) publishing code docs to Confluence, (4) embedding draw.io diagrams. Triggers: confluence, wiki page, create page, update docs, publish to confluence.",
       "source": "./plugins/doc-confluence",
