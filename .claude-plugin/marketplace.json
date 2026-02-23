@@ -148,6 +148,13 @@
       "version": "1.0.0"
     },
     {
+      "name": "dev-broken-windows",
+      "description": "Scan codebase for entropy indicators — broken windows that trigger systemic decay. Detects: skipped tests, commented-out code, TODO/FIXME without issue refs, dead exports, naming inconsistency, empty catch blocks. Produces prioritized report by severity. Use when: codebase health check, entropy scan, broken windows audit, code hygiene. Triggers: broken windows, scan for entropy, codebase health, code hygiene, audit code quality.",
+      "source": "./plugins/dev-broken-windows",
+      "category": "dev",
+      "version": "1.0.0"
+    },
+    {
       "name": "dev-learn",
       "description": "Capture learnings into documentation. Use when: completing work that revealed missing instructions, finding workarounds for undocumented blockers, discovering patterns that work better than documented, capturing session learnings. Triggers: update the instructions based on what we learned, add this pattern to the docs, capture this workaround, improve the workflow documentation.",
       "source": "./plugins/dev-learn",
