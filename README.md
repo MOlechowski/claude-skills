@@ -68,7 +68,7 @@ rm -rf ~/.claude/skills/*
 ```
 claude-skills/
 ├── .claude-plugin/
-│   └── marketplace.json          # Marketplace catalog (97 plugins)
+│   └── marketplace.json          # Marketplace catalog (104 plugins)
 ├── plugins/
 │   ├── aws-cli/
 │   │   ├── .claude-plugin/
@@ -79,8 +79,7 @@ claude-skills/
 │   │           └── references/   # Optional supporting files
 │   ├── aws-expert/
 │   │   └── ...
-│   └── ... (97 plugins total)
-├── scripts/                      # Build/migration scripts
+│   └── ... (104 plugins total)
 ├── AGENTS.md                     # Agent instructions
 ├── CLAUDE.md                     # Repository guidance
 ├── CHANGELOG.md                  # Version history
@@ -88,7 +87,7 @@ claude-skills/
 └── README.md                     # This file
 ```
 
-## Available Skills (97 total)
+## Available Skills (104 total)
 
 All skills use domain prefixes for discoverability. Each skill is its own plugin.
 
@@ -126,14 +125,18 @@ All skills use domain prefixes for discoverability. Each skill is its own plugin
 | Skill | Description |
 |-------|-------------|
 | **dev-backlog** | Markdown-native task manager and Kanban board |
+| **dev-broken-windows** | Scan codebase for entropy indicators: skipped tests, commented-out code, TODO debt |
 | **dev-compress** | Optimize token usage in markdown content |
+| **dev-dry-audit** | Detect DRY violations across a codebase: code clones, repeated constants, knowledge duplication |
 | **dev-learn** | Capture learnings into documentation |
+| **dev-reload** | Reload Claude Code configuration without full restart via SIGHUP |
 | **dev-review** | Code review orchestrator: auto-detects context and routes |
 | **dev-review-file** | Deep code review of files and directories |
 | **dev-review-pr** | Review git diffs, staged changes, and GitHub PRs |
 | **dev-rlm** | Repository Language Model context management |
 | **dev-skill-create** | Create new skills following best practices |
 | **dev-swarm** | Parallelize tasks using Claude agents |
+| **dev-wizard-review** | Review generated/scaffolded code for maintainability |
 
 ### doc- (Documentation & Notes)
 | Skill | Description |
@@ -147,8 +150,11 @@ All skills use domain prefixes for discoverability. Each skill is its own plugin
 | **doc-pandoc** | Universal document conversion with Pandoc |
 | **doc-qmd** | Local on-device search engine for markdown knowledge bases |
 | **doc-book-reader** | Read entire books (PDF, EPUB, DOCX, TXT) and produce structured synthesis reports |
+| **doc-changelog** | Generate and update CHANGELOG.md from git history |
 | **doc-extract** | Document intelligence: extract structured text from PDFs, images using tiered OCR engines |
+| **doc-project** | Update all project documentation in one pass: CLAUDE.md, AGENTS.md, README.md, SKILLS.md |
 | **doc-readme** | Create, update, and validate README.md files |
+| **doc-skills-md** | Create and update SKILLS.md with marketplace plugin recommendations |
 
 ### git- (Git & Version Control)
 | Skill | Description |
