@@ -68,7 +68,7 @@ rm -rf ~/.claude/skills/*
 ```
 claude-skills/
 ├── .claude-plugin/
-│   └── marketplace.json          # Marketplace catalog (104 plugins)
+│   └── marketplace.json          # Marketplace catalog (105 plugins)
 ├── plugins/
 │   ├── aws-cli/
 │   │   ├── .claude-plugin/
@@ -87,7 +87,7 @@ claude-skills/
 └── README.md                     # This file
 ```
 
-## Available Skills (104 total)
+## Available Skills (105 total)
 
 All skills use domain prefixes for discoverability. Each skill is its own plugin.
 
@@ -231,6 +231,7 @@ All skills use domain prefixes for discoverability. Each skill is its own plugin
 | **res-trends** | Multi-source trend analysis with hybrid search |
 | **res-price-compare** | Polish market product price comparison: 20+ shops, shipping, warranty analysis |
 | **res-web** | Web research and analysis |
+| **res-x** | Fetch X/Twitter tweet content by URL and search X posts |
 
 ### sec- (Security Scanning)
 | Skill | Description |

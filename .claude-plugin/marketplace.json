@@ -652,6 +652,13 @@
       "version": "1.0.0"
     },
     {
+      "name": "res-x",
+      "description": "Fetch X/Twitter tweet content by URL and search X posts. Resolves tweet links that WebFetch cannot scrape. Use for: reading saved X/Twitter links, fetching tweet content from URLs, searching X for posts on a topic, batch-processing X links from notes. Triggers: x.com link, twitter.com link, fetch tweet, read tweet, what does this tweet say, X search, twitter search.",
+      "source": "./plugins/res-x",
+      "category": "research",
+      "version": "1.0.0"
+    },
+    {
       "name": "res-web",
       "description": "Research topics with web search. Use when: researching a topic or concept, finding current information, answering factual questions, comparing options or technologies. Triggers: research [topic], find out about, what are the best practices for, research the latest on.",
       "source": "./plugins/res-web",
