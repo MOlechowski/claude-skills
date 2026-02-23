@@ -108,16 +108,17 @@ https://x.com/{user}/status/{id}
 https://twitter.com/{user}/status/{id}
 https://x.com/{user}/status/{id}?s=20
 https://x.com/{user}/status/{id}?t=...&s=...
+https://x.com/i/article/{id}
 ```
 
-All normalized to `https://x.com/{user}/status/{id}` before processing.
+Tweets normalized to `https://x.com/{user}/status/{id}`, articles to `https://x.com/i/article/{id}` before processing.
 
 ## Batch Processing
 
 For processing saved X links from a file (e.g., Obsidian daily note):
 
 1. Read the file content
-2. Extract all X/Twitter URLs (regex: `https?://(?:x\.com|twitter\.com)/\w+/status/\d+`)
+2. Extract all X/Twitter URLs (tweets: `https?://(?:x\.com|twitter\.com)/\w+/status/\d+`, articles: `https?://(?:x\.com|twitter\.com)/i/article/[\w\-]+`)
 3. Pass all URLs to the script: `uv run scripts/x_fetch.py fetch "url1" "url2" ...`
 4. Present results organized by URL
 
