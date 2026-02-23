@@ -6,13 +6,14 @@
 # ]
 # ///
 """
-X/Twitter tweet fetcher and search tool.
+X/Twitter content fetcher and search tool.
 
-Fetches tweet content by URL or searches X using xAI Responses API.
-Reads API key from macOS Keychain.
+Fetches tweets, articles, and other X content by URL, or searches X
+using xAI Responses API. Reads API key from macOS Keychain.
 
 Usage:
     uv run x_fetch.py fetch "https://x.com/user/status/123"
+    uv run x_fetch.py fetch "https://x.com/i/article/456"
     uv run x_fetch.py fetch "url1" "url2" "url3"
     uv run x_fetch.py fetch "url1" "url2" --single
     uv run x_fetch.py search "query terms"
@@ -37,8 +38,11 @@ XAI_RESPONSES_URL = "https://api.x.ai/v1/responses"
 XAI_MODEL = "grok-4-1-fast-reasoning"
 CHUNK_SIZE = 3
 
-URL_PATTERN = re.compile(
+TWEET_PATTERN = re.compile(
     r"https?://(?:x\.com|twitter\.com)/(\w+)/status/(\d+)"
+)
+ARTICLE_PATTERN = re.compile(
+    r"https?://(?:x\.com|twitter\.com)/i/article/([\w\-]+)"
 )
 
 
@@ -178,30 +182,46 @@ def normalize_url(url: str) -> str:
     if not url.startswith("http"):
         url = "https://" + url
     url = url.replace("twitter.com", "x.com")
-    match = URL_PATTERN.search(url)
-    if match:
-        username, tweet_id = match.groups()
+    tweet_match = TWEET_PATTERN.search(url)
+    if tweet_match:
+        username, tweet_id = tweet_match.groups()
         return f"https://x.com/{username}/status/{tweet_id}"
+    article_match = ARTICLE_PATTERN.search(url)
+    if article_match:
+        article_id = article_match.group(1)
+        return f"https://x.com/i/article/{article_id}"
     return url
 
 
-def parse_tweet_urls(args: list) -> list:
-    """Extract and validate tweet URLs from arguments."""
+def parse_urls(args: list) -> list:
+    """Extract and validate X/Twitter URLs from arguments."""
     parsed = []
     skipped = []
     for arg in args:
-        match = URL_PATTERN.search(arg)
-        if match:
-            username, tweet_id = match.groups()
+        tweet_match = TWEET_PATTERN.search(arg)
+        if tweet_match:
+            username, tweet_id = tweet_match.groups()
             parsed.append(
                 {
                     "url": normalize_url(arg),
+                    "type": "tweet",
                     "username": username,
                     "tweet_id": tweet_id,
                 }
             )
-        else:
-            skipped.append(arg)
+            continue
+        article_match = ARTICLE_PATTERN.search(arg)
+        if article_match:
+            article_id = article_match.group(1)
+            parsed.append(
+                {
+                    "url": normalize_url(arg),
+                    "type": "article",
+                    "article_id": article_id,
+                }
+            )
+            continue
+        skipped.append(arg)
 
     if skipped:
         print(
@@ -217,7 +237,7 @@ def chunk_urls(urls: list, size: int = CHUNK_SIZE) -> list:
     return [urls[i : i + size] for i in range(0, len(urls), size)]
 
 
-def build_single_fetch_prompt(url: str) -> str:
+def build_single_tweet_prompt(url: str) -> str:
     """Build prompt for fetching a single tweet."""
     return f"""Retrieve the full content of this specific tweet: {url}
 
@@ -234,7 +254,7 @@ Include ALL of the following:
 Format the output clearly with labeled sections."""
 
 
-def build_multi_fetch_prompt(url_list: str) -> str:
+def build_multi_tweet_prompt(url_list: str) -> str:
     """Build prompt for fetching multiple tweets."""
     return f"""Retrieve the full content of each of these tweets:
 
@@ -253,33 +273,145 @@ For EACH tweet, include ALL of the following:
 Separate each tweet clearly with a divider. Process every URL."""
 
 
-def fetch_tweets(
+def build_single_article_prompt(url: str) -> str:
+    """Build prompt for fetching a single X article."""
+    return f"""Find the full content of the X/Twitter article at: {url}
+
+Follow these steps IN ORDER:
+
+STEP 1 — Identify the article (use x_search):
+Search X for the tweet that shared this article URL. Look for tweets
+containing "{url}" or the article ID. This gives you the author handle,
+topic, and any preview text.
+
+STEP 2 — Find full content (use web_search):
+Using the author name, article title/topic, and key phrases from Step 1,
+search the web for the full article text. Check blogs, newsletters,
+Reddit, Hacker News, and other sites that reposted or discussed it.
+
+STEP 3 — Report everything you found:
+1. Article title
+2. Author display name and handle (@username)
+3. Publication date
+4. Full article text — as much as you can reconstruct
+5. Engagement metrics: likes, reposts, replies, views
+6. Key quotes from the article
+7. Related links or citations
+
+Format the output clearly with labeled sections."""
+
+
+def build_multi_article_prompt(url_list: str) -> str:
+    """Build prompt for fetching multiple X articles."""
+    return f"""Find the full content of each of these X/Twitter articles:
+
+{url_list}
+
+For EACH article, follow these steps IN ORDER:
+
+STEP 1 — Identify the article (use x_search):
+Search X for the tweet that shared this article URL. This gives you
+the author handle, topic, and preview text.
+
+STEP 2 — Find full content (use web_search):
+Using the author name, article title/topic, and key phrases from Step 1,
+search the web for the full text. Check blogs, newsletters, Reddit, HN.
+
+STEP 3 — Report:
+1. Article URL (as header)
+2. Article title
+3. Author display name and handle
+4. Publication date
+5. Full article text — as much as you can reconstruct
+6. Key quotes
+7. Engagement metrics if available
+
+Separate each article clearly with a divider."""
+
+
+def _build_prompt_for_chunk(chunk: list) -> str:
+    """Build the appropriate prompt for a chunk of URLs based on type."""
+    types = {u["type"] for u in chunk}
+    urls_str = "\n".join(f"- {u['url']}" for u in chunk)
+
+    if len(chunk) == 1:
+        url = chunk[0]["url"]
+        if chunk[0]["type"] == "article":
+            return build_single_article_prompt(url)
+        return build_single_tweet_prompt(url)
+
+    if types == {"article"}:
+        return build_multi_article_prompt(urls_str)
+    if types == {"tweet"}:
+        return build_multi_tweet_prompt(urls_str)
+
+    return f"""Retrieve the full content of each of these X/Twitter items:
+
+{urls_str}
+
+For EACH item, include ALL of the following:
+1. The URL (as a header to separate items)
+2. Full content text (complete, not truncated)
+3. Author display name and handle (@username)
+4. Date posted/published
+5. Engagement metrics: likes, reposts, replies, views
+6. Any media: describe images, note videos/links
+7. For tweets: thread/reply/quote context if applicable
+8. For articles: title and any citations/links within
+
+Separate each item clearly with a divider. Process every URL."""
+
+
+def _tool_for_chunk(chunk: list) -> list:
+    """Select API tools based on URL types in the chunk.
+
+    Articles get both x_search (to identify author/topic) and
+    web_search (to find full text externally). Tweets only need
+    x_search.
+    """
+    types = {u["type"] for u in chunk}
+    if types == {"tweet"}:
+        return [{"type": "x_search"}]
+    # Articles or mixed: provide both tools
+    return [{"type": "x_search"}, {"type": "web_search"}]
+
+
+def fetch_urls(
     urls: list, api_key: str, single: bool = False
 ) -> list:
-    """Fetch tweet content by URL(s)."""
+    """Fetch X content by URL(s).
+
+    Tweets use x_search, articles use web_search (x_search cannot
+    read X article bodies).
+    """
     chunk_size = 1 if single else CHUNK_SIZE
-    chunks = chunk_urls(urls, chunk_size)
+
+    # Separate by type so each chunk gets the right tool
+    tweets = [u for u in urls if u["type"] == "tweet"]
+    articles = [u for u in urls if u["type"] == "article"]
+
     results = []
 
-    for chunk in chunks:
-        if len(chunk) == 1:
-            prompt = build_single_fetch_prompt(chunk[0]["url"])
-        else:
-            url_list = "\n".join(f"- {u['url']}" for u in chunk)
-            prompt = build_multi_fetch_prompt(url_list)
+    for group in (tweets, articles):
+        if not group:
+            continue
+        chunks = chunk_urls(group, chunk_size)
+        for chunk in chunks:
+            prompt = _build_prompt_for_chunk(chunk)
+            tools = _tool_for_chunk(chunk)
 
-        response = call_xai_responses(
-            api_key, prompt, [{"type": "x_search"}], timeout=150
-        )
-        content = extract_output_text(response)
+            response = call_xai_responses(
+                api_key, prompt, tools, timeout=150
+            )
+            content = extract_output_text(response)
 
-        results.append(
-            {
-                "urls": [u["url"] for u in chunk],
-                "content": content,
-                "raw_response": response,
-            }
-        )
+            results.append(
+                {
+                    "urls": [u["url"] for u in chunk],
+                    "content": content,
+                    "raw_response": response,
+                }
+            )
 
     return results
 
@@ -334,11 +466,11 @@ def print_fetch_results(results: list, json_output: bool = False):
     if json_output:
         output = {
             "type": "fetch",
-            "tweets": [],
+            "items": [],
             "timestamp": datetime.now().isoformat(),
         }
         for r in results:
-            output["tweets"].append(
+            output["items"].append(
                 {
                     "urls": r["urls"],
                     "content": r["content"],
@@ -349,7 +481,7 @@ def print_fetch_results(results: list, json_output: bool = False):
 
     total = sum(len(r["urls"]) for r in results)
     print(f"\n{'=' * 60}")
-    print(f"Fetched {total} tweet(s)")
+    print(f"Fetched {total} item(s)")
     print(f"{'=' * 60}\n")
 
     for r in results:
@@ -391,11 +523,12 @@ def print_search_results(results: dict, json_output: bool = False):
 def parse_args():
     """Parse command line arguments."""
     parser = argparse.ArgumentParser(
-        description="Fetch X/Twitter tweets by URL or search X posts",
+        description="Fetch X/Twitter content by URL or search X posts",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
   uv run x_fetch.py fetch "https://x.com/user/status/123"
+  uv run x_fetch.py fetch "https://x.com/i/article/456"
   uv run x_fetch.py fetch "url1" "url2" "url3"
   uv run x_fetch.py fetch "url1" --single
   uv run x_fetch.py search "AI agents"
@@ -407,10 +540,10 @@ Examples:
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     fetch_parser = subparsers.add_parser(
-        "fetch", help="Fetch tweet content by URL"
+        "fetch", help="Fetch tweet/article content by URL"
     )
     fetch_parser.add_argument(
-        "urls", nargs="+", help="One or more X/Twitter URLs"
+        "urls", nargs="+", help="One or more X/Twitter URLs (tweets or articles)"
     )
     fetch_parser.add_argument(
         "--single",
@@ -450,22 +583,24 @@ def main():
     api_key = get_api_key()
 
     if args.command == "fetch":
-        parsed = parse_tweet_urls(args.urls)
+        parsed = parse_urls(args.urls)
         if not parsed:
             print(
                 "Error: No valid X/Twitter URLs found.",
                 file=sys.stderr,
             )
             print(
-                "Expected format: https://x.com/user/status/123456",
+                "Expected formats:\n"
+                "  https://x.com/user/status/123456\n"
+                "  https://x.com/i/article/789",
                 file=sys.stderr,
             )
             sys.exit(1)
 
         if not args.json_output:
-            print(f"Fetching {len(parsed)} tweet(s)...")
+            print(f"Fetching {len(parsed)} item(s)...")
 
-        results = fetch_tweets(parsed, api_key, single=args.single)
+        results = fetch_urls(parsed, api_key, single=args.single)
         print_fetch_results(results, args.json_output)
 
     elif args.command == "search":
