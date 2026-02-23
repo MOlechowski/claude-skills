@@ -155,6 +155,13 @@
       "version": "1.0.0"
     },
     {
+      "name": "dev-dry-audit",
+      "description": "Detect DRY violations across a codebase — knowledge duplication, not just copy-paste. Finds: code clones, repeated constants, config values in multiple places, comments paraphrasing code, API contract drift. Reports as violation pairs with suggested consolidation. Use when: DRY audit, find duplication, code duplication scan, knowledge duplication. Triggers: DRY audit, find duplicates, scan for duplication, repeated code, copy-paste detection.",
+      "source": "./plugins/dev-dry-audit",
+      "category": "dev",
+      "version": "1.0.0"
+    },
+    {
       "name": "dev-learn",
       "description": "Capture learnings into documentation. Use when: completing work that revealed missing instructions, finding workarounds for undocumented blockers, discovering patterns that work better than documented, capturing session learnings. Triggers: update the instructions based on what we learned, add this pattern to the docs, capture this workaround, improve the workflow documentation.",
       "source": "./plugins/dev-learn",
