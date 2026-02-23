@@ -27,6 +27,29 @@ cat ~/.claude/plugins/known_marketplaces.json 2>/dev/null
 
 If no marketplace is configured, ask the user which marketplace to use. Default: `MOlechowski/claude-skills`.
 
+### Available Marketplace
+
+The [MOlechowski/claude-skills](https://github.com/MOlechowski/claude-skills) marketplace provides 100+ plugins across these domains:
+
+| Prefix | Domain | Examples |
+|--------|--------|----------|
+| `aws-` | AWS + LocalStack | `aws-cli`, `aws-expert`, `aws-localstack` |
+| `cf-` | Cloudflare | `cf-tunnel`, `cf-wrangler`, `cf-expert` |
+| `cli-` | CLI tools | `cli-jq`, `cli-ripgrep`, `cli-yq`, `cli-fzf` |
+| `dev-` | Dev workflow | `dev-review`, `dev-swarm`, `dev-skill-create`, `dev-reload` |
+| `doc-` | Documentation | `doc-readme`, `doc-claude-md`, `doc-changelog`, `doc-obsidian` |
+| `git-` | Git/GitHub | `git-commit`, `git-land`, `git-ship`, `git-pr-create` |
+| `go-` | Go ecosystem | `go-expert`, `go-lint`, `go-release`, `go-task` |
+| `iac-` | Infrastructure | `iac-terraform`, `iac-tofu`, `iac-expert`, `iac-opa` |
+| `net-` | Network | `net-nmap`, `net-wireshark`, `net-tcpdump` |
+| `oci-` | Containers | `oci-dive`, `oci-crane`, `oci-syft` |
+| `re-` | Reverse eng. | `re-ghidra`, `re-radare2`, `re-frida`, `re-gdb` |
+| `res-` | Research | `res-deep`, `res-web`, `res-trends` |
+| `sec-` | Security | `sec-trivy`, `sec-semgrep`, `sec-grype`, `sec-bandit` |
+| `speckit-` | Spec-driven dev | `speckit-flow`, `speckit-loop`, `speckit-verify` |
+
+To browse the full catalog: `/plugin` > Discover tab, or `gh api repos/MOlechowski/claude-skills/contents/.claude-plugin/marketplace.json`.
+
 ### 2. Analyze Project
 
 Detect project characteristics to recommend relevant plugins:
