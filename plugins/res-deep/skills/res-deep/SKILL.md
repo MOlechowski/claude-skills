@@ -241,11 +241,11 @@ Same parallel pattern as Round 1, but with targeted queries.
 
 Maximum 4-6 WebFetch calls in Round 2.
 
-**Scrapling fallback:** If WebFetch returns 403, empty content, a captcha page, or a blocked response for any URL, retry with scrapling:
-```bash
-scrapling extract get "URL" /tmp/scrapling-fallback.md
-```
-Then read `/tmp/scrapling-fallback.md` with the Read tool. This handles sites with anti-bot protection that reject plain HTTP fetches.
+**Scrapling fallback:** If WebFetch returns 403, empty content, a captcha page, or a blocked response, retry using the **auto-escalation protocol** from cli-web-scrape:
+1. `scrapling extract get "URL" /tmp/scrapling-fallback.md` → Read → validate content
+2. If content is thin (JS-only shell, no data, mostly nav links) → `scrapling extract fetch "URL" /tmp/scrapling-fallback.md --network-idle --disable-resources` → Read → validate
+3. If still blocked → `scrapling extract stealthy-fetch "URL" /tmp/scrapling-fallback.md --solve-cloudflare`
+4. All tiers fail → skip URL and note "scrapling blocked"
 
 ### Confidence Update
 
@@ -274,11 +274,7 @@ Maximum 6-10 WebFetch lookups targeting:
 | Both sides of contradictions | Resolve conflicts | 1-2 |
 | Official sites for versions/dates | Confirm recency | 1-2 |
 
-**Scrapling fallback:** Same pattern as Round 2 -- if WebFetch fails (403, empty, captcha, blocked), retry with:
-```bash
-scrapling extract get "URL" /tmp/scrapling-fallback.md
-```
-Then read `/tmp/scrapling-fallback.md` with the Read tool.
+**Scrapling fallback:** Same auto-escalation protocol as Round 2 — try HTTP tier, validate content, escalate to Dynamic/Stealthy if thin or blocked.
 
 ### Rules
 
@@ -449,12 +445,11 @@ security unlock-keychain ~/Library/Keychains/claude-keys.keychain-db
 
 **No X/Twitter results:** Requires valid xAI API key. Check at https://console.x.ai
 
-**WebFetch blocked (403/captcha/empty):** Install scrapling and retry:
+**WebFetch blocked (403/captcha/empty):** Install scrapling and follow the auto-escalation protocol from cli-web-scrape (HTTP → validate → Dynamic → Stealthy):
 ```bash
 uv tool install 'scrapling[all]'
-scrapling extract get "URL" /tmp/scrapling-fallback.md
+scrapling install  # one-time: install browser engines for Dynamic/Stealthy tiers
 ```
-Then read `/tmp/scrapling-fallback.md` with the Read tool.
 
 **Script errors:** Ensure uv is installed: `which uv`. If missing: `curl -LsSf https://astral.sh/uv/install.sh | sh`
 

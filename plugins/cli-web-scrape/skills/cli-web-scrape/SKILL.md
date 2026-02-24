@@ -175,24 +175,64 @@ scrapling extract stealthy-fetch "https://protected.com" /tmp/scrapling-out.txt 
   --solve-cloudflare -s ".content"
 ```
 
-## Escalation Pattern
+## Auto-Escalation Protocol
 
-1. Try HTTP tier first (fast, low overhead)
-2. If response is empty/blocked/403 → try `fetch` (JS rendering)
-3. If still blocked → try `stealthy-fetch --solve-cloudflare`
-4. If still blocked → add `--block-webrtc --hide-canvas --block-webgl`
+**ALL scrapling usage must follow this protocol.** Never use `extract get` alone — always validate content and escalate if needed. Consumer skills (res-deep, res-price-compare, doc-daily-digest) MUST use this pattern, not a bare `extract get`.
+
+### Step 1: HTTP Tier
 
 ```bash
-# Step 1: HTTP tier
-scrapling extract get "https://target.com/page" /tmp/scrapling-out.md -s ".main-content"
-
-# Step 2: If blocked, escalate to dynamic
-scrapling extract fetch "https://target.com/page" /tmp/scrapling-out.md -s ".main-content"
-
-# Step 3: If still blocked, escalate to stealthy
-scrapling extract stealthy-fetch "https://target.com/page" /tmp/scrapling-out.md \
-  --solve-cloudflare -s ".main-content"
+scrapling extract get "URL" /tmp/scrapling-out.md
 ```
+
+Read `/tmp/scrapling-out.md` and **validate content** before proceeding.
+
+### Step 2: Validate Content
+
+Check the scraped output for **thin content indicators** — signs that the site requires JS rendering:
+
+| Indicator | Pattern | Example |
+|-----------|---------|---------|
+| JS disabled warning | "JavaScript", "enable JavaScript", "JS wyłączony" | iSpot.pl, many SPAs |
+| No product/price data | Output has navigation and footer but no prices, specs, or product names | E-commerce SPAs |
+| Mostly nav links | 80%+ of content is menu items, category links, cookie banners | React/Angular/Vue apps |
+| Very short content | Less than ~20 meaningful lines after stripping nav/footer | Hydration-dependent pages |
+| Login/loading wall | "Loading...", "Please wait", skeleton UI text | Dashboard apps |
+
+**If ANY indicator is present → escalate to Dynamic tier.** Do NOT treat HTTP 200 with thin content as success.
+
+### Step 3: Dynamic Tier (if content validation fails)
+
+```bash
+scrapling extract fetch "URL" /tmp/scrapling-out.md --network-idle --disable-resources
+```
+
+Read and validate again. If content is now rich → done. If still blocked (403, Cloudflare challenge, empty) → escalate.
+
+### Step 4: Stealthy Tier (if Dynamic tier fails)
+
+```bash
+scrapling extract stealthy-fetch "URL" /tmp/scrapling-out.md --solve-cloudflare
+```
+
+If still blocked, add maximum stealth flags:
+```bash
+scrapling extract stealthy-fetch "URL" /tmp/scrapling-out.md \
+  --solve-cloudflare --block-webrtc --hide-canvas --block-webgl
+```
+
+### Consumer Skill Integration
+
+When a consumer skill says "retry with scrapling" or "scrapling fallback", it means: **follow the full auto-escalation protocol above**, not just the HTTP tier. The pattern:
+
+1. `extract get` → Read → Validate content
+2. Content thin? → `extract fetch --network-idle --disable-resources` → Read → Validate
+3. Still blocked? → `extract stealthy-fetch --solve-cloudflare` → Read
+4. All tiers fail? → Skip and label "scrapling blocked"
+
+**Known JS-rendered sites** (always start at Dynamic tier):
+- iSpot.pl — React SPA, HTTP tier returns only nav shell
+- Single-page apps with client-side routing (hash or history API URLs)
 
 ## Interactive Shell
 

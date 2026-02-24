@@ -104,13 +104,11 @@ WebFetch: https://github.com/{owner}/{repo}
 Prompt: "Extract: repo name, description, star count, language, license, last update date, and a 2-3 sentence summary of what this project does based on the README."
 ```
 
-**Scrapling fallback:** If WebFetch returns 403, empty content, a captcha page, or a blocked response, retry with scrapling:
-
-```bash
-scrapling extract get "https://github.com/{owner}/{repo}" /tmp/scrapling-fallback.md
-```
-
-Then read `/tmp/scrapling-fallback.md` with the Read tool and extract the same fields.
+**Scrapling fallback:** If WebFetch returns 403, empty content, a captcha page, or a blocked response, retry using the **auto-escalation protocol** from cli-web-scrape:
+1. `scrapling extract get "URL" /tmp/scrapling-fallback.md` → Read → validate content
+2. If content is thin (JS-only shell, no data) → `scrapling extract fetch "URL" /tmp/scrapling-fallback.md --network-idle --disable-resources` → Read → validate
+3. If still blocked → `scrapling extract stealthy-fetch "URL" /tmp/scrapling-fallback.md --solve-cloudflare`
+4. All tiers fail → note failure and move on
 
 ### Web URLs
 
@@ -119,15 +117,11 @@ WebFetch: {URL}
 Prompt: "Extract: page title, author if available, publication date if available, and a 3-5 sentence summary of the key content."
 ```
 
-**Scrapling fallback:** If WebFetch returns 403, empty content, a captcha page, or a blocked response, retry with scrapling:
-
-```bash
-scrapling extract get "{URL}" /tmp/scrapling-fallback.md
-```
-
-Then read `/tmp/scrapling-fallback.md` with the Read tool and extract the same fields.
-
-If both WebFetch and scrapling fail, note the failure and move on.
+**Scrapling fallback:** If WebFetch returns 403, empty content, a captcha page, or a blocked response, retry using the **auto-escalation protocol** from cli-web-scrape:
+1. `scrapling extract get "URL" /tmp/scrapling-fallback.md` → Read → validate content
+2. If content is thin (JS-only shell, no data) → `scrapling extract fetch "URL" /tmp/scrapling-fallback.md --network-idle --disable-resources` → Read → validate
+3. If still blocked → `scrapling extract stealthy-fetch "URL" /tmp/scrapling-fallback.md --solve-cloudflare`
+4. All tiers fail → note failure and move on
 
 ### Loose Ideas
 

@@ -50,20 +50,18 @@ Every WebFetch call in this skill follows a two-tier pattern:
    ```
    WebFetch(url, prompt)
    ```
-2. **If WebFetch fails** (403, empty content, CAPTCHA page, or blocked response), **retry with scrapling**:
-   ```bash
-   scrapling extract get "URL" /tmp/scrapling-fallback.md
-   ```
-   Then read the result:
-   ```
-   Read(/tmp/scrapling-fallback.md)
-   ```
+2. **If WebFetch fails** (403, empty content, CAPTCHA page, or blocked response), **retry using the auto-escalation protocol** from cli-web-scrape:
+   1. `scrapling extract get "URL" /tmp/scrapling-fallback.md` → Read → validate content
+   2. If content is thin (JS-only shell, no data, mostly nav links) → `scrapling extract fetch "URL" /tmp/scrapling-fallback.md --network-idle --disable-resources` → Read → validate
+   3. If still blocked → `scrapling extract stealthy-fetch "URL" /tmp/scrapling-fallback.md --solve-cloudflare`
+   4. All tiers fail → skip shop and label "scrapling blocked"
 
-Detection heuristics for blocked responses:
+Detection heuristics for blocked/thin responses:
 - HTTP 403 or "access denied" in response
 - Response body is empty or contains only navigation/cookie banners
 - Response contains CAPTCHA challenge (reCAPTCHA, hCaptcha, Cloudflare challenge page)
-- Response is a generic "please enable JavaScript" page
+- Response is a "please enable JavaScript" page or JS-disabled warning
+- HTTP 200 but no prices, specs, or product names — only nav links and footer (JS-rendered SPA)
 
 If scrapling is not installed, fall back to the original behavior: skip the shop and label "WebFetch blocked".
 
@@ -166,11 +164,7 @@ WebFetch(url, "Podaj: 1) dokładną cenę brutto, 2) dostępność/stan magazyno
   3) koszty wysyłki, 4) informacje o gwarancji (producenta czy sprzedawcy)")
 ```
 
-If WebFetch returns 403, empty content, CAPTCHA, or a blocked response:
-```bash
-scrapling extract get "URL" /tmp/scrapling-fallback.md
-```
-Then `Read(/tmp/scrapling-fallback.md)` and extract the same data points.
+If WebFetch returns 403, empty content, CAPTCHA, or a blocked response, follow the auto-escalation protocol (HTTP → validate content → Dynamic → Stealthy). Extract the same data points from the scrapling output.
 
 If Ceneo is available, WebFetch the Ceneo page **first** — it provides a list of many shops at once.
 
@@ -219,11 +213,7 @@ WebFetch(shipping_url, "Podaj wszystkie opcje dostawy z cenami:
   kurier, Paczkomat, Poczta Polska, odbiór osobisty, darmowa wysyłka (od jakiej kwoty)")
 ```
 
-On blocked response, fall back to scrapling:
-```bash
-scrapling extract get "SHIPPING_URL" /tmp/scrapling-fallback.md
-```
-Then `Read(/tmp/scrapling-fallback.md)` and extract delivery options.
+On blocked response, follow the auto-escalation protocol (HTTP → validate content → Dynamic → Stealthy) and extract delivery options from the scrapling output.
 
 ## Step 6: Round 4 — B2B and Distributors
 
@@ -251,11 +241,7 @@ WebFetch(terms_url, "Czy regulamin wyłącza rękojmię dla przedsiębiorców?
   Szukaj: Art. 558 KC, wyłączenie rękojmi, przedsiębiorca, firma")
 ```
 
-On blocked response, fall back to scrapling:
-```bash
-scrapling extract get "TERMS_URL" /tmp/scrapling-fallback.md
-```
-Then `Read(/tmp/scrapling-fallback.md)` and search for statutory warranty exclusion clauses.
+On blocked response, follow the auto-escalation protocol (HTTP → validate content → Dynamic → Stealthy) and search the scrapling output for statutory warranty exclusion clauses.
 
 ### Distribution Chain
 
@@ -419,7 +405,7 @@ Always **deep** mode — 5 rounds, 25-40 shops, 20-30 WebFetch.
 
 | Error | Resolution |
 |-------|-----------|
-| WebFetch 403/CAPTCHA/empty | Retry with scrapling fallback: `scrapling extract get "URL" /tmp/scrapling-fallback.md`, then `Read(/tmp/scrapling-fallback.md)`. If scrapling unavailable or also fails, skip shop and label "blocked" |
+| WebFetch 403/CAPTCHA/empty | Follow auto-escalation protocol from cli-web-scrape: HTTP tier → validate content → Dynamic tier → Stealthy tier. If scrapling unavailable or all tiers fail, skip shop and label "blocked" |
 | Ceneo returns no results | Search directly in shops from polish-market.md |
 | Allegro blocks scraping | Use WebSearch `site:allegro.pl`, not WebFetch |
 | No price on page | Label "n/a", skip in ranking |
