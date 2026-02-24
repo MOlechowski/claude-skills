@@ -141,6 +141,128 @@ When evaluating GitHub results, look for:
 - **Front page:** Validated by community voting
 - **Flagged/dead:** Controversial (may still have useful info in comments)
 
+## Substack Search Patterns
+
+### Article Discovery
+
+| Pattern | Description | Example |
+|---------|-------------|---------|
+| `site:substack.com "{topic}"` | General Substack search | `site:substack.com "AI agents"` |
+| `site:*.substack.com "{topic}"` | Include custom subdomain newsletters | `site:*.substack.com "machine learning"` |
+| `site:substack.com "{author}"` | Author search | `site:substack.com "Alap Shah"` |
+| `"{topic}" substack comments reaction` | Find discussions and reactions | `"AI crisis" substack comments` |
+
+### Quality Signals
+
+- **Subscriber count:** 10K+ = established newsletter
+- **Likes/hearts:** 50+ = high engagement for the platform
+- **Comment sections:** Active comments often contain expert counter-arguments
+- **Cross-posting:** Articles shared on X/HN/Reddit = validated content
+
+### Limitations
+
+- Many Substacks are paywalled — WebFetch may only get preview content. If blocked, try scrapling fallback: `scrapling extract get "URL" /tmp/scrapling-fallback.md`
+- `open.substack.com` URLs redirect to author subdomains — follow redirects
+
+## Financial Media Search Patterns
+
+### Site-Specific Searches
+
+| Pattern | Description | Example |
+|---------|-------------|---------|
+| `site:tradingview.com "{topic}"` | TradingView analysis and ideas | `site:tradingview.com "AI stocks"` |
+| `site:seekingalpha.com "{topic}"` | Seeking Alpha analysis | `site:seekingalpha.com "AI disruption"` |
+| `site:benzinga.com "{topic}"` | Benzinga news and analysis | `site:benzinga.com "AI jobs"` |
+| `site:wallstreetoasis.com "{topic}"` | WSO forum threads | `site:wallstreetoasis.com "AI banking"` |
+| `site:invezz.com "{topic}"` | Invezz market analysis | `site:invezz.com "AI market"` |
+
+### Aggregating Financial Search
+
+```
+{topic} site:seekingalpha.com OR site:benzinga.com OR site:tradingview.com
+```
+
+### Quality Signals
+
+- **Seeking Alpha:** Comment count, author track record, PRO-only articles tend to be higher quality
+- **WSO:** Monkey points, replies from verified professionals, "Most Helpful" tags
+- **TradingView:** Ideas with chart analysis and community votes
+- **Benzinga:** Analyst ratings, earnings data references
+
+### Limitations
+
+- Seeking Alpha articles are often paywalled — WebFetch gets preview only. Try scrapling fallback: `scrapling extract get "URL" /tmp/scrapling-fallback.md`
+- WSO returns 403 on WebFetch — try scrapling fallback: `scrapling extract get "URL" /tmp/scrapling-fallback.md`, then read `/tmp/scrapling-fallback.md`. Fall back to WebSearch snippets if scrapling also fails
+- TradingView ideas are heavy on charts (not extractable via WebFetch or scrapling)
+
+## LinkedIn Search Patterns
+
+### Profile and Content Searches
+
+| Pattern | Description | Example |
+|---------|-------------|---------|
+| `site:linkedin.com/in/ "{name}"` | Person profile | `site:linkedin.com/in/ "Alap Shah"` |
+| `site:linkedin.com/company/ "{org}"` | Company page | `site:linkedin.com/company/ "Anthropic"` |
+| `site:linkedin.com/pulse/ "{topic}"` | LinkedIn articles | `site:linkedin.com/pulse/ "AI jobs"` |
+| `site:linkedin.com/posts/ "{topic}"` | LinkedIn posts | `site:linkedin.com/posts/ "AI disruption"` |
+
+### Quality Signals
+
+- **Connections/followers:** 500+ connections = established professional
+- **Article engagement:** Likes and comments on Pulse articles
+- **Verified badges:** Company pages with verified status
+
+### Limitations
+
+- WebFetch to LinkedIn usually fails (requires JavaScript/authentication). Try scrapling fallback: `scrapling extract get "URL" /tmp/scrapling-fallback.md` -- scrapling handles JavaScript rendering
+- If scrapling also fails, use WebSearch snippets only — do not attempt further deep-reading of LinkedIn URLs
+- Profile data from search snippets is often sufficient for author background checks
+
+## Crunchbase Search Patterns
+
+### Entity Discovery
+
+| Pattern | Description | Example |
+|---------|-------------|---------|
+| `site:crunchbase.com/person/ "{name}"` | Person profile | `site:crunchbase.com/person/ "Sam Altman"` |
+| `site:crunchbase.com/organization/ "{org}"` | Company profile | `site:crunchbase.com/organization/ "anthropic"` |
+| `"{name}" crunchbase investments advisory` | Investment activity | `"Marc Andreessen" crunchbase investments` |
+
+### Quality Signals
+
+- **Funding rounds:** Series stage, amounts, investors
+- **Board members:** Advisory and board roles reveal incentive structures
+- **Acquisitions:** M&A activity shows strategic interests
+
+### Limitations
+
+- Crunchbase paywalls detailed data — WebSearch snippets give basics (funding, HQ, employee count)
+- WebFetch may hit paywall for full profiles. Try scrapling fallback: `scrapling extract get "URL" /tmp/scrapling-fallback.md`
+
+## YouTube Search Patterns
+
+### Video Discovery
+
+| Pattern | Description | Example |
+|---------|-------------|---------|
+| `site:youtube.com "{topic}"` | General video search | `site:youtube.com "AI job displacement"` |
+| `site:youtube.com "{topic}" reaction OR review` | Reaction/review videos | `site:youtube.com "AI crisis" reaction` |
+| `site:youtube.com "{topic}" explained` | Explainer videos | `site:youtube.com "METR benchmark" explained` |
+| `site:youtube.com "{topic}" interview` | Interview clips | `site:youtube.com "AI safety" interview` |
+
+### Quality Signals
+
+- **View count:** 10K+ = notable reach
+- **Like ratio:** High like-to-dislike = community approval
+- **Comment count:** 100+ = active discussion
+- **Channel subscribers:** 100K+ = established creator
+
+### Limitations
+
+- WebFetch cannot extract video content — only metadata, descriptions, and comments. Scrapling fallback has the same limitation for video content
+- Use WebSearch snippets for video titles, view counts, and descriptions
+- Transcripts are not available via standard web fetching
+
 ## Technical Blog Targeting
 
 ### High-Signal Engineering Blogs
@@ -227,7 +349,11 @@ uv run xai_search.py x "AI tools 2026 min_faves:100"
 2. **Add X/Twitter** — Real-time opinions and expert takes
 3. **Add GitHub** — Assess actual adoption, code quality, maintenance
 4. **Add HN** — Technical depth, contrarian views, historical context
-5. **Cross-reference** — Compare social sentiment with code reality
+5. **Add Substack** — Long-form analysis, newsletter perspectives, counter-arguments
+6. **Add Financial Media** — Market impact, professional investor views (for finance/economics topics)
+7. **Add LinkedIn** — Author backgrounds, company profiles, professional credibility
+8. **Add YouTube** — Video reactions, explainers, interviews
+9. **Cross-reference** — Compare social sentiment with code reality and financial data
 
 ### Query Adaptation by Source
 
@@ -240,6 +366,9 @@ The same topic needs different queries per source:
 | X | Concise, trending | `AI code review min_faves:50` |
 | GitHub | Repository-focused | `site:github.com "AI code review" OR "AI PR review"` |
 | HN | Technical, opinionated | `site:news.ycombinator.com "AI code review"` |
+| Substack | Long-form, analytical | `site:substack.com "AI code review"` |
+| Financial | Market-impact oriented | `site:seekingalpha.com "AI code review" market` |
+| LinkedIn | Professional, credential | `site:linkedin.com "AI code review" engineer` |
 
 ## Rate Limits
 
