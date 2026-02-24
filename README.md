@@ -79,7 +79,7 @@ claude-skills/
 │   │           └── references/   # Optional supporting files
 │   ├── aws-expert/
 │   │   └── ...
-│   └── ... (104 plugins total)
+│   └── ... (108 plugins total)
 ├── AGENTS.md                     # Agent instructions
 ├── CLAUDE.md                     # Repository guidance
 ├── CHANGELOG.md                  # Version history
@@ -157,6 +157,7 @@ All skills use domain prefixes for discoverability. Each skill is its own plugin
 | **doc-readme** | Create, update, and validate README.md files |
 | **doc-skills-md** | Create and update SKILLS.md with marketplace plugin recommendations |
 | **doc-daily-digest** | Process Obsidian daily notes: classify URLs and ideas, fetch content, create notes, update wikilinks |
+| **doc-vault-save** | Save structured content to Obsidian vault with frontmatter, folder routing, dedup, and wikilinks |
 
 ### git- (Git & Version Control)
 | Skill | Description |
