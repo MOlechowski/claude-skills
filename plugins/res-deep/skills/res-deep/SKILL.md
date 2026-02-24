@@ -28,6 +28,12 @@ Results from multiple sources are **merged and deduplicated** for comprehensive 
 |------|---------|---------|
 | uv | Python package manager (handles dependencies) | `curl -LsSf https://astral.sh/uv/install.sh \| sh` |
 
+### Optional Tools
+
+| Tool | Purpose | Install |
+|------|---------|---------|
+| scrapling | Headless browser fallback for sites that block WebFetch (403, captcha, empty responses) | `uv tool install 'scrapling[all]'` |
+
 ### API Keys
 
 | Service | Purpose | Required | Get Key |
@@ -166,7 +172,7 @@ KEY_ENTITIES: [specific tools, companies, people discovered]
 THEMES: [recurring themes across sources]
 GAPS: [what's missing — feed into Step 3]
 CONTRADICTIONS: [conflicting claims]
-LEADS: [URLs worth deep-reading via WebFetch in Round 2]
+LEADS: [URLs worth deep-reading via WebFetch (or scrapling fallback) in Round 2]
 ```
 
 ## Step 3: Gap Analysis
@@ -210,6 +216,12 @@ Same parallel pattern as Round 1, but with targeted queries.
 
 Maximum 4-6 WebFetch calls in Round 2.
 
+**Scrapling fallback:** If WebFetch returns 403, empty content, a captcha page, or a blocked response for any URL, retry with scrapling:
+```bash
+scrapling extract get "URL" /tmp/scrapling-fallback.md
+```
+Then read `/tmp/scrapling-fallback.md` with the Read tool. This handles sites with anti-bot protection that reject plain HTTP fetches.
+
 ### Confidence Update
 
 After Round 2, re-assess all claims:
@@ -236,6 +248,12 @@ Maximum 6-10 WebFetch lookups targeting:
 | Independent benchmark sites | Validate performance claims | 1-2 |
 | Both sides of contradictions | Resolve conflicts | 1-2 |
 | Official sites for versions/dates | Confirm recency | 1-2 |
+
+**Scrapling fallback:** Same pattern as Round 2 -- if WebFetch fails (403, empty, captcha, blocked), retry with:
+```bash
+scrapling extract get "URL" /tmp/scrapling-fallback.md
+```
+Then read `/tmp/scrapling-fallback.md` with the Read tool.
 
 ### Rules
 
@@ -338,6 +356,7 @@ Mode is determined by Step 0 — never skip it or assume Web-Only without checki
 | Claude Code WebSearch | Free (subscription) |
 | xAI search call (any type) | $0.005/call |
 | WebFetch (built-in) | Free |
+| scrapling fallback (optional) | Free |
 
 **Estimated cost per research session:**
 
@@ -350,7 +369,7 @@ Mode is determined by Step 0 — never skip it or assume Web-Only without checki
 **Cost-Saving Strategy:**
 - Claude WebSearch handles most needs (free)
 - xAI adds X/Twitter (unique value) + broader coverage per platform
-- WebFetch for deep-reading specific URLs (free)
+- WebFetch for deep-reading specific URLs (free), with scrapling fallback for blocked sites
 
 ## Critical Constraints
 
@@ -390,6 +409,13 @@ security unlock-keychain ~/Library/Keychains/claude-keys.keychain-db
 ```
 
 **No X/Twitter results:** Requires valid xAI API key. Check at https://console.x.ai
+
+**WebFetch blocked (403/captcha/empty):** Install scrapling and retry:
+```bash
+uv tool install 'scrapling[all]'
+scrapling extract get "URL" /tmp/scrapling-fallback.md
+```
+Then read `/tmp/scrapling-fallback.md` with the Read tool.
 
 **Script errors:** Ensure uv is installed: `which uv`. If missing: `curl -LsSf https://astral.sh/uv/install.sh | sh`
 

@@ -15,6 +15,8 @@ Process an Obsidian daily note by classifying raw items, fetching/researching co
 | res-x | For X/Twitter URLs | Fetch tweet content via xAI |
 | res-deep | For loose ideas | Multi-round research |
 
+**Optional dependency:** `scrapling` -- headless browser fallback for sites that block WebFetch (403, empty content, captcha pages). Install with: `uv tool install 'scrapling[all]'`
+
 ## Workflow
 
 ```
@@ -102,6 +104,14 @@ WebFetch: https://github.com/{owner}/{repo}
 Prompt: "Extract: repo name, description, star count, language, license, last update date, and a 2-3 sentence summary of what this project does based on the README."
 ```
 
+**Scrapling fallback:** If WebFetch returns 403, empty content, a captcha page, or a blocked response, retry with scrapling:
+
+```bash
+scrapling extract get "https://github.com/{owner}/{repo}" /tmp/scrapling-fallback.md
+```
+
+Then read `/tmp/scrapling-fallback.md` with the Read tool and extract the same fields.
+
 ### Web URLs
 
 ```
@@ -109,7 +119,15 @@ WebFetch: {URL}
 Prompt: "Extract: page title, author if available, publication date if available, and a 3-5 sentence summary of the key content."
 ```
 
-If WebFetch returns 403 or empty content, note the failure and move on.
+**Scrapling fallback:** If WebFetch returns 403, empty content, a captcha page, or a blocked response, retry with scrapling:
+
+```bash
+scrapling extract get "{URL}" /tmp/scrapling-fallback.md
+```
+
+Then read `/tmp/scrapling-fallback.md` with the Read tool and extract the same fields.
+
+If both WebFetch and scrapling fail, note the failure and move on.
 
 ### Loose Ideas
 

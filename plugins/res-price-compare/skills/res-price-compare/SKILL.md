@@ -14,16 +14,18 @@ Iterative 5-round product price research on the Polish e-commerce market with wa
 | Tool | Purpose | Cost |
 |------|---------|------|
 | `WebSearch` | Search for shops, prices, offers | Free |
-| `WebFetch` | Verify prices on shop pages | Free |
+| `WebFetch` | Verify prices on shop pages (primary) | Free |
+| `scrapling` | Fallback for sites that block WebFetch | Free |
 
 No xAI — price comparison doesn't need X/Twitter.
 
 ## Requirements
 
-No external dependencies. Skill runs exclusively on built-in Claude Code tools.
+No external dependencies required. Skill runs on built-in Claude Code tools.
 
-Optionally for XLSX export:
-- `uv` — to run `uv run --with openpyxl python3 -c "..."`
+Optional dependencies:
+- `scrapling` — fallback for sites that block WebFetch (403, CAPTCHA, empty responses). Install: `uv tool install 'scrapling[all]'`
+- `uv` — to run `uv run --with openpyxl python3 -c "..."` for XLSX export
 
 ## Workflow Overview
 
@@ -39,6 +41,31 @@ Optionally for XLSX export:
 | 8 | Synthesis | Comparison table, recommendation, summary |
 | 9 | Export | TXT, XLSX, HTML on request |
 | 10 | Expert mode | Answers from cache, no new searches |
+
+## WebFetch with Scrapling Fallback
+
+Every WebFetch call in this skill follows a two-tier pattern:
+
+1. **Try WebFetch first** (fast, no file I/O):
+   ```
+   WebFetch(url, prompt)
+   ```
+2. **If WebFetch fails** (403, empty content, CAPTCHA page, or blocked response), **retry with scrapling**:
+   ```bash
+   scrapling extract get "URL" /tmp/scrapling-fallback.md
+   ```
+   Then read the result:
+   ```
+   Read(/tmp/scrapling-fallback.md)
+   ```
+
+Detection heuristics for blocked responses:
+- HTTP 403 or "access denied" in response
+- Response body is empty or contains only navigation/cookie banners
+- Response contains CAPTCHA challenge (reCAPTCHA, hCaptcha, Cloudflare challenge page)
+- Response is a generic "please enable JavaScript" page
+
+If scrapling is not installed, fall back to the original behavior: skip the shop and label "WebFetch blocked".
 
 ## Step 1: Parse Query
 
@@ -132,12 +159,18 @@ Select top 8-12 URLs for WebFetch verification. Priority:
 
 ### Execution
 
-For each URL from the list:
+For each URL from the list, apply the **WebFetch with Scrapling Fallback** pattern:
 
 ```
 WebFetch(url, "Podaj: 1) dokładną cenę brutto, 2) dostępność/stan magazynowy,
   3) koszty wysyłki, 4) informacje o gwarancji (producenta czy sprzedawcy)")
 ```
+
+If WebFetch returns 403, empty content, CAPTCHA, or a blocked response:
+```bash
+scrapling extract get "URL" /tmp/scrapling-fallback.md
+```
+Then `Read(/tmp/scrapling-fallback.md)` and extract the same data points.
 
 If Ceneo is available, WebFetch the Ceneo page **first** — it provides a list of many shops at once.
 
@@ -148,6 +181,7 @@ If Ceneo is available, WebFetch the Ceneo page **first** — it provides a list 
 | WebSearch snippet | LOW — price may be outdated |
 | Ceneo listing | MEDIUM — aggregator, but delays |
 | WebFetch of shop page | HIGH — directly confirmed |
+| Scrapling fallback of shop page | HIGH — directly confirmed (same as WebFetch) |
 
 ## Step 5: Round 3 — Warranty and Shipping
 
@@ -178,12 +212,18 @@ Load `references/warranty-guide.md` if deeper B2B or statutory warranty analysis
 
 ### Shipping Costs
 
-WebFetch the "Dostawa" (Delivery) or "Wysyłka" (Shipping) page for top 10 shops:
+WebFetch the "Dostawa" (Delivery) or "Wysyłka" (Shipping) page for top 10 shops, using the **WebFetch with Scrapling Fallback** pattern:
 
 ```
 WebFetch(shipping_url, "Podaj wszystkie opcje dostawy z cenami:
   kurier, Paczkomat, Poczta Polska, odbiór osobisty, darmowa wysyłka (od jakiej kwoty)")
 ```
+
+On blocked response, fall back to scrapling:
+```bash
+scrapling extract get "SHIPPING_URL" /tmp/scrapling-fallback.md
+```
+Then `Read(/tmp/scrapling-fallback.md)` and extract delivery options.
 
 ## Step 6: Round 4 — B2B and Distributors
 
@@ -204,12 +244,18 @@ WebSearch: "{PRODUCT}" site:ab.pl OR site:action.pl OR site:also.pl
 
 ### B2B Statutory Warranty Verification
 
-For top 5 cheapest shops:
+For top 5 cheapest shops, apply the **WebFetch with Scrapling Fallback** pattern:
 
 ```
 WebFetch(terms_url, "Czy regulamin wyłącza rękojmię dla przedsiębiorców?
   Szukaj: Art. 558 KC, wyłączenie rękojmi, przedsiębiorca, firma")
 ```
+
+On blocked response, fall back to scrapling:
+```bash
+scrapling extract get "TERMS_URL" /tmp/scrapling-fallback.md
+```
+Then `Read(/tmp/scrapling-fallback.md)` and search for statutory warranty exclusion clauses.
 
 ### Distribution Chain
 
@@ -296,7 +342,7 @@ Label each piece of information:
 
 | Confidence | When |
 |-----------|------|
-| [HIGH] | Confirmed via WebFetch from shop page |
+| [HIGH] | Confirmed via WebFetch or scrapling from shop page |
 | [MEDIUM] | From Ceneo/comparator or single source |
 | [LOW] | From WebSearch snippets only |
 
@@ -373,11 +419,11 @@ Always **deep** mode — 5 rounds, 25-40 shops, 20-30 WebFetch.
 
 | Error | Resolution |
 |-------|-----------|
-| WebFetch 403/CAPTCHA | Skip shop, label "WebFetch blocked" |
+| WebFetch 403/CAPTCHA/empty | Retry with scrapling fallback: `scrapling extract get "URL" /tmp/scrapling-fallback.md`, then `Read(/tmp/scrapling-fallback.md)`. If scrapling unavailable or also fails, skip shop and label "blocked" |
 | Ceneo returns no results | Search directly in shops from polish-market.md |
 | Allegro blocks scraping | Use WebSearch `site:allegro.pl`, not WebFetch |
 | No price on page | Label "n/a", skip in ranking |
-| Conflicting prices (snippet vs WebFetch) | Always trust WebFetch |
+| Conflicting prices (snippet vs WebFetch) | Always trust WebFetch (or scrapling if WebFetch was blocked) |
 
 ## References
 

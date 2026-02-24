@@ -186,7 +186,7 @@ Round 2 surfaces specific claims and data. Round 3 verifies them at the source.
 **Round 2 discovers:** "Qdrant claims 10x faster than Milvus on ANN benchmarks"
 
 **Round 3 queries (verification):**
-- Direct WebFetch of the benchmark URL cited
+- Direct WebFetch of the benchmark URL cited (use scrapling fallback if blocked)
 - `site:ann-benchmarks.com` for independent benchmark data
 - `"qdrant" "milvus" benchmark results` for third-party validation
 
