@@ -136,6 +136,12 @@ In Round 2, use WebFetch for high-value URLs found in Round 1:
 
 Maximum 4-6 WebFetch calls in Round 2.
 
+**Scrapling fallback:** If WebFetch returns 403, empty content, a captcha page, or a blocked response, retry with scrapling:
+```bash
+scrapling extract get "URL" /tmp/scrapling-fallback.md
+```
+Then read `/tmp/scrapling-fallback.md` with the Read tool. This handles sites with anti-bot protection that reject plain HTTP fetches.
+
 ### Confidence Update
 
 After Round 2, re-assess all confidence levels:
@@ -158,7 +164,11 @@ Round 3 is exclusively for verification. No new discovery.
 | Contradiction resolution | WebFetch both sides' primary sources | 1-2 |
 | Recency confirmation | WebFetch official sites for latest versions/dates | 1-2 |
 
-**Total Round 3 budget: 6-10 WebFetch lookups maximum.**
+**Total Round 3 budget: 6-10 WebFetch lookups maximum.** If any WebFetch call returns 403, empty content, captcha, or a blocked response, retry with scrapling:
+```bash
+scrapling extract get "URL" /tmp/scrapling-fallback.md
+```
+Then read `/tmp/scrapling-fallback.md` with the Read tool.
 
 ### Verification Rules
 
