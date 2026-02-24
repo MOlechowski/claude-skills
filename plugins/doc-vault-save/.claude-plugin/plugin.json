@@ -1,0 +1,5 @@
+{
+  "name": "doc-vault-save",
+  "version": "1.0.0",
+  "description": "Save structured content to Obsidian vault with standardized frontmatter, folder routing, deduplication, and wikilink generation. Persists res-deep research, res-price-compare reports, and generic content. Use when: saving to vault, persisting results, store in obsidian. Triggers: save to vault, vault save, persist this, save research, store in vault, update vault note."
+}
