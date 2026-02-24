@@ -1,7 +1,7 @@
 ---
-last_validated: 2026-02-24T10:39:49Z
+last_validated: 2026-02-24T12:15:41Z
 project_type: plugin-marketplace
-skill_count: 106
+skill_count: 108
 ---
 
 # Agent Instructions: claude-skills
@@ -54,6 +54,8 @@ This is a Claude Skills **plugin marketplace** following Anthropic's Agent Skill
 │   ├── cli-tmux
 │   │   └── skills
 │   ├── cli-tree
+│   │   └── skills
+│   ├── cli-web-scrape
 │   │   └── skills
 │   ├── cli-yq
 │   │   └── skills
@@ -112,6 +114,8 @@ This is a Claude Skills **plugin marketplace** following Anthropic's Agent Skill
 │   ├── doc-readme
 │   │   └── skills
 │   ├── doc-skills-md
+│   │   └── skills
+│   ├── doc-vault-save
 │   │   └── skills
 │   ├── git-commit
 │   │   └── skills
@@ -243,7 +247,7 @@ For working on this repository, install the recommended plugins listed in @SKILL
 
 ## Searching the Codebase with qmd
 
-This repository is indexed as a `qmd` collection for fast keyword and semantic search across all 106 plugins.
+This repository is indexed as a `qmd` collection for fast keyword and semantic search across all 108 plugins.
 
 ### Setup
 
@@ -304,7 +308,7 @@ plugins/<name>/
 
 ### marketplace.json
 
-The root `.claude-plugin/marketplace.json` catalogs all 106 plugins with:
+The root `.claude-plugin/marketplace.json` catalogs all 108 plugins with:
 - `pluginRoot`: `"./plugins"` — base path for all plugins
 - `plugins[]`: array of entries with name, description, version, category, tags, path
 

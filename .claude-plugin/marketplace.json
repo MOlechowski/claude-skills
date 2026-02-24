@@ -113,6 +113,14 @@
       "version": "1.0.0"
     },
     {
+      "name": "cli-web-scrape",
+      "description": "Scrapling CLI wrapper for web scraping with browser impersonation, stealth headers, CSS selectors, Cloudflare bypass, and JS rendering. Three fetcher tiers: HTTP (fast), Dynamic (Playwright), Stealthy (Camoufox). Output as HTML, Markdown, or text. Use when: scraping web pages, extracting content with CSS selectors, bypassing anti-bot protection, fetching JS-rendered pages. Triggers: scrape, scrapling, web scraping, extract page, fetch page content, bypass cloudflare.",
+      "source": "./plugins/cli-web-scrape",
+      "category": "cli",
+      "tags": ["scraping", "web", "stealth", "css-selectors", "anti-bot"],
+      "version": "1.0.0"
+    },
+    {
       "name": "cli-tmux",
       "description": "Terminal multiplexer for interactive and background commands. Use when: (1) script prompts for input (y/n, confirmation, passwords), (2) bash command fails due to interactive prompt, (3) long-running process needs monitoring, (4) need to send keystrokes to running program. Triggers: /cli-tmux, script needs input, answer prompts, y/n confirmation, command timed out waiting for input.",
       "source": "./plugins/cli-tmux",

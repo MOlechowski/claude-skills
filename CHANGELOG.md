@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **cli-web-scrape** — Scrapling CLI wrapper: web scraping with browser impersonation, stealth headers, CSS selectors, Cloudflare bypass, JS rendering (3 fetcher tiers)
+- **doc-vault-save** — save structured content to Obsidian vault with frontmatter, folder routing, deduplication, and wikilink generation
 - **doc-daily-digest** — process Obsidian daily notes: classify URLs and ideas, fetch content, create structured notes, replace with wikilinks
 - **doc-project** — orchestrator skill that updates CLAUDE.md, AGENTS.md, README.md, SKILLS.md, CHANGELOG.md in one pass (#123, #125)
 - **doc-changelog** — generate and update CHANGELOG.md from git history (#116)
@@ -20,7 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **dev-review** Paranoia pillar — added as 7th review dimension (#108)
 
 ### Changed
-- **Plugin count** — marketplace now contains 106 plugins across 14 domain prefixes
+- **Plugin count** — marketplace now contains 108 plugins across 14 domain prefixes
 - **plugin.json schema** — Claude Code only accepts `name`, `version`, `description`; category/tags/author moved to marketplace.json (#113, #114, #115)
 
 ### Fixed
