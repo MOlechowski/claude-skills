@@ -5,7 +5,7 @@ description: "Iterative multi-round deep research with structured analysis frame
 
 # Deep Research
 
-Iterative multi-round research across Web, Reddit, X/Twitter, GitHub, and Hacker News with structured output frameworks (comparison, landscape, deep-dive, decision).
+Iterative multi-round research across Web, Reddit, X/Twitter, GitHub, Hacker News, Substack, Financial Media, LinkedIn, and more with structured output frameworks (comparison, landscape, deep-dive, decision).
 
 ## Architecture
 
@@ -16,6 +16,12 @@ Iterative multi-round research across Web, Reddit, X/Twitter, GitHub, and Hacker
 | **X/Twitter** | xAI `x_search` only | $0.005/call |
 | **GitHub** | Claude Code `WebSearch` (site:github.com) + xAI `web_search` | Free + $0.005/call |
 | **Hacker News** | Claude Code `WebSearch` (site:news.ycombinator.com) + xAI `web_search` | Free + $0.005/call |
+| **Substack** | Claude Code `WebSearch` (site:substack.com) + xAI `web_search` | Free + $0.005/call |
+| **Financial Media** | Claude Code `WebSearch` (site-specific) + xAI `web_search` | Free + $0.005/call |
+| **Wall Street Oasis** | Claude Code `WebSearch` (site:wallstreetoasis.com) | Free |
+| **LinkedIn** | Claude Code `WebSearch` (site:linkedin.com) + xAI `web_search` | Free + $0.005/call |
+| **Crunchbase** | Claude Code `WebSearch` (site:crunchbase.com) | Free |
+| **YouTube** | Claude Code `WebSearch` (site:youtube.com) | Free |
 | **Tech Blogs** | Claude Code `WebSearch` (site-specific) | Free |
 
 Results from multiple sources are **merged and deduplicated** for comprehensive coverage.
@@ -110,15 +116,15 @@ Detect output framework from query patterns:
 
 | Depth | Trigger | Rounds | Target Sources |
 |-------|---------|--------|---------------|
-| quick | "quick", "brief", "overview" | 1 | 8-12 |
-| default | (none) | 2 | 20-30 |
-| deep | "deep", "comprehensive", "thorough" | 3 | 50-70 |
+| quick | "quick", "brief", "overview" | 1 | 10-15 |
+| default | (none) | 2 | 25-40 |
+| deep | "deep", "comprehensive", "thorough" | 3 | 60-90 |
 
 ## Step 2: Round 1 — Broad Search
 
 ### Query Generation
 
-Generate 4-6 queries covering different angles of the TOPIC:
+Generate 6-9 queries covering different angles of the TOPIC:
 
 1. **Direct query**: `"{TOPIC}"` — the topic as stated
 2. **Temporal query**: `"{TOPIC} 2026"` or `"{TOPIC} latest"`
@@ -130,6 +136,9 @@ Generate 4-6 queries covering different angles of the TOPIC:
    - LANDSCAPE: `"{TOPIC} ecosystem" OR "{TOPIC} landscape"`
    - DEEP_DIVE: `"how {TOPIC} works" OR "{TOPIC} explained"`
    - DECISION: `"{TOPIC}" experience OR recommendation`
+7. **Substack query**: `site:substack.com "{TOPIC}"`
+8. **Financial media query**: `site:tradingview.com OR site:benzinga.com OR site:seekingalpha.com "{TOPIC}"` (for finance/economics topics)
+9. **LinkedIn query**: `site:linkedin.com "{TOPIC}"` (when topic involves people or companies)
 
 ### Parallel Execution
 
@@ -141,6 +150,12 @@ Run searches simultaneously:
 - `WebSearch`: Reddit-targeted query
 - `WebSearch`: GitHub-targeted query
 - `WebSearch`: HN-targeted query
+- `WebSearch`: Substack-targeted query
+- `WebSearch`: Financial media-targeted query (for finance/economics topics)
+- `WebSearch`: LinkedIn-targeted query (when topic involves people/companies)
+- `WebSearch`: YouTube-targeted query
+- `WebSearch`: WSO-targeted query (for finance topics)
+- `WebSearch`: Crunchbase-targeted query (for company/startup topics)
 
 **xAI scripts (if available, run as background Bash tasks):**
 ```bash
@@ -149,6 +164,9 @@ uv run scripts/xai_search.py reddit "{TOPIC}" --json &
 uv run scripts/xai_search.py x "{TOPIC}" --json &
 uv run scripts/xai_search.py github "{TOPIC}" --json &
 uv run scripts/xai_search.py hn "{TOPIC}" --json &
+uv run scripts/xai_search.py substack "{TOPIC}" --json &
+uv run scripts/xai_search.py finance "{TOPIC}" --json &
+uv run scripts/xai_search.py linkedin "{TOPIC}" --json &
 ```
 
 ### Merge and Deduplicate
@@ -158,7 +176,13 @@ MERGED_WEB = dedupe(claude_web + xai_web)
 MERGED_REDDIT = dedupe(claude_reddit + xai_reddit)
 MERGED_GITHUB = dedupe(claude_github + xai_github)
 MERGED_HN = dedupe(claude_hn + xai_hn)
+MERGED_SUBSTACK = dedupe(claude_substack + xai_substack)
+MERGED_FINANCE = dedupe(claude_finance + xai_finance)
+MERGED_LINKEDIN = dedupe(claude_linkedin + xai_linkedin)
 X_RESULTS = xai_x_results  (no Claude equivalent)
+WSO_RESULTS = claude_wso  (WebSearch only)
+CRUNCHBASE_RESULTS = claude_crunchbase  (WebSearch only)
+YOUTUBE_RESULTS = claude_youtube  (WebSearch only)
 ```
 
 Deduplication by URL, keeping the entry with more metadata.
@@ -188,6 +212,7 @@ After Round 1, run gap analysis. See `references/iterative-research.md` for full
 | Shallow coverage | Any entity mentioned but unexplained? | Deep-search that entity |
 | Stale data | Key facts > 12 months old? | Search for recent updates |
 | Missing source type | Missing Reddit / GitHub / HN / X / blogs? | Target that platform |
+| Missing financial/business context | Missing Substack / financial media / LinkedIn / Crunchbase? | Target that platform |
 
 ### Plan Round 2
 
@@ -288,8 +313,12 @@ Weight sources by signal strength. See `references/iterative-research.md` for fu
 | X engagement | 50+ likes | High |
 | GitHub stars | 1000+ | High |
 | HN points | 100+ | High |
+| Substack likes | 50+ | High |
 | Multi-platform agreement | 3+ sources | High |
 | Dual-engine match | Claude + xAI | High |
+| Seeking Alpha comments | 20+ | Medium |
+| WSO upvotes | 10+ | Medium |
+| YouTube views | 10K+ | Medium |
 | Recent (< 7 days) | Any | Medium |
 | Single source only | Any | Low |
 
@@ -301,6 +330,12 @@ Research Statistics
 ├─ X: {n} posts │ {likes} likes │ {reposts} reposts
 ├─ GitHub: {n} repos │ {stars} total stars
 ├─ HN: {n} threads │ {points} total points
+├─ Substack: {n} articles │ {likes} likes
+├─ Financial: {n} articles │ {sources}
+├─ LinkedIn: {n} profiles/articles
+├─ YouTube: {n} videos
+├─ WSO: {n} threads
+├─ Crunchbase: {n} profiles
 ├─ Web: {n} pages │ {domains}
 ├─ Merged: {n} from Claude + {n} from xAI
 └─ Top voices: r/{sub1} │ @{handle1} │ {blog1}
@@ -312,6 +347,10 @@ Research Statistics
 ├─ Reddit: {n} threads (via Claude WebSearch)
 ├─ GitHub: {n} repos (via Claude WebSearch)
 ├─ HN: {n} threads (via Claude WebSearch)
+├─ Substack: {n} articles (via Claude WebSearch)
+├─ Financial: {n} articles (via Claude WebSearch)
+├─ LinkedIn: {n} profiles/articles (via Claude WebSearch)
+├─ YouTube: {n} videos (via Claude WebSearch)
 ├─ Web: {n} pages
 └─ Top sources: {site1}, {site2}
 
@@ -336,7 +375,7 @@ After delivering research, enter Expert Mode:
 
 | Mode | Sources | When |
 |------|---------|------|
-| **Full** | Claude WebSearch + xAI (web + X + Reddit + GitHub + HN) | Step 0 returns XAI_AVAILABLE=true |
+| **Full** | Claude WebSearch + xAI (web + X + Reddit + GitHub + HN + Substack + Finance + LinkedIn) | Step 0 returns XAI_AVAILABLE=true |
 | **Web-Only** | Claude WebSearch only | Step 0 returns XAI_AVAILABLE=false |
 
 Mode is determined by Step 0 — never skip it or assume Web-Only without checking.
@@ -345,9 +384,9 @@ Mode is determined by Step 0 — never skip it or assume Web-Only without checki
 
 | Depth | Rounds | Sources | xAI Calls (Full) | Use Case |
 |-------|--------|---------|-------------------|----------|
-| quick | 1 | 8-12 | 5 | Fast overview, time-sensitive |
-| default | 2 | 20-30 | 10 | Balanced research |
-| deep | 3 | 50-70 | 15 + 6-10 WebFetch | Comprehensive analysis, important decisions |
+| quick | 1 | 10-15 | 8 | Fast overview, time-sensitive |
+| default | 2 | 25-40 | 13 | Balanced research |
+| deep | 3 | 60-90 | 18 + 6-10 WebFetch | Comprehensive analysis, important decisions |
 
 ## Cost Awareness
 
@@ -362,9 +401,9 @@ Mode is determined by Step 0 — never skip it or assume Web-Only without checki
 
 | Depth | Full Mode | Web-Only |
 |-------|-----------|----------|
-| quick | ~$0.025 (5 xAI calls) | Free |
-| default | ~$0.05 (10 xAI calls) | Free |
-| deep | ~$0.075 (15 xAI calls) | Free |
+| quick | ~$0.04 (8 xAI calls) | Free |
+| default | ~$0.065 (13 xAI calls) | Free |
+| deep | ~$0.09 (18 xAI calls) | Free |
 
 **Cost-Saving Strategy:**
 - Claude WebSearch handles most needs (free)

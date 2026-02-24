@@ -8,7 +8,8 @@
 """
 xAI Search Script for deep-research skill
 
-Performs Web, X, Reddit, GitHub, and Hacker News searches using xAI Responses API.
+Performs Web, X, Reddit, GitHub, Hacker News, Substack, Financial Media,
+and LinkedIn searches using xAI Responses API.
 Reads API key securely from macOS Keychain.
 
 Usage:
@@ -17,6 +18,9 @@ Usage:
     uv run xai_search.py reddit "search query"
     uv run xai_search.py github "search query"
     uv run xai_search.py hn "search query"
+    uv run xai_search.py substack "search query"
+    uv run xai_search.py finance "search query"
+    uv run xai_search.py linkedin "search query"
     uv run xai_search.py all "search query"
     uv run xai_search.py all "search query" --quick
     uv run xai_search.py all "search query" --deep
@@ -347,6 +351,123 @@ Prioritize:
     }
 
 
+def substack_search(query: str, api_key: str, depth: str = "default") -> dict:
+    """Perform Substack search using xAI Responses API with web_search."""
+    min_items, max_items = DEPTH_CONFIG[depth]["range"]
+
+    prompt = f"""Search Substack for articles and newsletters about: {query}
+
+Use these search strategies:
+1. "site:substack.com {query}"
+2. "site:*.substack.com {query}"
+3. "{query} substack"
+
+Find {min_items}-{max_items} relevant Substack articles.
+
+For each result, include:
+- Article title
+- Author / publication name
+- URL
+- Key arguments and claims
+- Subscriber count or engagement metrics if visible
+- Publication date if visible
+
+Prioritize:
+- High-engagement posts with substantive analysis
+- Articles with active comment sections
+- Counter-arguments and diverse perspectives
+- Well-known newsletter authors in the topic area"""
+
+    tools = [{"type": "web_search"}]
+    response = call_xai_responses(api_key, prompt, tools, timeout=90 if depth == "quick" else 120)
+
+    return {
+        "type": "substack",
+        "query": query,
+        "depth": depth,
+        "content": extract_output_text(response),
+        "raw_response": response,
+    }
+
+
+def finance_search(query: str, api_key: str, depth: str = "default") -> dict:
+    """Perform financial media search using xAI Responses API with web_search."""
+    min_items, max_items = DEPTH_CONFIG[depth]["range"]
+
+    prompt = f"""Search financial media for analysis about: {query}
+
+Use these search strategies:
+1. "site:tradingview.com OR site:benzinga.com OR site:invezz.com {query}"
+2. "site:wallstreetoasis.com OR site:seekingalpha.com {query}"
+3. "{query} market analysis OR financial impact"
+
+Find {min_items}-{max_items} relevant financial articles and forum threads.
+
+For each result, include:
+- Title
+- Source / publication
+- URL
+- Key financial claims and market data cited
+- Author credentials if visible
+- Publication date if visible
+
+Prioritize:
+- Analysis backed by data, not just news headlines
+- Forum threads from finance professionals (WSO, Seeking Alpha)
+- TradingView ideas with chart analysis
+- Multiple perspectives on financial implications"""
+
+    tools = [{"type": "web_search"}]
+    response = call_xai_responses(api_key, prompt, tools, timeout=90 if depth == "quick" else 120)
+
+    return {
+        "type": "finance",
+        "query": query,
+        "depth": depth,
+        "content": extract_output_text(response),
+        "raw_response": response,
+    }
+
+
+def linkedin_search(query: str, api_key: str, depth: str = "default") -> dict:
+    """Perform LinkedIn search using xAI Responses API with web_search."""
+    min_items, max_items = DEPTH_CONFIG[depth]["range"]
+
+    prompt = f"""Search LinkedIn for profiles, articles, and posts about: {query}
+
+Use these search strategies:
+1. "site:linkedin.com/in/ {query}"
+2. "site:linkedin.com/pulse/ {query}"
+3. "site:linkedin.com/posts/ {query}"
+4. "site:linkedin.com/company/ {query}"
+
+Find {min_items}-{max_items} relevant LinkedIn results.
+
+For each result, include:
+- Person/company name
+- Title and company (for profiles)
+- URL
+- Key profile details or article content
+- Connections/followers if visible
+
+Prioritize:
+- People directly involved with or expert in the topic
+- LinkedIn articles (Pulse) with substantive analysis
+- Company pages for organizations mentioned in the topic
+- Posts with high engagement"""
+
+    tools = [{"type": "web_search"}]
+    response = call_xai_responses(api_key, prompt, tools, timeout=90 if depth == "quick" else 120)
+
+    return {
+        "type": "linkedin",
+        "query": query,
+        "depth": depth,
+        "content": extract_output_text(response),
+        "raw_response": response,
+    }
+
+
 def print_results(results: dict, json_output: bool = False):
     """Print search results in readable or JSON format."""
     if json_output:
@@ -368,6 +489,9 @@ def print_results(results: dict, json_output: bool = False):
         "reddit": "REDDIT",
         "github": "GITHUB",
         "hn": "HACKER NEWS",
+        "substack": "SUBSTACK",
+        "finance": "FINANCIAL MEDIA",
+        "linkedin": "LINKEDIN",
     }
 
     print(f"\n{'='*60}")
@@ -397,6 +521,9 @@ Examples:
   uv run xai_search.py reddit 'best Python frameworks'
   uv run xai_search.py github 'machine learning framework'
   uv run xai_search.py hn 'new programming languages'
+  uv run xai_search.py substack 'AI agents'
+  uv run xai_search.py finance 'AI job displacement'
+  uv run xai_search.py linkedin 'Alap Shah'
   uv run xai_search.py all 'machine learning trends'
   uv run xai_search.py all 'machine learning trends' --quick
   uv run xai_search.py all 'machine learning trends' --deep
@@ -404,8 +531,8 @@ Examples:
         """
     )
 
-    parser.add_argument("type", choices=["web", "x", "reddit", "github", "hn", "all"],
-                        help="Search type: web, x, reddit, github, hn, or all")
+    parser.add_argument("type", choices=["web", "x", "reddit", "github", "hn", "substack", "finance", "linkedin", "all"],
+                        help="Search type: web, x, reddit, github, hn, substack, finance, linkedin, or all")
     parser.add_argument("query", nargs="+", help="Search query")
 
     depth_group = parser.add_mutually_exclusive_group()
@@ -423,7 +550,7 @@ Examples:
 def main():
     if len(sys.argv) < 3:
         print("Usage: uv run xai_search.py <type> <query> [--quick|--deep] [--json]")
-        print("  type: web, x, reddit, github, hn, or all")
+        print("  type: web, x, reddit, github, hn, substack, finance, linkedin, or all")
         print("  query: your search query")
         print("\nDepth Control:")
         print("  --quick: Fast overview (8-12 sources)")
@@ -436,6 +563,9 @@ def main():
         print("  uv run xai_search.py web 'AI trends 2026'")
         print("  uv run xai_search.py github 'machine learning framework'")
         print("  uv run xai_search.py hn 'new programming languages'")
+        print("  uv run xai_search.py substack 'AI agents'")
+        print("  uv run xai_search.py finance 'AI job displacement'")
+        print("  uv run xai_search.py linkedin 'Alap Shah'")
         print("  uv run xai_search.py all 'machine learning' --quick")
         print("  uv run xai_search.py all 'machine learning' --deep --json")
         sys.exit(1)
@@ -466,13 +596,28 @@ def main():
         "reddit": lambda: reddit_search(query, api_key, depth),
         "github": lambda: github_search(query, api_key, depth),
         "hn": lambda: hn_search(query, api_key, depth),
+        "substack": lambda: substack_search(query, api_key, depth),
+        "finance": lambda: finance_search(query, api_key, depth),
+        "linkedin": lambda: linkedin_search(query, api_key, depth),
     }
 
     try:
         if args.type == "all":
+            all_search_types = ["reddit", "x", "github", "hn", "substack", "finance", "linkedin", "web"]
+            all_labels = {
+                "reddit": "Reddit Discussions",
+                "x": "X/Twitter Posts",
+                "github": "GitHub Repositories",
+                "hn": "Hacker News Discussions",
+                "substack": "Substack Articles",
+                "finance": "Financial Media",
+                "linkedin": "LinkedIn Profiles & Articles",
+                "web": "Web Articles",
+            }
+
             if json_output:
                 all_results = {}
-                for search_type in ["reddit", "x", "github", "hn", "web"]:
+                for search_type in all_search_types:
                     results = search_functions[search_type]()
                     all_results[search_type] = {
                         "query": results["query"],
@@ -494,25 +639,10 @@ def main():
                 print(f"MULTI-SOURCE RESEARCH ({depth.upper()})")
                 print("="*60)
 
-                print("\n--- Reddit Discussions ---")
-                reddit_results = search_functions["reddit"]()
-                print_results(reddit_results)
-
-                print("\n--- X/Twitter Posts ---")
-                x_results = search_functions["x"]()
-                print_results(x_results)
-
-                print("\n--- GitHub Repositories ---")
-                github_results = search_functions["github"]()
-                print_results(github_results)
-
-                print("\n--- Hacker News Discussions ---")
-                hn_results = search_functions["hn"]()
-                print_results(hn_results)
-
-                print("\n--- Web Articles ---")
-                web_results = search_functions["web"]()
-                print_results(web_results)
+                for search_type in all_search_types:
+                    print(f"\n--- {all_labels[search_type]} ---")
+                    results = search_functions[search_type]()
+                    print_results(results)
 
                 print("\n" + "="*60)
                 print("RESEARCH COMPLETE - Ready for synthesis")
