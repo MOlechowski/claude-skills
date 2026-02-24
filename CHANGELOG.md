@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **doc-daily-digest** — process Obsidian daily notes: classify URLs and ideas, fetch content, create structured notes, replace with wikilinks
 - **doc-project** — orchestrator skill that updates CLAUDE.md, AGENTS.md, README.md, SKILLS.md, CHANGELOG.md in one pass (#123, #125)
 - **doc-changelog** — generate and update CHANGELOG.md from git history (#116)
 - **doc-skills-md** — generate SKILLS.md with marketplace plugin recommendations (#117, #118)
@@ -19,7 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **dev-review** Paranoia pillar — added as 7th review dimension (#108)
 
 ### Changed
-- **Plugin count** — marketplace now contains 105 plugins across 14 domain prefixes
+- **Plugin count** — marketplace now contains 106 plugins across 14 domain prefixes
 - **plugin.json schema** — Claude Code only accepts `name`, `version`, `description`; category/tags/author moved to marketplace.json (#113, #114, #115)
 
 ### Fixed
