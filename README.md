@@ -68,7 +68,7 @@ rm -rf ~/.claude/skills/*
 ```
 claude-skills/
 ├── .claude-plugin/
-│   └── marketplace.json          # Marketplace catalog (105 plugins)
+│   └── marketplace.json          # Marketplace catalog (106 plugins)
 ├── plugins/
 │   ├── aws-cli/
 │   │   ├── .claude-plugin/
@@ -87,7 +87,7 @@ claude-skills/
 └── README.md                     # This file
 ```
 
-## Available Skills (105 total)
+## Available Skills (106 total)
 
 All skills use domain prefixes for discoverability. Each skill is its own plugin.
 
@@ -155,6 +155,7 @@ All skills use domain prefixes for discoverability. Each skill is its own plugin
 | **doc-project** | Update all project documentation in one pass: CLAUDE.md, AGENTS.md, README.md, SKILLS.md |
 | **doc-readme** | Create, update, and validate README.md files |
 | **doc-skills-md** | Create and update SKILLS.md with marketplace plugin recommendations |
+| **doc-daily-digest** | Process Obsidian daily notes: classify URLs and ideas, fetch content, create notes, update wikilinks |
 
 ### git- (Git & Version Control)
 | Skill | Description |

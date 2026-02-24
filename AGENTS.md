@@ -1,7 +1,7 @@
 ---
-last_validated: 2026-02-24T00:00:00Z
+last_validated: 2026-02-24T10:39:49Z
 project_type: plugin-marketplace
-skill_count: 105
+skill_count: 106
 ---
 
 # Agent Instructions: claude-skills
@@ -15,34 +15,226 @@ This is a Claude Skills **plugin marketplace** following Anthropic's Agent Skill
 ## Repository Structure
 
 ```
-.
-├── .claude-plugin/
-│   └── marketplace.json           # Marketplace catalog (105 plugins)
-├── plugins/                       # 105 individual skill plugins
-│   ├── aws-cli/
-│   │   ├── .claude-plugin/
-│   │   │   └── plugin.json        # Plugin metadata (name, version, description)
-│   │   └── skills/
-│   │       └── aws-cli/
-│   │           ├── SKILL.md       # Main skill definition
-│   │           └── references/    # Optional supporting files
-│   ├── aws-expert/
-│   │   ├── .claude-plugin/
-│   │   │   └── plugin.json
-│   │   └── skills/
-│   │       └── aws-expert/
-│   │           ├── SKILL.md
-│   │           └── references/
-│   └── ... (105 plugins total)
-├── .claude/
-│   ├── skills/                    # Project-local skills (gitignored, see SKILLS.md)
-│   └── settings.local.json
-├── AGENTS.md                      # This file
-├── CLAUDE.md                      # Reference pointer
-├── README.md                      # Public documentation
-├── SKILLS.md                      # Recommended skills for this repo
-├── CHANGELOG.md                   # Version history
-└── LICENSE                        # MIT license
+/Users/michalolechowski/Projects/ai-agents/claude-skills
+├── AGENTS.md
+├── CHANGELOG.md
+├── CLAUDE.md
+├── LICENSE
+├── plugins
+│   ├── aws-cli
+│   │   └── skills
+│   ├── aws-expert
+│   │   └── skills
+│   ├── aws-local
+│   │   └── skills
+│   ├── aws-localstack
+│   │   └── skills
+│   ├── aws-localstack-expert
+│   │   └── skills
+│   ├── cf-ctl
+│   │   └── skills
+│   ├── cf-expert
+│   │   └── skills
+│   ├── cf-tunnel
+│   │   └── skills
+│   ├── cf-wrangler
+│   │   └── skills
+│   ├── cli-ast-grep
+│   │   └── skills
+│   ├── cli-fastmod
+│   │   └── skills
+│   ├── cli-fzf
+│   │   └── skills
+│   ├── cli-jq
+│   │   └── skills
+│   ├── cli-parallel
+│   │   └── skills
+│   ├── cli-ripgrep
+│   │   └── skills
+│   ├── cli-tmux
+│   │   └── skills
+│   ├── cli-tree
+│   │   └── skills
+│   ├── cli-yq
+│   │   └── skills
+│   ├── dev-backlog
+│   │   └── skills
+│   ├── dev-broken-windows
+│   │   └── skills
+│   ├── dev-compress
+│   │   └── skills
+│   ├── dev-dry-audit
+│   │   └── skills
+│   ├── dev-learn
+│   │   └── skills
+│   ├── dev-reload
+│   │   └── skills
+│   ├── dev-review
+│   │   └── skills
+│   ├── dev-review-file
+│   │   └── skills
+│   ├── dev-review-pr
+│   │   └── skills
+│   ├── dev-rlm
+│   │   └── skills
+│   ├── dev-skill-create
+│   │   └── skills
+│   ├── dev-swarm
+│   │   └── skills
+│   ├── dev-wizard-review
+│   │   └── skills
+│   ├── doc-book-reader
+│   │   └── skills
+│   ├── doc-changelog
+│   │   └── skills
+│   ├── doc-claude-md
+│   │   └── skills
+│   ├── doc-confluence
+│   │   └── skills
+│   ├── doc-daily-digest
+│   │   └── skills
+│   ├── doc-extract
+│   │   └── skills
+│   ├── doc-mermaid
+│   │   └── skills
+│   ├── doc-mermaid-render
+│   │   └── skills
+│   ├── doc-notesmd
+│   │   └── skills
+│   ├── doc-obsidian
+│   │   └── skills
+│   ├── doc-pandoc
+│   │   └── skills
+│   ├── doc-project
+│   │   └── skills
+│   ├── doc-qmd
+│   │   └── skills
+│   ├── doc-readme
+│   │   └── skills
+│   ├── doc-skills-md
+│   │   └── skills
+│   ├── git-commit
+│   │   └── skills
+│   ├── git-land
+│   │   └── skills
+│   ├── git-pr-create
+│   │   └── skills
+│   ├── git-pr-manage
+│   │   └── skills
+│   ├── git-repo
+│   │   └── skills
+│   ├── git-ship
+│   │   └── skills
+│   ├── git-worktree
+│   │   └── skills
+│   ├── go-delve
+│   │   └── skills
+│   ├── go-expert
+│   │   └── skills
+│   ├── go-lefthook
+│   │   └── skills
+│   ├── go-lint
+│   │   └── skills
+│   ├── go-mockery
+│   │   └── skills
+│   ├── go-pprof
+│   │   └── skills
+│   ├── go-release
+│   │   └── skills
+│   ├── go-task
+│   │   └── skills
+│   ├── iac-expert
+│   │   └── skills
+│   ├── iac-hcloud
+│   │   └── skills
+│   ├── iac-opa
+│   │   └── skills
+│   ├── iac-terraform
+│   │   └── skills
+│   ├── iac-tofu
+│   │   └── skills
+│   ├── net-httpx
+│   │   └── skills
+│   ├── net-mitmproxy
+│   │   └── skills
+│   ├── net-nmap
+│   │   └── skills
+│   ├── net-tcpdump
+│   │   └── skills
+│   ├── net-wireshark
+│   │   └── skills
+│   ├── oci-crane
+│   │   └── skills
+│   ├── oci-dive
+│   │   └── skills
+│   ├── oci-skopeo
+│   │   └── skills
+│   ├── oci-syft
+│   │   └── skills
+│   ├── re-binwalk
+│   │   └── skills
+│   ├── re-docker-expert
+│   │   └── skills
+│   ├── re-dtrace
+│   │   └── skills
+│   ├── re-expert
+│   │   └── skills
+│   ├── re-frida
+│   │   └── skills
+│   ├── re-gdb
+│   │   └── skills
+│   ├── re-ghidra
+│   │   └── skills
+│   ├── re-lldb
+│   │   └── skills
+│   ├── re-objcopy
+│   │   └── skills
+│   ├── re-patchelf
+│   │   └── skills
+│   ├── re-pwntools
+│   │   └── skills
+│   ├── re-python-expert
+│   │   └── skills
+│   ├── re-radare2
+│   │   └── skills
+│   ├── re-strace
+│   │   └── skills
+│   ├── re-xxd
+│   │   └── skills
+│   ├── res-deep
+│   │   └── skills
+│   ├── res-price-compare
+│   │   └── skills
+│   ├── res-trends
+│   │   └── skills
+│   ├── res-web
+│   │   └── skills
+│   ├── res-x
+│   │   └── skills
+│   ├── sec-bandit
+│   │   └── skills
+│   ├── sec-grype
+│   │   └── skills
+│   ├── sec-nuclei
+│   │   └── skills
+│   ├── sec-pip-audit
+│   │   └── skills
+│   ├── sec-semgrep
+│   │   └── skills
+│   ├── sec-trivy
+│   │   └── skills
+│   ├── speckit-audit
+│   │   └── skills
+│   ├── speckit-flow
+│   │   └── skills
+│   ├── speckit-loop
+│   │   └── skills
+│   ├── speckit-retro
+│   │   └── skills
+│   └── speckit-verify
+│       └── skills
+├── README.md
+└── SKILLS.md
 ```
 
 ## Project Skills
@@ -51,7 +243,7 @@ For working on this repository, install the recommended plugins listed in @SKILL
 
 ## Searching the Codebase with qmd
 
-This repository is indexed as a `qmd` collection for fast keyword and semantic search across all 105 plugins.
+This repository is indexed as a `qmd` collection for fast keyword and semantic search across all 106 plugins.
 
 ### Setup
 
@@ -112,7 +304,7 @@ plugins/<name>/
 
 ### marketplace.json
 
-The root `.claude-plugin/marketplace.json` catalogs all 105 plugins with:
+The root `.claude-plugin/marketplace.json` catalogs all 106 plugins with:
 - `pluginRoot`: `"./plugins"` — base path for all plugins
 - `plugins[]`: array of entries with name, description, version, category, tags, path
 

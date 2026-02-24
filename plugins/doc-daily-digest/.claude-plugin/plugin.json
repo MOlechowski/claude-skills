@@ -1,0 +1,5 @@
+{
+  "name": "doc-daily-digest",
+  "version": "1.0.0",
+  "description": "Process Obsidian daily notes: classify raw URLs and ideas, fetch content, create structured notes, replace with wikilinks. Orchestrates doc-obsidian, res-x, and res-deep. Use when: processing daily note links, triaging saved URLs, turning ideas into research notes, daily note digest. Triggers: daily digest, process daily, daily links, triage daily."
+}
