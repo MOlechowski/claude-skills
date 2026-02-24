@@ -331,6 +331,14 @@
       "version": "1.0.0"
     },
     {
+      "name": "doc-vault-save",
+      "description": "Save structured content to Obsidian vault with standardized frontmatter, folder routing, deduplication, and wikilink generation. Persists res-deep research, res-price-compare reports, and generic content. Use when: saving to vault, persisting results, store in obsidian. Triggers: save to vault, vault save, persist this, save research, store in vault, update vault note.",
+      "source": "./plugins/doc-vault-save",
+      "category": "documentation",
+      "tags": ["documentation", "obsidian", "vault", "research"],
+      "version": "1.0.0"
+    },
+    {
       "name": "git-commit",
       "description": "Generate Conventional Commits messages. Use when: creating commits, writing commit messages, committing changes. Triggers: /git-commit, commit this, commit my changes, finishing code changes.",
       "source": "./plugins/git-commit",
