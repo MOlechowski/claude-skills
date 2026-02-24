@@ -33,16 +33,21 @@ ls plugins/ 2>/dev/null | wc -l
 
 ### 2. CLAUDE.md + AGENTS.md
 
-Delegate to `doc-claude-md` skill:
+**CRITICAL: Never manually edit the AGENTS.md directory tree.** It uses non-breaking spaces (`\xa0`) from the `tree` command that the Edit tool cannot match. Always use the script — it regenerates the tree from scratch.
 
-```
-Skill(skill="doc-claude-md")
+Run `validate_docs.py --fix` from the doc-claude-md skill:
+
+```bash
+python3 ~/.claude/skills/doc-claude-md/scripts/validate_docs.py --path <project> --fix
 ```
 
 This handles:
-- Creating or validating CLAUDE.md (pointer file)
-- Creating or updating AGENTS.md (full project instructions, structure, conventions)
-- Updating `last_validated` timestamp and counts in frontmatter
+- Regenerating the directory tree (from `tree` command)
+- Validating CLAUDE.md (pointer file)
+- Checking AGENTS.md structure and codebase consistency
+- Updating `last_validated` timestamp
+
+After the script runs, manually update any **non-tree content** in AGENTS.md (e.g., skill counts in prose, new naming conventions).
 
 ### 3. README.md
 
