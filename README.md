@@ -68,7 +68,7 @@ rm -rf ~/.claude/skills/*
 ```
 claude-skills/
 ├── .claude-plugin/
-│   └── marketplace.json          # Marketplace catalog (106 plugins)
+│   └── marketplace.json          # Marketplace catalog (108 plugins)
 ├── plugins/
 │   ├── aws-cli/
 │   │   ├── .claude-plugin/
@@ -87,7 +87,7 @@ claude-skills/
 └── README.md                     # This file
 ```
 
-## Available Skills (106 total)
+## Available Skills (108 total)
 
 All skills use domain prefixes for discoverability. Each skill is its own plugin.
 
@@ -117,6 +117,7 @@ All skills use domain prefixes for discoverability. Each skill is its own plugin
 | **cli-jq** | JSON processing and transformation |
 | **cli-parallel** | Execute shell jobs in parallel using GNU parallel |
 | **cli-ripgrep** | Fast recursive code search with smart defaults |
+| **cli-web-scrape** | Web scraping with browser impersonation, stealth, CSS selectors |
 | **cli-tmux** | Terminal multiplexer for session management |
 | **cli-tree** | Directory tree visualization |
 | **cli-yq** | YAML/JSON/XML processor with jq-like syntax |

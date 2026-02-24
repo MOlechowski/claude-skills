@@ -1,0 +1,5 @@
+{
+  "name": "cli-web-scrape",
+  "version": "1.0.0",
+  "description": "Scrapling CLI wrapper for web scraping with browser impersonation, stealth headers, CSS selectors, Cloudflare bypass, and JS rendering. Three fetcher tiers: HTTP (fast), Dynamic (Playwright), Stealthy (Camoufox). Output as HTML, Markdown, or text. Use when: scraping web pages, extracting content with CSS selectors, bypassing anti-bot protection, fetching JS-rendered pages. Triggers: scrape, scrapling, web scraping, extract page, fetch page content, bypass cloudflare."
+}
