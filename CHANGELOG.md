@@ -22,6 +22,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **dev-review** Paranoia pillar — added as 7th review dimension (#108)
 
 ### Changed
+- **cli-web-scrape** — replaced "Escalation Pattern" with "Auto-Escalation Protocol": content validation heuristics, 4-step tier progression (HTTP → validate → Dynamic → Stealthy), consumer skill integration guidance (#134)
+- **res-deep** — scrapling fallback now uses auto-escalation protocol instead of bare HTTP tier (#134)
+- **res-price-compare** — scrapling fallback now uses auto-escalation protocol instead of bare HTTP tier (#134)
+- **doc-daily-digest** — scrapling fallback now uses auto-escalation protocol instead of bare HTTP tier (#134)
 - **Plugin count** — marketplace now contains 108 plugins across 14 domain prefixes
 - **plugin.json schema** — Claude Code only accepts `name`, `version`, `description`; category/tags/author moved to marketplace.json (#113, #114, #115)
 
