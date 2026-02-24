@@ -1,0 +1,5 @@
+{
+  "name": "dot-sync",
+  "version": "1.0.0",
+  "description": "Bidirectional sync between a dot-claude config repo and live ~/.claude/. Diffs settings, hooks, plugins, and CLAUDE.md — explains changes semantically and lets you choose direction per file. Use when: syncing claude config, config drift detection, pulling config changes, pushing config to repo. Triggers: dot-sync, sync config, sync claude, config drift, sync hooks, sync settings."
+}

@@ -233,6 +233,13 @@
       "version": "1.0.0"
     },
     {
+      "name": "dot-sync",
+      "description": "Bidirectional sync between a dot-claude config repo and live ~/.claude/. Diffs settings, hooks, plugins, and CLAUDE.md — explains changes semantically and lets you choose direction per file. Use when: syncing claude config, config drift detection, pulling config changes, pushing config to repo. Triggers: dot-sync, sync config, sync claude, config drift, sync hooks, sync settings.",
+      "source": "./plugins/dot-sync",
+      "category": "dev",
+      "version": "1.0.0"
+    },
+    {
       "name": "doc-claude-md",
       "description": "Create and update CLAUDE.md and AGENTS.md files. Use when: (1) setting up Claude documentation for a project, (2) updating agent instructions after codebase changes, (3) validating docs match current structure. Triggers: CLAUDE.md, AGENTS.md, agent instructions, project documentation.",
       "source": "./plugins/doc-claude-md",
