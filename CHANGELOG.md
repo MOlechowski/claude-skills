@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **doc-vault-redact** — encrypt Obsidian vault files with age + Apple Secure Enclave (Touch ID), dual-recipient (SE + backup), stub notes preserve wikilinks and tags
+- **dot-sync** — bidirectional sync between dot-claude config repo and live ~/.claude/, semantic diffs (#136)
+- **res-youtube** — analyze YouTube videos using Gemini API's native video understanding
 - **cli-web-scrape** — Scrapling CLI wrapper: web scraping with browser impersonation, stealth headers, CSS selectors, Cloudflare bypass, JS rendering (3 fetcher tiers)
 - **doc-vault-save** — save structured content to Obsidian vault with frontmatter, folder routing, deduplication, and wikilink generation
 - **doc-daily-digest** — process Obsidian daily notes: classify URLs and ideas, fetch content, create structured notes, replace with wikilinks
@@ -26,7 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **res-deep** — scrapling fallback now uses auto-escalation protocol instead of bare HTTP tier (#134)
 - **res-price-compare** — scrapling fallback now uses auto-escalation protocol instead of bare HTTP tier (#134)
 - **doc-daily-digest** — scrapling fallback now uses auto-escalation protocol instead of bare HTTP tier (#134)
-- **Plugin count** — marketplace now contains 108 plugins across 14 domain prefixes
+- **Plugin count** — marketplace now contains 111 plugins across 15 domain prefixes
 - **plugin.json schema** — Claude Code only accepts `name`, `version`, `description`; category/tags/author moved to marketplace.json (#113, #114, #115)
 
 ### Fixed

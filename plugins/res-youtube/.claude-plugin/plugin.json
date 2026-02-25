@@ -1,0 +1,5 @@
+{
+  "name": "res-youtube",
+  "version": "1.0.0",
+  "description": "Analyze YouTube videos using Gemini API's native video understanding. Extract title, channel, topics, summary, takeaways, and quotes. Free tier, no credit card."
+}

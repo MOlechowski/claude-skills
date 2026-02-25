@@ -354,6 +354,14 @@
       "version": "1.0.0"
     },
     {
+      "name": "doc-vault-redact",
+      "description": "Encrypt Obsidian vault files with age + Apple Secure Enclave (Touch ID). Whole-file encryption with stub notes preserving wikilinks and tags. Dual-recipient: SE key for daily use, backup key for disaster recovery. Use when: encrypting vault notes, protecting PII, vault security, encrypt sensitive files. Triggers: encrypt vault, vault encrypt, protect notes, encrypt file, decrypt file, vault security, redact vault.",
+      "source": "./plugins/doc-vault-redact",
+      "category": "documentation",
+      "tags": ["documentation", "obsidian", "vault", "security", "encryption"],
+      "version": "1.0.0"
+    },
+    {
       "name": "git-commit",
       "description": "Generate Conventional Commits messages. Use when: creating commits, writing commit messages, committing changes. Triggers: /git-commit, commit this, commit my changes, finishing code changes.",
       "source": "./plugins/git-commit",
@@ -679,6 +687,13 @@
       "name": "res-trends",
       "description": "Research trending topics using Claude Code WebSearch + xAI (X/Twitter). Multi-source synthesis with merged results, engagement metrics, intent parsing, and prompt generation. Use for: trend analysis, topic research, social listening, market research, competitive intelligence, prompt discovery. Triggers: trending topics, what's trending, research trends, X trends, Twitter trends, Reddit discussions, social pulse, market trends, find prompts for.",
       "source": "./plugins/res-trends",
+      "category": "research",
+      "version": "1.0.0"
+    },
+    {
+      "name": "res-youtube",
+      "description": "Analyze YouTube videos using Gemini API's native video understanding. Extract title, channel, topics, summary, takeaways, and quotes from any YouTube URL. Free tier, no credit card. Use for: summarizing YouTube videos, extracting key points from video content, processing YouTube links in daily notes, creating structured notes from videos. Triggers: youtube, video summary, analyze video, youtube link, watch video, video notes.",
+      "source": "./plugins/res-youtube",
       "category": "research",
       "version": "1.0.0"
     },
