@@ -68,7 +68,7 @@ rm -rf ~/.claude/skills/*
 ```
 claude-skills/
 ├── .claude-plugin/
-│   └── marketplace.json          # Marketplace catalog (108 plugins)
+│   └── marketplace.json          # Marketplace catalog (111 plugins)
 ├── plugins/
 │   ├── aws-cli/
 │   │   ├── .claude-plugin/
@@ -79,7 +79,7 @@ claude-skills/
 │   │           └── references/   # Optional supporting files
 │   ├── aws-expert/
 │   │   └── ...
-│   └── ... (108 plugins total)
+│   └── ... (111 plugins total)
 ├── AGENTS.md                     # Agent instructions
 ├── CLAUDE.md                     # Repository guidance
 ├── CHANGELOG.md                  # Version history
@@ -87,7 +87,7 @@ claude-skills/
 └── README.md                     # This file
 ```
 
-## Available Skills (108 total)
+## Available Skills (111 total)
 
 All skills use domain prefixes for discoverability. Each skill is its own plugin.
 
@@ -158,6 +158,12 @@ All skills use domain prefixes for discoverability. Each skill is its own plugin
 | **doc-skills-md** | Create and update SKILLS.md with marketplace plugin recommendations |
 | **doc-daily-digest** | Process Obsidian daily notes: classify URLs and ideas, fetch content, create notes, update wikilinks |
 | **doc-vault-save** | Save structured content to Obsidian vault with frontmatter, folder routing, dedup, and wikilinks |
+| **doc-vault-redact** | Encrypt vault files with age + Apple Secure Enclave (Touch ID), stub notes preserve wikilinks |
+
+### dot- (Config Management)
+| Skill | Description |
+|-------|-------------|
+| **dot-sync** | Bidirectional sync between dot-claude config repo and live ~/.claude/, semantic diffs |
 
 ### git- (Git & Version Control)
 | Skill | Description |
@@ -235,6 +241,7 @@ All skills use domain prefixes for discoverability. Each skill is its own plugin
 | **res-price-compare** | Polish market product price comparison: 20+ shops, shipping, warranty analysis |
 | **res-web** | Web research and analysis |
 | **res-x** | Fetch X/Twitter tweet content by URL and search X posts |
+| **res-youtube** | Analyze YouTube videos using Gemini API's native video understanding |
 
 ### sec- (Security Scanning)
 | Skill | Description |
