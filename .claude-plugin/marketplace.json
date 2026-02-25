@@ -370,6 +370,14 @@
       "version": "1.0.0"
     },
     {
+      "name": "doc-vault-dedup",
+      "description": "Detect and consolidate overlapping research notes in Obsidian vault. Semantic similarity scanning, section-level overlap mapping, merge planning, and execution with wikilink redirect. Use when: notes overlap, research is scattered, vault has duplicates, consolidating notes, dedup vault, merge research. Triggers: dedup, deduplicate, consolidate notes, merge notes, find duplicates, overlap analysis, vault cleanup.",
+      "source": "./plugins/doc-vault-dedup",
+      "category": "documentation",
+      "tags": ["documentation", "obsidian", "vault", "deduplication"],
+      "version": "1.0.0"
+    },
+    {
       "name": "git-commit",
       "description": "Generate Conventional Commits messages. Use when: creating commits, writing commit messages, committing changes. Triggers: /git-commit, commit this, commit my changes, finishing code changes.",
       "source": "./plugins/git-commit",

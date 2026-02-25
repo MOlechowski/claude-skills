@@ -68,7 +68,7 @@ rm -rf ~/.claude/skills/*
 ```
 claude-skills/
 ├── .claude-plugin/
-│   └── marketplace.json          # Marketplace catalog (112 plugins)
+│   └── marketplace.json          # Marketplace catalog (113 plugins)
 ├── plugins/
 │   ├── aws-cli/
 │   │   ├── .claude-plugin/
@@ -79,7 +79,7 @@ claude-skills/
 │   │           └── references/   # Optional supporting files
 │   ├── aws-expert/
 │   │   └── ...
-│   └── ... (112 plugins total)
+│   └── ... (113 plugins total)
 ├── AGENTS.md                     # Agent instructions
 ├── CLAUDE.md                     # Repository guidance
 ├── CHANGELOG.md                  # Version history
@@ -87,7 +87,7 @@ claude-skills/
 └── README.md                     # This file
 ```
 
-## Available Skills (112 total)
+## Available Skills (113 total)
 
 All skills use domain prefixes for discoverability. Each skill is its own plugin.
 
@@ -159,6 +159,7 @@ All skills use domain prefixes for discoverability. Each skill is its own plugin
 | **doc-daily-digest** | Process Obsidian daily notes: classify URLs and ideas, fetch content, create notes, update wikilinks |
 | **doc-vault-save** | Save structured content to Obsidian vault with frontmatter, folder routing, dedup, and wikilinks |
 | **doc-vault-crypt** | Encrypt vault files with age + Apple Secure Enclave (Touch ID), stub notes preserve wikilinks |
+| **doc-vault-dedup** | Detect and consolidate overlapping research notes in Obsidian vault with semantic similarity scanning |
 | **doc-vault-project** | Manage multi-note research projects in Obsidian vault with phased subdirectory structure |
 
 ### dot- (Config Management)
