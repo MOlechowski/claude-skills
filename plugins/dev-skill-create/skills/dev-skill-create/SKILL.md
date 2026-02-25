@@ -257,7 +257,11 @@ Skip if skill exists and needs iteration/packaging.
 Run `init_skill.py` from this skill's scripts directory:
 
 ```bash
+# Flat structure (for local ~/.claude/skills/ installation)
 python3 ~/.claude/skills/skill-creator/scripts/init_skill.py <skill-name> --path <output-directory>
+
+# Marketplace plugin structure (for plugin repos)
+python3 ~/.claude/skills/skill-creator/scripts/init_skill.py <skill-name> --path <output-directory> --marketplace
 ```
 
 The script:
@@ -266,6 +270,7 @@ The script:
 - Generates SKILL.md template with frontmatter and TODO placeholders
 - Creates example directories: `scripts/`, `references/`, `assets/`
 - Adds example files to customize or delete
+- With `--marketplace`: creates `.claude-plugin/plugin.json` and nests skill under `skills/{name}/`
 
 After initialization, customize or remove generated files as needed.
 

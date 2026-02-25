@@ -362,6 +362,14 @@
       "version": "1.0.0"
     },
     {
+      "name": "doc-vault-project",
+      "description": "Manage multi-note research projects in Obsidian vault with phased subdirectory structure (concept, research, design, implementation). Scaffold new projects, add component notes, track status, link existing research, promote topics to projects. Use when: creating a project, adding to a project, checking project status, linking research to a project, promoting a research topic to a full project. Triggers: project init, project add, project status, project link, project promote, create project, new project.",
+      "source": "./plugins/doc-vault-project",
+      "category": "documentation",
+      "tags": ["documentation", "obsidian", "vault", "project-management"],
+      "version": "1.0.0"
+    },
+    {
       "name": "git-commit",
       "description": "Generate Conventional Commits messages. Use when: creating commits, writing commit messages, committing changes. Triggers: /git-commit, commit this, commit my changes, finishing code changes.",
       "source": "./plugins/git-commit",
