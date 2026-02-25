@@ -102,7 +102,7 @@ def cmd_setup(args):
     se_recipient = None
     se_identity = None
     for line in se_output.splitlines():
-        if line.startswith("# recipient:"):
+        if line.startswith("# public key:") or line.startswith("# recipient:"):
             se_recipient = line.split(":", 1)[1].strip()
         elif line.startswith("AGE-PLUGIN-SE-"):
             se_identity = line.strip()
