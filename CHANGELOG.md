@@ -27,6 +27,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **dev-review** Paranoia pillar — added as 7th review dimension (#108)
 
 ### Changed
+- **dev-rlm** — add `context: fork` + `model: haiku` for isolated orchestrator context on cheap model; worker agents inherit parent model for quality analysis
+- **dev-skill-create** — quick_validate.py now accepts `context`, `agent`, `model`, `disable-model-invocation` frontmatter fields
 - **cli-web-scrape** — replaced "Escalation Pattern" with "Auto-Escalation Protocol": content validation heuristics, 4-step tier progression (HTTP → validate → Dynamic → Stealthy), consumer skill integration guidance (#134)
 - **res-deep** — scrapling fallback now uses auto-escalation protocol instead of bare HTTP tier (#134)
 - **res-price-compare** — scrapling fallback now uses auto-escalation protocol instead of bare HTTP tier (#134)

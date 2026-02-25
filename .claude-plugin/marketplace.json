@@ -209,14 +209,14 @@
       "description": "Recursive codebase analysis using the RLM paradigm. Use when: analyzing large codebases (100+ files), investigating cross-cutting patterns, recursive decomposition of complex code questions, scanning for issues across entire repos. Triggers: analyze this codebase, how does X work across the codebase, scan all files for Y, recursive analysis, RLM.",
       "source": "./plugins/dev-rlm",
       "category": "dev",
-      "version": "1.0.0"
+      "version": "1.1.0"
     },
     {
       "name": "dev-skill-create",
       "description": "Guide for creating effective skills. Use when: creating a new skill, updating an existing skill, extending Claude's capabilities with specialized knowledge or workflows. Triggers: create skill, new skill, skill template, build skill, update skill.",
       "source": "./plugins/dev-skill-create",
       "category": "dev",
-      "version": "1.0.0"
+      "version": "1.0.1"
     },
     {
       "name": "dev-wizard-review",

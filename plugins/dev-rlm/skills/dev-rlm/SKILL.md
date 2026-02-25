@@ -1,6 +1,10 @@
 ---
 name: dev-rlm
 description: "Recursive codebase analysis using the RLM paradigm. Use when: analyzing large codebases (100+ files), investigating cross-cutting patterns, recursive decomposition of complex code questions, scanning for issues across entire repos. Triggers: analyze this codebase, how does X work across the codebase, scan all files for Y, recursive analysis, RLM."
+context: fork
+agent: general-purpose
+model: haiku
+disable-model-invocation: true
 ---
 
 # Recursive Language Model (RLM) Skill
