@@ -1,0 +1,5 @@
+{
+  "name": "doc-vault-project",
+  "version": "1.0.0",
+  "description": "Manage multi-note research projects in Obsidian vault with phased subdirectory structure. Scaffold projects, add components, track status, link research, promote topics. Use when: create project, new project, add to project, project status, link research to project, promote to project. Triggers: project init, project add, project status, project link, project promote."
+}
