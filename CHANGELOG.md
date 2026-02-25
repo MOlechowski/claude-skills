@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **doc-vault-dedup** — detect and consolidate overlapping research notes in Obsidian vault: semantic similarity scanning, section-level overlap mapping, merge planning, and execution with wikilink redirect
 - **doc-vault-project** — manage multi-note research projects in Obsidian vault with phased subdirectory structure (concept, research, design, implementation); 5 commands: init, add, status, link, promote
 - **doc-vault-crypt** — encrypt Obsidian vault files with age + Apple Secure Enclave (Touch ID), dual-recipient (SE + backup), stub notes preserve wikilinks and tags
 - **dot-sync** — bidirectional sync between dot-claude config repo and live ~/.claude/, semantic diffs (#136)
@@ -31,7 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **res-price-compare** — scrapling fallback now uses auto-escalation protocol instead of bare HTTP tier (#134)
 - **doc-daily-digest** — scrapling fallback now uses auto-escalation protocol instead of bare HTTP tier (#134)
 - **dev-skill-create** — init_skill.py now supports `--marketplace` flag for creating marketplace plugin structure with `.claude-plugin/plugin.json` and `skills/{name}/` nesting
-- **Plugin count** — marketplace now contains 112 plugins across 15 domain prefixes
+- **Plugin count** — marketplace now contains 113 plugins across 15 domain prefixes
 - **plugin.json schema** — Claude Code only accepts `name`, `version`, `description`; category/tags/author moved to marketplace.json (#113, #114, #115)
 
 ### Fixed

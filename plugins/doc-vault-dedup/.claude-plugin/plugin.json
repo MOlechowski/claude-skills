@@ -1,0 +1,5 @@
+{
+  "name": "doc-vault-dedup",
+  "version": "1.0.0",
+  "description": "Detect and consolidate overlapping research notes in Obsidian vault. Semantic similarity analysis, section-level overlap mapping, merge execution with wikilink updates."
+}
