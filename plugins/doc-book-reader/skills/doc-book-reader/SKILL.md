@@ -1,6 +1,10 @@
 ---
 name: doc-book-reader
 description: "Read entire books (PDF, EPUB, DOCX, TXT) and produce structured synthesis reports or convert to markdown. Orchestrates doc-extract with parallel agent coordination for chapter-aware processing. Use for: (1) reading and summarizing entire books, (2) extracting key themes and arguments from long documents, (3) producing book reports with chapter summaries, (4) processing large PDFs with parallel agents, (5) converting books to markdown files. Triggers: read book, book report, summarize book, read entire pdf, book synthesis, book analysis, convert book to markdown, book to md, doc-book-reader."
+context: fork
+agent: general-purpose
+model: haiku
+disable-model-invocation: true
 ---
 
 # doc-book-reader
@@ -144,18 +148,31 @@ Combines agent summary JSONs into `merged.json` for final synthesis. Deduplicate
 
 ### Step 4: Report
 
-Read `merged.json` and `references/report-template.md`. Write the report following the template structure:
+Spawn a report-writing agent to synthesize the merged data into a final report. Do NOT write the report in the orchestrator — delegate to a worker agent for quality output.
 
-1. Fill in metadata from the manifest (title, author, format, words).
-2. Write the executive summary by synthesizing all chapter summaries.
-3. Write chapter summaries from the merged data.
-4. Identify key themes that span multiple chapters.
-5. List key arguments with chapter references.
-6. Include notable quotes with page numbers.
-7. Write critical analysis (strengths, weaknesses, audience).
-8. Fill in processing statistics.
+```
+Task(
+  description="Write book synthesis report",
+  prompt="Read the merged summary at <session_dir>/merged.json and the report template at
+  ~/.claude/skills/doc-book-reader/references/report-template.md.
 
-Save the report as `{title}_report.md` in the current working directory.
+  Write the report following the template structure:
+  1. Fill in metadata from the manifest (title, author, format, words).
+  2. Write the executive summary by synthesizing all chapter summaries.
+  3. Write chapter summaries from the merged data.
+  4. Identify key themes that span multiple chapters.
+  5. List key arguments with chapter references.
+  6. Include notable quotes with page numbers.
+  7. Write critical analysis (strengths, weaknesses, audience).
+  8. Fill in processing statistics.
+
+  Save the report as {title}_report.md in <cwd>.",
+  subagent_type="general-purpose",
+  run_in_background=false
+)
+```
+
+Wait for the agent to complete. Verify the report file exists before proceeding to cleanup.
 
 ### Step 5: Clean up
 
