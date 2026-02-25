@@ -3,12 +3,12 @@
 Skill Initializer - Creates a new skill from template
 
 Usage:
-    init_skill.py <skill-name> --path <path>
+    init_skill.py <skill-name> --path <path> [--marketplace]
 
 Examples:
     init_skill.py my-new-skill --path skills/public
     init_skill.py my-api-helper --path skills/private
-    init_skill.py custom-skill --path /custom/location
+    init_skill.py custom-skill --path /custom/location --marketplace
 """
 
 import sys
@@ -191,24 +191,40 @@ def title_case_skill_name(skill_name):
     return ' '.join(word.capitalize() for word in skill_name.split('-'))
 
 
-def init_skill(skill_name, path):
+PLUGIN_JSON_TEMPLATE = """{
+  "name": "%s",
+  "version": "1.0.0",
+  "description": "[TODO: What this skill does and when to use it. Include triggers.]"
+}
+"""
+
+
+def init_skill(skill_name, path, marketplace=False):
     """
     Initialize a new skill directory with template SKILL.md.
 
     Args:
         skill_name: Name of the skill
         path: Path where the skill directory should be created
+        marketplace: If True, create marketplace plugin structure with
+                     .claude-plugin/plugin.json and skills/{name}/ nesting
 
     Returns:
         Path to created skill directory, or None if error
     """
     # Determine skill directory path
-    skill_dir = Path(path).resolve() / skill_name
+    plugin_dir = Path(path).resolve() / skill_name
 
     # Check if directory already exists
-    if skill_dir.exists():
-        print(f"❌ Error: Skill directory already exists: {skill_dir}")
+    if plugin_dir.exists():
+        print(f"❌ Error: Skill directory already exists: {plugin_dir}")
         return None
+
+    # Determine where SKILL.md and resources go
+    if marketplace:
+        skill_dir = plugin_dir / 'skills' / skill_name
+    else:
+        skill_dir = plugin_dir
 
     # Create skill directory
     try:
@@ -217,6 +233,18 @@ def init_skill(skill_name, path):
     except Exception as e:
         print(f"❌ Error creating directory: {e}")
         return None
+
+    # Create .claude-plugin/plugin.json for marketplace format
+    if marketplace:
+        try:
+            plugin_json_dir = plugin_dir / '.claude-plugin'
+            plugin_json_dir.mkdir(exist_ok=True)
+            plugin_json_path = plugin_json_dir / 'plugin.json'
+            plugin_json_path.write_text(PLUGIN_JSON_TEMPLATE % skill_name)
+            print("✅ Created .claude-plugin/plugin.json")
+        except Exception as e:
+            print(f"❌ Error creating plugin.json: {e}")
+            return None
 
     # Create SKILL.md from template
     skill_title = title_case_skill_name(skill_name)
@@ -261,37 +289,56 @@ def init_skill(skill_name, path):
         return None
 
     # Print next steps
-    print(f"\n✅ Skill '{skill_name}' initialized successfully at {skill_dir}")
+    print(f"\n✅ Skill '{skill_name}' initialized successfully at {plugin_dir}")
+    if marketplace:
+        print(f"   Plugin root: {plugin_dir}")
+        print(f"   Skill path:  {skill_dir}")
     print("\nNext steps:")
     print("1. Edit SKILL.md to complete the TODO items and update the description")
-    print("2. Customize or delete the example files in scripts/, references/, and assets/")
-    print("3. Run the validator when ready to check the skill structure")
+    if marketplace:
+        print("2. Edit .claude-plugin/plugin.json description")
+        print("3. Customize or delete the example files in scripts/, references/, and assets/")
+        print("4. Add entry to marketplace.json")
+        print("5. Run the validator when ready to check the skill structure")
+    else:
+        print("2. Customize or delete the example files in scripts/, references/, and assets/")
+        print("3. Run the validator when ready to check the skill structure")
 
-    return skill_dir
+    return plugin_dir
 
 
 def main():
-    if len(sys.argv) < 4 or sys.argv[2] != '--path':
-        print("Usage: init_skill.py <skill-name> --path <path>")
+    args = sys.argv[1:]
+    marketplace = '--marketplace' in args
+    if marketplace:
+        args.remove('--marketplace')
+
+    if len(args) < 3 or args[1] != '--path':
+        print("Usage: init_skill.py <skill-name> --path <path> [--marketplace]")
         print("\nSkill name requirements:")
         print("  - Hyphen-case identifier (e.g., 'data-analyzer')")
         print("  - Lowercase letters, digits, and hyphens only")
         print("  - Max 40 characters")
         print("  - Must match directory name exactly")
+        print("\nOptions:")
+        print("  --marketplace  Create marketplace plugin structure with")
+        print("                 .claude-plugin/plugin.json and skills/{name}/ nesting")
         print("\nExamples:")
         print("  init_skill.py my-new-skill --path skills/public")
         print("  init_skill.py my-api-helper --path skills/private")
-        print("  init_skill.py custom-skill --path /custom/location")
+        print("  init_skill.py custom-skill --path plugins/ --marketplace")
         sys.exit(1)
 
-    skill_name = sys.argv[1]
-    path = sys.argv[3]
+    skill_name = args[0]
+    path = args[2]
 
     print(f"🚀 Initializing skill: {skill_name}")
     print(f"   Location: {path}")
+    if marketplace:
+        print(f"   Format: marketplace plugin")
     print()
 
-    result = init_skill(skill_name, path)
+    result = init_skill(skill_name, path, marketplace=marketplace)
 
     if result:
         sys.exit(0)
