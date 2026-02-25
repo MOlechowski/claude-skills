@@ -230,7 +230,7 @@
       "description": "Parallelize tasks using Claude agents. Use when: processing multiple files/items concurrently, running analysis across independent code modules, batch operations with cognitive tasks. Triggers: parallelize this task, run on all files in parallel, analyze modules concurrently, batch process these items.",
       "source": "./plugins/dev-swarm",
       "category": "dev",
-      "version": "1.0.0"
+      "version": "1.1.0"
     },
     {
       "name": "dot-sync",
@@ -251,7 +251,7 @@
       "description": "Read entire books (PDF, EPUB, DOCX, TXT) and produce structured synthesis reports. Orchestrates doc-extract and doc-pandoc with parallel agent coordination for chapter-aware processing. Use for: (1) reading and summarizing entire books, (2) extracting key themes and arguments, (3) producing book reports with chapter summaries, (4) processing large PDFs with parallel agents. Triggers: read book, book report, summarize book, read entire pdf, book synthesis, book analysis, doc-book-reader.",
       "source": "./plugins/doc-book-reader",
       "category": "documentation",
-      "version": "1.0.0"
+      "version": "1.1.0"
     },
     {
       "name": "doc-changelog",
