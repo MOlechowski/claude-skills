@@ -1,6 +1,6 @@
 ---
-name: doc-vault-redact
-description: "Encrypt Obsidian vault files with age + Apple Secure Enclave (Touch ID). Whole-file encryption with stub notes preserving wikilinks and tags. Dual-recipient: SE key for daily use, backup key for disaster recovery. Use when: encrypting vault notes, protecting PII, vault security, encrypt sensitive files. Triggers: encrypt vault, vault encrypt, protect notes, encrypt file, decrypt file, vault security, redact vault."
+name: doc-vault-crypt
+description: "Encrypt and decrypt Obsidian vault files with age + Apple Secure Enclave (Touch ID). Whole-file encryption with stub notes preserving wikilinks and tags. Dual-recipient: SE key for daily use, backup key for disaster recovery. Use when: encrypting vault notes, decrypting vault notes, protecting PII, vault security. Triggers: encrypt vault, decrypt vault, vault crypt, protect notes, encrypt file, decrypt file, vault security."
 ---
 
 # Vault Encrypt
@@ -20,7 +20,7 @@ Requires macOS 14+ with Secure Enclave (Apple Silicon or T2 chip).
 All operations use `vault_encrypt.py`:
 
 ```bash
-SCRIPT=$(find ~/.claude -path "*/doc-vault-redact/scripts/vault_encrypt.py" -print -quit 2>/dev/null)
+SCRIPT=$(find ~/.claude -path "*/doc-vault-crypt/scripts/vault_encrypt.py" -print -quit 2>/dev/null)
 ```
 
 ## Setup

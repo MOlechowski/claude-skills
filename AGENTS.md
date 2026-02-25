@@ -1,5 +1,5 @@
 ---
-last_validated: 2026-02-25T00:02:41Z
+last_validated: 2026-02-25T15:32:13Z
 project_type: plugin-marketplace
 skill_count: 111
 ---
@@ -115,7 +115,7 @@ This is a Claude Skills **plugin marketplace** following Anthropic's Agent Skill
 │   │   └── skills
 │   ├── doc-skills-md
 │   │   └── skills
-│   ├── doc-vault-redact
+│   ├── doc-vault-crypt
 │   │   └── skills
 │   ├── doc-vault-save
 │   │   └── skills

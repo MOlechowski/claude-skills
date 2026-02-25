@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- **doc-vault-redact** — encrypt Obsidian vault files with age + Apple Secure Enclave (Touch ID), dual-recipient (SE + backup), stub notes preserve wikilinks and tags
+- **doc-vault-crypt** — encrypt Obsidian vault files with age + Apple Secure Enclave (Touch ID), dual-recipient (SE + backup), stub notes preserve wikilinks and tags
 - **dot-sync** — bidirectional sync between dot-claude config repo and live ~/.claude/, semantic diffs (#136)
 - **res-youtube** — analyze YouTube videos using Gemini API's native video understanding
 - **cli-web-scrape** — Scrapling CLI wrapper: web scraping with browser impersonation, stealth headers, CSS selectors, Cloudflare bypass, JS rendering (3 fetcher tiers)

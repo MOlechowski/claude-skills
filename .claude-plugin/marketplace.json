@@ -354,9 +354,9 @@
       "version": "1.0.0"
     },
     {
-      "name": "doc-vault-redact",
-      "description": "Encrypt Obsidian vault files with age + Apple Secure Enclave (Touch ID). Whole-file encryption with stub notes preserving wikilinks and tags. Dual-recipient: SE key for daily use, backup key for disaster recovery. Use when: encrypting vault notes, protecting PII, vault security, encrypt sensitive files. Triggers: encrypt vault, vault encrypt, protect notes, encrypt file, decrypt file, vault security, redact vault.",
-      "source": "./plugins/doc-vault-redact",
+      "name": "doc-vault-crypt",
+      "description": "Encrypt and decrypt Obsidian vault files with age + Apple Secure Enclave (Touch ID). Whole-file encryption with stub notes preserving wikilinks and tags. Dual-recipient: SE key for daily use, backup key for disaster recovery. Use when: encrypting vault notes, decrypting vault notes, protecting PII, vault security. Triggers: encrypt vault, decrypt vault, vault crypt, protect notes, encrypt file, decrypt file, vault security.",
+      "source": "./plugins/doc-vault-crypt",
       "category": "documentation",
       "tags": ["documentation", "obsidian", "vault", "security", "encryption"],
       "version": "1.0.0"

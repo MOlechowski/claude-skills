@@ -158,7 +158,7 @@ All skills use domain prefixes for discoverability. Each skill is its own plugin
 | **doc-skills-md** | Create and update SKILLS.md with marketplace plugin recommendations |
 | **doc-daily-digest** | Process Obsidian daily notes: classify URLs and ideas, fetch content, create notes, update wikilinks |
 | **doc-vault-save** | Save structured content to Obsidian vault with frontmatter, folder routing, dedup, and wikilinks |
-| **doc-vault-redact** | Encrypt vault files with age + Apple Secure Enclave (Touch ID), stub notes preserve wikilinks |
+| **doc-vault-crypt** | Encrypt vault files with age + Apple Secure Enclave (Touch ID), stub notes preserve wikilinks |
 
 ### dot- (Config Management)
 | Skill | Description |
