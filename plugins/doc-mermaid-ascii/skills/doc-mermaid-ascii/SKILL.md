@@ -1,11 +1,11 @@
 ---
-name: doc-mermaid-render
+name: doc-mermaid-ascii
 description: "Render Mermaid diagrams to themed SVG or ASCII/Unicode art using beautiful-mermaid. Zero DOM, pure TypeScript, 15 built-in editor themes, mono mode (2 colors). Use for: (1) rendering flowcharts, sequence, class, state, ER diagrams to SVG files, (2) rendering diagrams as ASCII/Unicode for terminal output, (3) themed diagram generation matching editor color schemes. Triggers: beautiful-mermaid, render mermaid, mermaid svg, mermaid ascii, themed diagram, diagram to image."
 ---
 
 # beautiful-mermaid
 
-Render Mermaid diagrams to SVG or ASCII using the `doc-mermaid-render` npm package. Zero DOM dependencies, 15 built-in themes, works in Node.js/Bun without a browser.
+Render Mermaid diagrams to SVG or ASCII using the `doc-mermaid-ascii` npm package. Zero DOM dependencies, 15 built-in themes, works in Node.js/Bun without a browser.
 
 ## Prerequisites
 
@@ -153,9 +153,9 @@ const colors = fromShikiTheme(shikiHighlighter.getTheme('vitesse-dark'))
 
 | Need | Use |
 |------|-----|
-| SVG/ASCII for flowchart, sequence, class, state, ER | `doc-mermaid-render` |
+| SVG/ASCII for flowchart, sequence, class, state, ER | `doc-mermaid-ascii` |
 | C4, Gantt, timeline, journey, mindmap, pie, git graph | `doc-mermaid` (mmdc) |
-| Terminal/ASCII output | `doc-mermaid-render` |
-| Editor-themed diagrams (tokyo-night, dracula, etc.) | `doc-mermaid-render` |
-| Server-side rendering without Puppeteer | `doc-mermaid-render` |
+| Terminal/ASCII output | `doc-mermaid-ascii` |
+| Editor-themed diagrams (tokyo-night, dracula, etc.) | `doc-mermaid-ascii` |
+| Server-side rendering without Puppeteer | `doc-mermaid-ascii` |
 | Full Mermaid syntax compatibility | `doc-mermaid` (mmdc) |

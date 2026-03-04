@@ -145,7 +145,7 @@ All skills use domain prefixes for discoverability. Each skill is its own plugin
 | **doc-claude-md** | Create and maintain CLAUDE.md and AGENTS.md documentation |
 | **doc-confluence** | Create and update Confluence Data Center pages from Markdown |
 | **doc-mermaid** | Mermaid diagramming for code visualization and documentation |
-| **doc-mermaid-render** | Render Mermaid diagrams to themed SVG or ASCII/Unicode art |
+| **doc-mermaid-ascii** | Render Mermaid diagrams to themed SVG or ASCII/Unicode art |
 | **doc-notesmd** | NotesMD CLI for Obsidian vault operations from the terminal |
 | **doc-obsidian** | Obsidian vault management combining search and CRUD |
 | **doc-pandoc** | Universal document conversion with Pandoc |
@@ -332,7 +332,7 @@ When a developer clones and trusts the repo, Claude Code prompts them to install
 | **Python** | `sec-bandit`, `sec-pip-audit`, `cli-jq`, `dev-review-pr` |
 | **Infrastructure** | `iac-expert`, `iac-tofu`, `aws-expert`, `cf-expert` |
 | **Security audit** | `sec-trivy`, `sec-semgrep`, `sec-nuclei`, `re-expert` |
-| **Documentation** | `doc-readme`, `doc-mermaid`, `doc-confluence`, `doc-pandoc` |
+| **Documentation** | `doc-readme`, `doc-mermaid`, `doc-mermaid-ascii`, `doc-confluence`, `doc-pandoc` |
 
 ### Personal Overrides
 

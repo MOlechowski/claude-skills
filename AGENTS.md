@@ -1,5 +1,5 @@
 ---
-last_validated: 2026-02-25T23:27:23Z
+last_validated: 2026-03-04T18:55:13Z
 project_type: plugin-marketplace
 skill_count: 113
 ---
@@ -99,7 +99,7 @@ This is a Claude Skills **plugin marketplace** following Anthropic's Agent Skill
 │   │   └── skills
 │   ├── doc-mermaid
 │   │   └── skills
-│   ├── doc-mermaid-render
+│   ├── doc-mermaid-ascii
 │   │   └── skills
 │   ├── doc-notesmd
 │   │   └── skills

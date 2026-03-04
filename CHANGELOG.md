@@ -102,7 +102,7 @@ Initial plugin marketplace release with 97 plugins.
 - **doc-confluence** — create and update Confluence Data Center pages from Markdown
 - **doc-extract** — document intelligence: extract text from PDFs, images using tiered OCR
 - **doc-mermaid** — Mermaid diagramming for code visualization
-- **doc-mermaid-render** — render Mermaid diagrams to themed SVG or ASCII art
+- **doc-mermaid-ascii** — render Mermaid diagrams to themed SVG or ASCII art
 - **doc-notesmd** — NotesMD CLI for Obsidian vault operations
 - **doc-obsidian** — Obsidian vault management combining qmd search and CRUD
 - **doc-pandoc** — universal document conversion with Pandoc
