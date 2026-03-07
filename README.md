@@ -8,8 +8,8 @@ Skills are organized directories containing instructions, scripts, and resources
 
 ### Key Features
 
-- **Plugin Marketplace**: Install only the skills you need via `/plugin install`
-- **Granular Control**: Enable/disable individual skills with `/plugin enable/disable`
+- **Plugin Marketplace**: Install via `/plugin install` or the [Skills CLI](https://github.com/vercel-labs/skills)
+- **Granular Control**: Enable/disable individual skills — install only what you need
 - **Progressive Loading**: Metadata loads first, then full instructions, then additional resources on-demand
 - **Executable Code**: Skills can include Python scripts and other tools for deterministic operations
 - **Context Efficient**: Only installed and enabled skills consume context tokens
@@ -42,25 +42,41 @@ Skills are organized directories containing instructions, scripts, and resources
 /context
 ```
 
+### Skills CLI (Alternative)
+
+The [Skills CLI](https://github.com/vercel-labs/skills) is an optional alternative that installs skills directly from the command line — useful for automation and scripting.
+
+```bash
+# Install globally (available in every project)
+skills add MOlechowski/claude-skills -s go-expert -s cli-jq --global --yes --agent claude-code
+
+# Install to current project only
+skills add MOlechowski/claude-skills -s go-expert -s cli-jq --yes
+
+# List installed skills
+skills ls --global
+
+# Remove a skill
+skills remove -s go-expert --global --yes --agent claude-code
+```
+
+Install multiple skills at once with repeated `-s` flags. The CLI reads `marketplace.json` and installs flat (no nested paths).
+
+#### Lock File
+
+For project-local skills, the CLI generates a `skills-lock.json` that pins exact versions. Commit it so contributors can restore with one command:
+
+```bash
+# Restore all project skills from lock file
+skills experimental_install
+```
+
 ### Manual Installation
 
 ```bash
 # Clone and copy a specific skill directly
 git clone https://github.com/MOlechowski/claude-skills.git
 cp -r claude-skills/plugins/aws-cli/skills/aws-cli ~/.claude/skills/
-```
-
-### Migrating from Global Skills
-
-If you previously installed all skills via `install.sh`:
-
-```bash
-# Remove old global skills (they load ~16k tokens at startup)
-rm -rf ~/.claude/skills/*
-
-# Add the marketplace and install only what you need
-/plugin marketplace add MOlechowski/claude-skills
-/plugin install go-expert@claude-skills
 ```
 
 ## Repository Structure
