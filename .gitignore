@@ -2,4 +2,5 @@ __pycache__/
 *.pyc
 .claude/logs/
 .claude/plans/
+.agents/
 .claude/skills/
