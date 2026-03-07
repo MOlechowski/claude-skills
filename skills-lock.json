@@ -1,0 +1,50 @@
+{
+  "version": 1,
+  "skills": {
+    "dev-review-pr": {
+      "source": "MOlechowski/claude-skills",
+      "sourceType": "github",
+      "computedHash": "7d3962b73024adb32f4f370fe121210258bf5777bb54982abf2559a2858ff267"
+    },
+    "dev-skill-create": {
+      "source": "MOlechowski/claude-skills",
+      "sourceType": "github",
+      "computedHash": "36d8c6857e5c8fad504144ef67e60fbbb12b001aeee1bd35e62e67d00225d94d"
+    },
+    "doc-changelog": {
+      "source": "MOlechowski/claude-skills",
+      "sourceType": "github",
+      "computedHash": "9b8554dd9925834e024cd803c505cad75e98fc1ab8b90929d6f0f4b58514e947"
+    },
+    "doc-claude-md": {
+      "source": "MOlechowski/claude-skills",
+      "sourceType": "github",
+      "computedHash": "6b199c9a8da4925c6c508df0ba6e4faea7fdea6096fd9fbc536b0831d7664359"
+    },
+    "doc-project": {
+      "source": "MOlechowski/claude-skills",
+      "sourceType": "github",
+      "computedHash": "5c27bcd517658327fcf3e68402d2bfd218df89c5fd2b98d2e5a9784dc42e32e6"
+    },
+    "doc-readme": {
+      "source": "MOlechowski/claude-skills",
+      "sourceType": "github",
+      "computedHash": "6139bde6b167305236e8300c73cf79558feeae45dc4ed4109c72a8efbcea8fea"
+    },
+    "doc-skills-md": {
+      "source": "MOlechowski/claude-skills",
+      "sourceType": "github",
+      "computedHash": "455c8159c70b4b4523d37ac336f086ed20eb4e1844f95db42236528059111e98"
+    },
+    "git-commit": {
+      "source": "MOlechowski/claude-skills",
+      "sourceType": "github",
+      "computedHash": "cef3159b9acbc4d86730a08e183222ab79a6e2d599b182f4597ba0e6f35ce448"
+    },
+    "git-ship": {
+      "source": "MOlechowski/claude-skills",
+      "sourceType": "github",
+      "computedHash": "d610ebffba255a9cefa10b4333b0d81bf807c3c3a19c3d080856a4efadc275c2"
+    }
+  }
+}

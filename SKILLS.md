@@ -1,40 +1,40 @@
 # Project Skills
 
-Recommended marketplace plugins for working on this repository.
+Development skills for working on this repository, managed via `skills-lock.json`.
 
 ## Setup
 
 ```bash
-# 1. Add the marketplace (one-time, requires trust approval)
-/plugin marketplace add MOlechowski/claude-skills
-
-# 2. Install required skills
-claude plugin install dev-skill-create@claude-skills --scope project
+# Install all project skills from the lock file (one command)
+skills experimental_install
 ```
 
-## Required
+This reads `skills-lock.json` and installs all 9 skills to `.agents/skills/` (project-local).
 
-Skills needed for contributing to this repository.
+## Included Skills
 
-| Skill | Purpose | Install |
-|-------|---------|---------|
-| **dev-skill-create** | Create new skills following best practices | `claude plugin install dev-skill-create@claude-skills --scope project` |
+| Skill | Purpose |
+|-------|---------|
+| **dev-skill-create** | Create new skills following marketplace conventions |
+| **dev-review-pr** | Review PRs with structured analysis |
+| **doc-claude-md** | Create and validate CLAUDE.md/AGENTS.md files |
+| **doc-changelog** | Generate CHANGELOG.md from git history |
+| **doc-project** | Update all project docs in one pass |
+| **doc-readme** | Create and validate README.md files |
+| **doc-skills-md** | Generate SKILLS.md with plugin recommendations |
+| **git-commit** | Generate Conventional Commits messages |
+| **git-ship** | Commit, PR, and merge with CI skipped |
 
-## Recommended
+## Adding a Skill
 
-Optional skills that improve the development workflow.
+```bash
+# Add a skill from the marketplace (updates skills-lock.json)
+skills add MOlechowski/claude-skills -s <skill-name> --yes
 
-| Skill | Purpose | Install |
-|-------|---------|---------|
-| **git-commit** | Generate Conventional Commits messages | `claude plugin install git-commit@claude-skills` |
-| **dev-review-pr** | Review PRs with structured analysis | `claude plugin install dev-review-pr@claude-skills` |
-| **doc-claude-md** | Create and validate CLAUDE.md/AGENTS.md files | `claude plugin install doc-claude-md@claude-skills` |
-| **doc-changelog** | Generate CHANGELOG.md from git history | `claude plugin install doc-changelog@claude-skills` |
-| **doc-project** | Update all project docs in one pass | `claude plugin install doc-project@claude-skills` |
-| **doc-readme** | Create and validate README.md files | `claude plugin install doc-readme@claude-skills` |
-| **doc-skills-md** | Generate SKILLS.md with plugin recommendations | `claude plugin install doc-skills-md@claude-skills` |
-| **git-ship** | Commit, PR, and merge with CI skipped | `claude plugin install git-ship@claude-skills` |
+# Commit the updated lock file
+git add skills-lock.json && git commit -m "chore: add <skill-name> to project skills"
+```
 
 ## Full Catalog
 
-Browse all 108 available plugins: `/plugin` > Discover tab, or see the [README](README.md#available-skills-108-total).
+Browse all available plugins in the [README](README.md#available-skills).
