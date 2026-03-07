@@ -77,7 +77,7 @@ gh pr create --title "feat: add <repo-name> repository" --body "Add OpenTofu mod
 ### 6. Clean Up
 
 ```bash
-rm -rf "$WORK_DIR"
+[ -n "$WORK_DIR" ] && [ -d "$WORK_DIR" ] && rm -rf "$WORK_DIR"
 ```
 
 Report the PR URL to the user.
