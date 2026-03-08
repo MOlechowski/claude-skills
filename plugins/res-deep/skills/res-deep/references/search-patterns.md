@@ -54,21 +54,104 @@ Advanced search patterns and operators for multi-source deep research.
 |---------|-------------|---------|
 | `site:` | Specific domain | `site:github.com machine learning` |
 | `-site:` | Exclude domain | `Python tutorial -site:w3schools.com` |
+| `related:` | Sites Google considers similar — discovers competitors and alternatives you didn't know to search for | `related:pinecone.io` |
+| `cache:` | Google's cached version of a page — bypasses paywalls and blocks without needing scrapling | `cache:example.com/paywalled-article` |
 
 ### Content Type
 
 | Pattern | Description | Example |
 |---------|-------------|---------|
 | `filetype:` | Specific file type | `AI whitepaper filetype:pdf` |
-| `intitle:` | Term in page title | `intitle:tutorial Python async` |
-| `inurl:` | Term in URL | `inurl:blog AI trends` |
+| `intitle:` | One term must appear in page title | `intitle:benchmark vector database` |
+| `allintitle:` | ALL terms must appear in page title — stricter than `intitle:`, filters tangential results | `allintitle:vector database benchmark 2026` |
+| `inurl:` | One term must appear in URL | `inurl:blog AI trends` |
+| `allinurl:` | ALL terms must appear in URL — targets official docs and primary sources by URL structure | `allinurl:api docs v2 reference` |
 
-### Freshness
+### Date Filtering
 
 | Pattern | Description | Example |
 |---------|-------------|---------|
-| Recent news | Add current year or "latest" | `Claude API latest 2026` |
-| Historical | Add specific date/year | `AI predictions 2025` |
+| `after:YYYY-MM-DD` | Results published after date | `"AI agents" after:2025-06-01` |
+| `before:YYYY-MM-DD` | Results published before date | `"GPT-4" before:2025-01-01` |
+| Combined range | Exact time window — far more precise than appending year | `"vector database" after:2025-09-01 before:2026-03-01` |
+| Year append | Quick freshness hint when exact dates aren't needed | `Claude API latest 2026` |
+
+### Discovery Operators
+
+| Pattern | Description | Example |
+|---------|-------------|---------|
+| `AROUND(N)` | Terms must appear within N words of each other — finds focused discussions, not pages that merely mention both terms | `"vector database" AROUND(3) "benchmark"` |
+| `*` wildcard | Fill-in-the-blank — discovers unknown entities and alternatives | `"best * for machine learning"`, `"switched from Kafka to *"` |
+| `$X..$Y` range | Numeric range filter — useful for financial research | `"funding $10..$50 million" AI startup` |
+| `(X OR Y)` grouping | Boolean groups — multi-option queries in one search | `(React OR Vue OR Svelte) "state management" 2026` |
+
+### Noise Reduction
+
+Stack `-site:` to exclude SEO spam and low-signal domains from results:
+
+```
+{topic} -site:pinterest.com -site:quora.com -site:w3schools.com -site:geeksforgeeks.org
+```
+
+Common noise sources to exclude by research type:
+
+| Research Type | Exclude |
+|---------------|---------|
+| Technical/programming | `-site:w3schools.com -site:geeksforgeeks.org -site:tutorialspoint.com` |
+| Product/tool research | `-site:pinterest.com -site:quora.com -site:g2.com` |
+| Financial research | `-site:pinterest.com -site:investopedia.com` (basic definitions, not analysis) |
+
+### Operator Composition
+
+Stack operators for precision targeting. Order doesn't matter.
+
+| Combination | Purpose | Example |
+|-------------|---------|---------|
+| `site:` + `intitle:` | Focused topic on specific platform | `site:reddit.com intitle:"vs" "React" "Vue"` |
+| `site:` + `after:` | Recent content from specific source | `site:news.ycombinator.com "AI agents" after:2025-10-01` |
+| `allintitle:` + `after:` | Precision + freshness | `allintitle:qdrant milvus benchmark after:2025-06-01` |
+| `related:` + `intitle:` | Competitor discovery + topic filter | Search `related:pinecone.io`, then `intitle:pricing` on discovered domains |
+| `AROUND()` + `site:` | Proximity search on specific platform | `site:reddit.com "kubernetes" AROUND(5) "nightmare"` |
+
+### When to Use Which
+
+| Research Phase | Best Operators | Why |
+|----------------|---------------|-----|
+| Round 1 (broad) | `site:`, `""`, `OR`, year append | Cast wide net, discover entities |
+| Round 2 (targeted) | `allintitle:`, `AROUND()`, `*`, `after:`/`before:`, `related:` | Fill gaps, find specific discussions |
+| Round 3 (verify) | `allinurl:`, `cache:`, `allintitle:` + `after:` | Hit primary sources, bypass blocks |
+| LANDSCAPE gaps | `related:` | Discover competitors Google knows about |
+| Paywall bypass | `cache:` | Free fallback before scrapling |
+
+## Google Scholar Patterns
+
+### Academic Paper Discovery
+
+| Pattern | Description | Example |
+|---------|-------------|---------|
+| `site:scholar.google.com "{topic}"` | General academic search | `site:scholar.google.com "retrieval augmented generation"` |
+| `site:arxiv.org "{topic}"` | Preprints and working papers | `site:arxiv.org "mixture of experts"` |
+| `site:arxiv.org "{topic}" abs` | Abstract pages specifically | `site:arxiv.org "RLHF" abs` |
+| `"{topic}" filetype:pdf site:*.edu` | University research papers | `"transformer architecture" filetype:pdf site:*.edu` |
+| `"{topic}" filetype:pdf site:*.ac.uk` | UK academic papers | `"reinforcement learning" filetype:pdf site:*.ac.uk` |
+
+### When to Use
+
+- DEEP_DIVE on technical topics — find the original paper behind a technique
+- Verification round — confirm claims with primary academic sources
+- COMPARISON framework — find benchmark papers that tested alternatives head-to-head
+
+### Quality Signals
+
+- **Citation count:** 100+ = established work, 1000+ = landmark paper
+- **Recent papers citing it:** Active research area if cited in last 12 months
+- **Author affiliation:** Google Brain, DeepMind, Meta AI, university labs = high signal
+- **Conference venue:** NeurIPS, ICML, ACL, CVPR = peer-reviewed quality
+
+### Limitations
+
+- Scholar results via WebSearch give titles/snippets only — use WebFetch on arxiv.org abstract pages for full content
+- PDFs from university sites are often accessible via WebFetch; conference proceedings may be paywalled
 
 ## GitHub Search Patterns
 
